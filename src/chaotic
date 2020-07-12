@@ -15,7 +15,7 @@ CAUR_CACHE_CC='/var/cache/chaotic/cc'
 CAUR_CACHE_SRC='/var/cache/chaotic/sources'
 CAUR_CACHE_PKG='/var/cache/chaotic/packages'
 CAUR_DEST_PKG='/srv/http/chaotic-aur/x86_64'
-CAUR_SIGN_KEY='3056513887B78AEB'
+CAUR_SIGN_KEY=''
 
 [[ -f '/etc/chaotic.conf' ]] && source '/etc/chaotic.conf'
 
