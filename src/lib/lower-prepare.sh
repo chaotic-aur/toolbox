@@ -15,10 +15,10 @@ function lower-prepare() {
     local _CURRENT="$(date +%Y%m%d%H%M%S)"
 
     mkdir "$_CURRENT"
-    pacstrap -C "$CAUR_GUEST_PACMAN" "./$_CURRENT" $CAUR_LOWER_PKGS
+    pacstrap -cC "$CAUR_GUEST_PACMAN" "./$_CURRENT" $CAUR_LOWER_PKGS
     pushd "$_CURRENT"
 
-    install -d755 './usr/local/bin'
+    install -dm755 './usr/local/bin'
     install -m644 "$CAUR_GUEST_ETC"/* './etc/'
     install -m755 "$CAUR_GUEST_BIN"/* './usr/local/bin/'
 
@@ -37,8 +37,11 @@ EOF
     install -dm755 "./home/$CAUR_GUEST_USER/"{pkgwork,.ccache,pkgdest,pkgsrc,makepkglogs}
     install -dm700 "./home/$CAUR_GUEST_USER/.gnupg"
     install -Dm700 -o1000 \
-        "$CAUR_GUEST_GNUPG"/{pubring.kbx,tofu.db,trustdb.gpg,crls.d} \
+        "$CAUR_GUEST_GNUPG"/{pubring.kbx,tofu.db,trustdb.gpg} \
         "./home/$CAUR_GUEST_USER/.gnupg/"
+    install -Dm700 -o1000 \
+        "$CAUR_GUEST_GNUPG/crls.d/DIR.txt" \
+        "./home/$CAUR_GUEST_USER/.gnupg/crls.d/"
 
     popd
     ln -s "./$_CURRENT" "./latest"

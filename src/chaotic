@@ -1,17 +1,27 @@
 #!/usr/bin/env bash
-CAUR_PREFIX="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
+CAUR_PREFIX="$( cd "$(dirname "$0")" >/dev/null 2>&1; cd .. ; pwd -P )"
+CAUR_PACKAGES='/var/lib/chaotic'
 CAUR_LOWER_DIR='/var/cache/chaotic/lower'
 CAUR_LOWER_PKGS='base base-devel'
 CAUR_GUEST_USER='main-builder'
 CAUR_GUEST_UID=1000
-CAUR_GUEST_ETC="${CAUR_PREFIX}/../lib/chaotic/guest/etc"
-CAUR_GUEST_BIN="${CAUR_PREFIX}/../lib/chaotic/guest/bin"
-CAUR_GUEST_GNUPG='/var/lib/chaotic/gnupg'
+CAUR_GUEST_ETC="${CAUR_PREFIX}/lib/chaotic/guest/etc"
+CAUR_GUEST_BIN="${CAUR_PREFIX}/lib/chaotic/guest/bin"
+CAUR_GUEST_GNUPG="${CAUR_PACKAGES}/gnupg"
+CAUR_QUEUE="/tmp/chaotic/queue"
+CAUR_BASH_WIZARD='wizard.sh'
+[[ -f '/etc/chaotic.conf' ]] && source '/etc/chaotic.conf'
 
 if [ "$EUID" -ne 0 ]; then
     echo 'This script must be run as root.'
     exit -1
 fi
 
-source "${CAUR_PREFIX}/../lib/chaotic"/*.sh
+pushd() { command pushd "$@" > /dev/null; }
+popd() { command popd "$@" > /dev/null; }
+
+for _LIB in "${CAUR_PREFIX}/lib/chaotic"/*.sh; do
+    source "${_LIB}"
+done
+
 $@

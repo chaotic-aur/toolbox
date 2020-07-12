@@ -16,15 +16,10 @@ Let's reinvent the wheel again
 
     Generates a lowerdir for later chrooting.
 
-* `chaotic upper-prepare ${PACKAGETAG}`
-
-    Generates a upperdir for later chrooting.
-    (If needed, runs `base-prepare`)
-
 * `chaotic makepkg-run-{nspawn,chroot} ${PACKAGETAG} $@`
 
     Runs a container.
-    (if needed, runs `upper-prepare` and `makepkg-gen-bash`)
+    (if needed, runs `lower-prepare` and `makepkg-gen-bash`)
 
 * `chaotic queue ${PACKAGE1TAG} ${PACKAGE2TAG}...`
 
