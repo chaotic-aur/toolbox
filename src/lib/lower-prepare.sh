@@ -3,10 +3,10 @@
 function lower-prepare() {
     set -o errexit
 
-    if [[ -f "$CAUR_LOWER_DIR/lock" ]]; do
+    if [[ -f "$CAUR_LOWER_DIR/lock" ]]; then
         echo 'Somone is already building a lowerdir'
         return 0
-    done
+    fi
 
     mkdir -p "$CAUR_LOWER_DIR"
     pushd "$CAUR_LOWER_DIR"
