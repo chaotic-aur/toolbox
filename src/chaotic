@@ -5,11 +5,18 @@ CAUR_LOWER_DIR='/var/cache/chaotic/lower'
 CAUR_LOWER_PKGS='base base-devel'
 CAUR_GUEST_USER='main-builder'
 CAUR_GUEST_UID=1000
+CAUR_GUEST_GID=1000
 CAUR_GUEST_ETC="${CAUR_PREFIX}/lib/chaotic/guest/etc"
 CAUR_GUEST_BIN="${CAUR_PREFIX}/lib/chaotic/guest/bin"
 CAUR_GUEST_GNUPG="${CAUR_PACKAGES}/gnupg"
 CAUR_QUEUE="/tmp/chaotic/queue"
 CAUR_BASH_WIZARD='wizard.sh'
+CAUR_CACHE_CC='/var/cache/chaotic/cc'
+CAUR_CACHE_SRC='/var/cache/chaotic/sources'
+CAUR_CACHE_PKG='/var/cache/chaotic/packages'
+CAUR_DEST_PKG='/srv/http/chaotic-aur/x86_64'
+CAUR_SIGN_KEY='3056513887B78AEB'
+
 [[ -f '/etc/chaotic.conf' ]] && source '/etc/chaotic.conf'
 
 if [ "$EUID" -ne 0 ]; then

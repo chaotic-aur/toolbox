@@ -8,10 +8,10 @@ function makepkg-gen-bash() {
     local _PARAMS="${@:3}"
     local _GENESIS="${CAUR_PACKAGES}/entries/${_PKGTAG}"
 
-    if [[ -z "$_PKGTAG" ]]; then
+    if [[ -z "${_PKGTAG}" ]]; then
         echo "Invalid parameters package tag."
         return 11
-    elif [[ -z "$_DEST_PARENT" ]]; then
+    elif [[ -z "${_DEST_PARENT}" ]]; then
         echo "Invalid destination directory."
         return 12
     elif [[ ! -d "${_GENESIS}/source" ]]; then
@@ -28,8 +28,8 @@ function makepkg-gen-bash() {
             [[ -d "${_DEST}" ]] && continue # Don't prepare a new one if there is another pending
             
             mkdir -p "${_DEST}/source"
-            echo "${_PKGTAG}" > "${_DEST}/tag"
-            echo "${_VARIATION}" > "${_DEST}/variation"
+            echo -n "${_PKGTAG}" > "${_DEST}/tag"
+            echo -n "${_VARIATION}" > "${_DEST}/variation"
             makepkg-gen-bash-init "${_DEST}"
 
             pushd "$_GENESIS/source"
@@ -63,7 +63,7 @@ function makepkg-gen-bash() {
         [[ -d "${_DEST}" ]] && return # Don't prepare a new one if there is another pending
             
         mkdir -p "${_DEST}/pkgwork"
-        echo "${_PKGTAG}" > "${_DEST}/tag"
+        echo -n "${_PKGTAG}" > "${_DEST}/tag"
         makepkg-gen-bash-init "${_DEST}"
 
         pushd "$_GENESIS/source"
@@ -88,8 +88,6 @@ function makepkg-gen-bash-init() {
 
     export CAUR_WIZARD="${_DEST}/${CAUR_BASH_WIZARD}"
     echo '#!/usr/bin/env bash' | tee "${CAUR_WIZARD}" > /dev/null
-    chown ${CAUR_GUEST_UID}:${CAUR_GUEST_UID} "${CAUR_WIZARD}"
-    chmod 755 "${CAUR_WIZARD}"
     export CAUR_PUSH="makepkg-gen-bash-append"
 
     return 0
@@ -110,7 +108,7 @@ function makepkg-gen-bash-finish() {
 
     unset CAUR_PUSH
     unset CAUR_WIZARD
-    echo 'bash' > "${_DEST}/type"
+    echo -n 'bash' > "${_DEST}/type"
 
     return 0
 }

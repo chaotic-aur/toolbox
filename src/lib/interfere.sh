@@ -12,10 +12,10 @@ function interference-apply() {
 
     if [[ -f "${_GENESIS}/PKGBUILD.prepend" ]]; then
         # The worst one, but KISS and easier to maintain
-        local _prepend="$(cat "${_GENESIS}/PKGBUILD.prepend")"
-        local _pkgbuild="$(cat PKGBUILD)"
-        echo "$_prepend" > PKGBUILD
-        echo "$_pkgbuild" >> PKGBUILD
+        local _PREPEND="$(cat "${_GENESIS}/PKGBUILD.prepend")"
+        local _PKGBUILD="$(cat PKGBUILD)"
+        echo "$_PREPEND" > PKGBUILD
+        echo "$_PKGBUILD" >> PKGBUILD
     fi
 
     [[ -f "${_GENESIS}/PKGBUILD.append" ]] && \
