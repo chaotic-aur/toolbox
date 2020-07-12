@@ -5,7 +5,7 @@ function lower-prepare() {
 
     if [[ -f "$CAUR_LOWER_DIR/lock" ]]; then
         echo 'Somone is already building a lowerdir'
-        return 0
+        return 9
     fi
 
     mkdir -p "$CAUR_LOWER_DIR"

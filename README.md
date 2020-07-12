@@ -4,7 +4,7 @@ Let's reinvent the wheel again
 
 ## CLI
 
-* `chaotic makepkg-gen-{bash,dockerfile,simg} ${PACKAGETAG} $@`
+* `chaotic makepkg-gen-{bash,dockerfile,simg} ${PACKAGETAG} ${OUTPUTDIR} $@`
 
     Generates a building script to be run in a containerized environment. 
 
@@ -16,15 +16,12 @@ Let's reinvent the wheel again
 
     Generates a lowerdir for later chrooting.
 
-* `chaotic makepkg-run-{nspawn,chroot} ${PACKAGETAG} $@`
+* `chaotic makepkg-run-{nspawn,chroot} ${INPUTDIR} $@`
 
     Runs a container.
-    (if needed, runs `lower-prepare` and `makepkg-gen-bash`)
+    `$INPUTDIR` is the result of a `makepkg-gen`
+    (Automatically runs `lower-prepare`)
 
-* `chaotic queue ${PACKAGE1TAG} ${PACKAGE2TAG}...`
-
-    Add some packages to the building queue.
-    
 
 ## Involved directories
 
