@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
+CAUR_PREFIX="${0##*/}"
 CAUR_LOWER_DIR='/var/cache/chaotic/lower'
 CAUR_LOWER_PKGS='base base-devel'
 CAUR_GUEST_USER='main-builder'
 CAUR_GUEST_UID=1000
-CAUR_GUEST_ETC='/usr/lib/chaotic/guest/etc'
-CAUR_GUEST_BIN='/usr/lib/chaotic/guest/bin'
+CAUR_GUEST_ETC="${CAUR_PREFIX}/../lib/chaotic/guest/etc"
+CAUR_GUEST_BIN="${CAUR_PREFIX}/../lib/chaotic/guest/bin"
 CAUR_GUEST_GNUPG='/var/lib/chaotic/gnupg'
 
 if [ "$EUID" -ne 0 ]; then
@@ -12,5 +13,5 @@ if [ "$EUID" -ne 0 ]; then
     exit -1
 fi
 
-source lib/*
+source "${CAUR_PREFIX}/../lib/chaotic"/*.sh
 $@
