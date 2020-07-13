@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+export HOME="/home/$(whoami)"
+export LANG='en_US.UTF-8'
+export USER="$(whoami)"
+export XDG_RUNTIME_DIR='/tmp'
+export SHELL='/bin/bash'
+export TERM='dumb'
+
+cd ~/pkgwork || exit
+exec makepkg $@
