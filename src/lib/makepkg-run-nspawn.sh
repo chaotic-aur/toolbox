@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 function makepkg-run-nspawn() {
-    set -o errexit
+    #set -o errexit # This one we may prefer that go till the end
 
     local INPUTDIR="$1"
 
@@ -33,7 +33,6 @@ function makepkg-run-nspawn() {
     local _PKGDEST="${_HOME}/pkgdest"
 
     mkdir -p machine/{up,work,root,destwork} dest "${_CCACHE}" "${_SRCCACHE}" "${CAUR_CACHE_PKG}" "${CAUR_DEST_PKG}" 
-    echo mount overlay -t overlay -olowerdir=${_LOWER},upperdir=machine/up,workdir=machine/work machine/root
     mount overlay -t overlay -olowerdir=${_LOWER},upperdir=machine/up,workdir=machine/work machine/root
     
     mount --bind 'pkgwork' "${_HOME}/pkgwork" 

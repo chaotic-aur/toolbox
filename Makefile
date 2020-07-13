@@ -28,6 +28,7 @@ $(DESTDIR)$(PREFIX)/lib/chaotic/guest/bin/%: guest/bin/%
 /var/lib/chaotic:
 	$(dir_guard)
 	cd /var/lib && git clone 'https://github.com/chaotic-aur/packages.git' chaotic
+	cd /var/lib/chaotic && git submodule init && git submodule update
 
 install: \
 	$(foreach f, $(LIBS), $(DESTDIR)$(PREFIX)/lib/chaotic/${f}.sh) \
