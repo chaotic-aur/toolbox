@@ -20,6 +20,8 @@ function makepkg-gen-bash() {
     fi
 
     if [[ -f "${_GENESIS}/variations.sh" ]]; then
+        source "${_GENESIS}"/variate.sh
+        
         local _i=0
         "${_GENESIS}"/variations.sh | while read _VARIATION; do
             local _DEST="${_DEST_PARENT}/${_PKGTAG}.${_i}"
@@ -37,7 +39,7 @@ function makepkg-gen-bash() {
             popd
 
             pushd "${_DEST}/source"
-            "${_GENESIS}"/variate.sh ${_VARIATION}
+            variate ${_VARIATION}
             popd
 
 
@@ -45,6 +47,7 @@ function makepkg-gen-bash() {
             if [[ -n "${CAUR_SUBPKGDIR}" ]]; then
                 mv "source/${CAUR_SUBPKGDIR}" 'pkgwork'
                 unset CAUR_SUBPKGDIR
+                rm -r 'source'
             else
                 mv 'source' 'pkgwork'
             fi
