@@ -1,12 +1,12 @@
 # Chaotic AUR
 
-Let's reinvent the wheel again
+Let us reinvent the wheel once more.
 
 ## CLI
 
 * `chaotic makepkg-gen-{bash,dockerfile,simg} ${PACKAGETAG} ${OUTPUTDIR} $@`
 
-    Generates a building script to be run in a containerized environment. 
+    It generates a building script to be later run in a containerized environment. 
 
     * `bash` for `arch-chroot` or SystemD-NSpawn.
     * `simg` for Singularity.
@@ -14,7 +14,7 @@ Let's reinvent the wheel again
 
 * `chaotic lower-prepare`
 
-    Generates a lowerdir for later chrooting.
+    It generates a lowerdir for later chrooting.
 
 * `chaotic makepkg-run-{nspawn,chroot,docker,singularity} ${INPUTDIR} $@`
 
@@ -23,7 +23,7 @@ Let's reinvent the wheel again
 
 * `chaotic sync`
 
-    Sync package list and their sources.
+    It syncs package list and their sources.
 
 * `chaotic deploy ${INPUTDIR}`
 
@@ -31,11 +31,11 @@ Let's reinvent the wheel again
 
 * `chaotic queue-run-{nspawn,chroot,docker,singularity} ${QUEUENAME_OR_PATH}`
 
-    Generates, builds, and deploy an entire queue of packages.
+    It generates, builds, and deploys an entire queue of packages.
 
 * `chaotic db-bump`
 
-    Add recent deployed packages to the database.
+    Add recently deployed packages to the database.
     Move older packages to archive.
     Uses `repoctl`
 
@@ -74,7 +74,13 @@ Let's reinvent the wheel again
 
 `pacman -S --needed base-devel git arch-install-scripts repoctl-devel`
 
-You must have an active mirror of chaotic-aur running locally and some signing key!
+One must have an active mirror of chaotic-aur running locally and some signing key. Configure them in `/etc/chaotic.conf`, like this:
+
+```sh
+export CAUR_DEST_PKG="/var/www/chaotic-aur/x86_64"
+export CAUR_URL="http://localhost:8080/chaotic-aur/x86_64"
+export CAUR_SIGN_KEY='8A9E14A07010F7E3'
+```
 
 ## Installation
 
