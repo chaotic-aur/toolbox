@@ -72,7 +72,7 @@ Let's reinvent the wheel again
 
 # Dependencies
 
-`pacman -S --needed base-devel git arch-install-scripts`
+`pacman -S --needed base-devel git arch-install-scripts repoctl-devel`
 
 You must have an active mirror of chaotic-aur running locally and some signing key!
 
