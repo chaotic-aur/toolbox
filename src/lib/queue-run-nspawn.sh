@@ -18,6 +18,9 @@ function queue-run-nspawn() {
 
     elif [[ -d "$1" ]]; then
         local _INPUTDIR="$( cd "$1"; pwd -P )"
+    else
+        echo 'Invalid parameters'
+        return 19
     fi
 
     pushd "${_INPUTDIR}"
