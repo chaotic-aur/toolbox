@@ -7,7 +7,7 @@ function queue-run-nspawn() {
         local _INPUTDIR="${CAUR_QUEUES}/${1}.$(date '+%Y%m%d%H%M%S')"
 
         pushd "${CAUR_PACKAGES}/queues/$1"
-        if [[ ./* == './*' ]]; then]
+        if [[ ./* == './*' ]]; then
             echo 'Empty queue, ignoring...'
             return 0
         fi
