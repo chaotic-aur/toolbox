@@ -3,7 +3,7 @@ ifeq ($(PREFIX),)
     PREFIX := /usr/local
 endif
 
-LIBS = lower-prepare makepkg-gen-bash interfere makepkg-run-nspawn
+LIBS = lower-prepare makepkg-gen-bash interfere makepkg-run-nspawn sync
 GUEST_ETC = pacman makepkg
 GUEST_BIN = internal-makepkg x11-wrapper
 

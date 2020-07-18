@@ -14,7 +14,9 @@ CAUR_BASH_WIZARD='wizard.sh'
 CAUR_CACHE_CC='/var/cache/chaotic/cc'
 CAUR_CACHE_SRC='/var/cache/chaotic/sources'
 CAUR_CACHE_PKG='/var/cache/chaotic/packages'
-CAUR_DEST_PKG='/srv/http/chaotic-aur/x86_64'
+CAUR_DB_NAME='chaotic-aur'
+CAUR_DEST_PKG="/srv/http/${CAUR_DB_NAME}/x86_64"
+CAUR_URL="http://localhost/${CAUR_DB_NAME}/x86_64"
 CAUR_SIGN_KEY=''
 
 [[ -f '/etc/chaotic.conf' ]] && source '/etc/chaotic.conf'
@@ -24,8 +26,9 @@ if [ "$EUID" -ne 0 ]; then
     exit -1
 fi
 
-pushd() { command pushd "$@" > /dev/null; }
-popd() { command popd "$@" > /dev/null; }
+pushd() { command pushd $@ > /dev/null; }
+popd() { command popd $@ > /dev/null; }
+tee() { command tee $@ > /dev/null; }
 
 for _LIB in "${CAUR_PREFIX}/lib/chaotic"/*.sh; do
     source "${_LIB}"

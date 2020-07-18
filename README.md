@@ -22,6 +22,13 @@ Let's reinvent the wheel again
     `$INPUTDIR` is the result of a `makepkg-gen`
     (Automatically runs `lower-prepare`)
 
+* `chaotic packages-sync`
+
+    Sync package list and their sources.
+
+* `chaotic makepkg-deploy`
+
+    Sign the package and append 
 
 ## Involved directories
 

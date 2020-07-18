@@ -23,6 +23,14 @@ function lower-prepare() {
     install -m644 "$CAUR_GUEST_ETC"/* './etc/'
     install -m755 "$CAUR_GUEST_BIN"/* './usr/local/bin/'
 
+    tee -a './etc/pacman.conf' <<EOF
+
+[${CAUR_DB_NAME}]
+SigLevel = Optional TrustAll
+Server = ${CAUR_URL}
+
+EOF
+
     echo 'en_US.UTF-8 UTF-8' | tee './etc/locale.gen'
     echo 'LANG=en_US.UTF-8' | tee './etc/locale.conf'
     ln -rsf './usr/share/zoneinfo/America/Sao_Paulo' './etc/localtime'
