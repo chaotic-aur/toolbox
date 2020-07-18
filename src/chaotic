@@ -2,6 +2,8 @@
 CAUR_PREFIX="$( cd "$(dirname "$0")" >/dev/null 2>&1; cd .. ; pwd -P )"
 CAUR_PACKAGES='/var/lib/chaotic'
 CAUR_LOWER_DIR='/var/cache/chaotic/lower'
+CAUR_DB_LOCK='/var/cache/db.lock'
+CAUR_DB_LAST='/var/cache/db.lastupdate'
 CAUR_LOWER_PKGS='base base-devel'
 CAUR_GUEST_USER='main-builder'
 CAUR_GUEST_UID=1000
@@ -15,6 +17,7 @@ CAUR_CACHE_CC='/var/cache/chaotic/cc'
 CAUR_CACHE_SRC='/var/cache/chaotic/sources'
 CAUR_CACHE_PKG='/var/cache/chaotic/packages'
 CAUR_DB_NAME='chaotic-aur'
+CAUR_DB_EXT='tar.zst'
 CAUR_DEST_PKG="/srv/http/${CAUR_DB_NAME}/x86_64"
 CAUR_URL="http://localhost/${CAUR_DB_NAME}/x86_64"
 CAUR_SIGN_KEY=''

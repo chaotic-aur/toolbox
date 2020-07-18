@@ -7,4 +7,6 @@ function sync() {
     git pull --ff-only
     git submodule update
     popd
+
+    return 0
 }

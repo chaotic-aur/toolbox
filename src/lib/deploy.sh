@@ -20,6 +20,8 @@ function deploy() {
     done
     cp * "${CAUR_DEST_PKG}/"
     popd
+
+    return 0
 }
 
 shopt -u extglob

@@ -39,6 +39,10 @@ Let's reinvent the wheel again
     Move older packages to archive.
     Uses `repoctl`
 
+* `chaotic cleanup ${INPUTDIR}`
+
+    Safely deletes old package sources.
+
 ## Involved directories
 
 * `/var/cache/chaotic/sources/${PACKAGETAG}`
