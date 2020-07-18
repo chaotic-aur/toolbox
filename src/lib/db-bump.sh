@@ -3,6 +3,11 @@
 function db-bump() {
     set -o errexit
 
+    if [[ "${CAUR_TYPE}" != 'primary' ]]; then
+        echo 'Secondary and mirrors should not bump database'
+        return 0
+    fi
+
     while [[ -f "${CAUR_DB_LOCK}" ]]; do
         sleep 2
     done

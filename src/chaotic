@@ -21,6 +21,7 @@ CAUR_DB_EXT='tar.zst'
 CAUR_DEST_PKG="/srv/http/${CAUR_DB_NAME}/x86_64"
 CAUR_URL="http://localhost/${CAUR_DB_NAME}/x86_64"
 CAUR_SIGN_KEY=''
+CAUR_TYPE='primary'
 
 [[ -f '/etc/chaotic.conf' ]] && source '/etc/chaotic.conf'
 
