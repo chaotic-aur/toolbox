@@ -32,7 +32,7 @@ fi
 
 pushd() { command pushd $@ > /dev/null; }
 popd() { command popd $@ > /dev/null; }
-tee() { command tee $@ > /dev/null; }
+stee() { command tee $@ > /dev/null; }
 
 for _LIB in "${CAUR_PREFIX}/lib/chaotic"/*.sh; do
     source "${_LIB}"

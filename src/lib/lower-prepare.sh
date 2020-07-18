@@ -23,7 +23,7 @@ function lower-prepare() {
     install -m644 "$CAUR_GUEST_ETC"/* './etc/'
     install -m755 "$CAUR_GUEST_BIN"/* './usr/local/bin/'
 
-    tee -a './etc/pacman.conf' <<EOF
+    stee -a './etc/pacman.conf' <<EOF
 
 [${CAUR_DB_NAME}]
 SigLevel = Optional TrustAll
@@ -31,8 +31,8 @@ Server = ${CAUR_URL}
 
 EOF
 
-    echo 'en_US.UTF-8 UTF-8' | tee './etc/locale.gen'
-    echo 'LANG=en_US.UTF-8' | tee './etc/locale.conf'
+    echo 'en_US.UTF-8 UTF-8' | stee './etc/locale.gen'
+    echo 'LANG=en_US.UTF-8' | stee './etc/locale.conf'
     ln -rsf './usr/share/zoneinfo/America/Sao_Paulo' './etc/localtime'
 
     arch-chroot . /usr/bin/bash <<EOF
@@ -43,7 +43,7 @@ locale-gen
 useradd -Uu $CAUR_GUEST_UID -m -s /bin/bash "$CAUR_GUEST_USER"
 EOF
 
-    echo "$CAUR_GUEST_USER ALL=(ALL) NOPASSWD: ALL" | tee -a "./etc/sudoers"
+    echo "$CAUR_GUEST_USER ALL=(ALL) NOPASSWD: ALL" | stee -a "./etc/sudoers"
 
     install -dm755 -o${CAUR_GUEST_UID} -g${CAUR_GUEST_GID} \
         "./home/$CAUR_GUEST_USER/"{pkgwork,.ccache,pkgdest,pkgsrc,makepkglogs}

@@ -29,7 +29,7 @@ function queue-run-nspawn() {
     pushd "${_INPUTDIR}"
 
     for _pkg in *; do
-       makepkg-run-nspawn "${_pkg}" | tee "${_pkg}.log" || continue
+       makepkg-run-nspawn "${_pkg}" --noconfirm | tee "${_pkg}.log" || continue
        deploy "${_pkg}" && db-bump || continue
        cleanup "${_pkg}" || continue
     done
