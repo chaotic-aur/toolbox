@@ -49,7 +49,7 @@ Let's reinvent the wheel again
 
     Per-package `SRCDEST`.
 
-* `/var/cache/chaotic/base/{latest,$DATESTAMP}`
+* `/var/cache/chaotic/lower/{latest,$DATESTAMP}`
 
     Lowerdirs.
 
@@ -57,13 +57,17 @@ Let's reinvent the wheel again
 
     Per-package `~/.ccache`.
 
+* `/var/cache/chaotic/packages`
+
+    Container-shared pacman's cache.
+
 * `/var/lib/chaotic`
 
     Cloned version of [packages' repository](https://github.com/chaotic-aur/packages)
 
-* `/tmp/chaotic-queue`
+* `/tmp/chaotic/queues`
 
-    Current queue of packages.
+    Current running queues.
 
 
 # Dependencies
