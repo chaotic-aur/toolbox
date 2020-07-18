@@ -3,26 +3,28 @@
 function makepkg-run-nspawn() {
     #set -o errexit # This one we may prefer that go till the end
 
-    local INPUTDIR="$1"
+    local _INPUTDIR="$( cd "$1"; pwd -P )"
+    local _PARAMS="${@:2}"
 
-    if [[ ! -f "${INPUTDIR}/type" ]]; then
-        echo "\"${INPUTDIR}\" doesn't look like a valid input directory."
+    if [[ ! -f "${_INPUTDIR}/type" ]]; then
+        echo "\"${_INPUTDIR}\" doesn't look like a valid input directory."
         return 14
-    elif [[ `cat ${INPUTDIR}/type` != 'bash' ]]; then
-        echo "\"${INPUTDIR}\" is not valid for systemd-nspawn."
+    elif [[ `cat ${_INPUTDIR}/type` != 'bash' ]]; then
+        echo "\"${_INPUTDIR}\" is not valid for systemd-nspawn."
         return 15
-    elif [[ -f "${INPUTDIR}/building.pid" ]]; then
-        echo "This package is already building."
+    elif [[ -f "${_INPUTDIR}/building.pid" ]]; then
+        echo 'This package is already building.'
         return 16
     fi
 
-    echo -n $$ > "${INPUTDIR}/building.pid"
+    echo -n $$ > "${_INPUTDIR}/building.pid"
 
     if [[ ! -e "${CAUR_LOWER_DIR}/latest" ]]; then
         lower-prepare
     fi
 
-    pushd "${INPUTDIR}"
+    pushd "${_INPUTDIR}"
+    [[ -e 'building.result' ]] && rm 'building.result'
     local _PKGTAG=`cat tag`
     local _GENESIS="${CAUR_PACKAGES}/entries/${_PKGTAG}"
     local _LOWER="$( cd "${CAUR_LOWER_DIR}" ; cd $(readlink latest) ; pwd -P )"
@@ -51,25 +53,20 @@ function makepkg-run-nspawn() {
         -u "${CAUR_GUEST_USER}" \
         --capability=CAP_IPC_LOCK,CAP_SYS_NICE \
         -D machine/root \
-        "/home/${BUILD_USER}/wizard.sh" || local _BUILD_FAILED="$?"
+        "/home/${BUILD_USER}/wizard.sh" ${_PARAMS} || local _BUILD_FAILED="$?"
 
-    [[ -n "${_BUILD_FAILED}" ]] \
-        && [[ -f "${_GENESIS}/on-failure.sh" ]] \
-        && source "${_GENESIS}/on-failure.sh"
+    if [[ -z "${_BUILD_FAILED}" ]]; then
+        echo 'success' >  'building.result'
+    elif  [[ -f "${_GENESIS}/on-failure.sh" ]]; then
+        echo "${_BUILD_FAILED}" >  'building.result'
+        source "${_GENESIS}/on-failure.sh"
+    fi
 
     umount -Rv machine/root && \
        rm --one-file-system -rf machine
 
-    if [[ -z "${_BUILD_FAILED}" ]] && [[ -n "${CAUR_SIGN_KEY}" ]]; then
-        pushd dest
-        for f in ./*; do
-            gpg --detach-sign --use-agent -u "${CAUR_SIGN_KEY}" --no-armor "$f"
-        done
-        popd
-    fi
-
-    popd
-    rm "${INPUTDIR}/building.pid"
+    rm 'building.pid'
+    popd # "${_INPUTDIR}"
     [[ -n "${_BUILD_FAILED}" ]] \
         && return ${_BUILD_FAILED}
     return 0

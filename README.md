@@ -16,19 +16,28 @@ Let's reinvent the wheel again
 
     Generates a lowerdir for later chrooting.
 
-* `chaotic makepkg-run-{nspawn,chroot} ${INPUTDIR} $@`
+* `chaotic makepkg-run-{nspawn,chroot,docker,singularity} ${INPUTDIR} $@`
 
     Runs a container.
     `$INPUTDIR` is the result of a `makepkg-gen`
-    (Automatically runs `lower-prepare`)
 
-* `chaotic packages-sync`
+* `chaotic sync`
 
     Sync package list and their sources.
 
-* `chaotic makepkg-deploy`
+* `chaotic deploy ${INPUTDIR}`
 
-    Sign the package and append 
+    Sign the package and append
+
+* `chaotic queue-run-{nspawn,chroot,docker,singularity} ${QUEUENAME_OR_PATH}`
+
+    Generates, builds, and deploy an entire queue of packages.
+
+* `chaotic db-bump`
+
+    Add recent deployed packages to the database.
+    Move older packages to archive.
+    Uses `repoctl`
 
 ## Involved directories
 
@@ -51,3 +60,14 @@ Let's reinvent the wheel again
 * `/tmp/chaotic-queue`
 
     Current queue of packages.
+
+
+# Dependencies
+
+`pacman -S --needed base-devel git arch-install-scripts`
+
+You must have an active mirror of chaotic-aur running locally and some signing key!
+
+## Installation
+
+`sudo make install`

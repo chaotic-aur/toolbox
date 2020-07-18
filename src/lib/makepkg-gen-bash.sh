@@ -4,7 +4,7 @@ function makepkg-gen-bash() {
     set -o errexit
 
     local _PKGTAG="$1"
-    local _DEST_PARENT="$2"
+    local _DEST_PARENT="$( cd "$2"; pwd -P )"
     local _PARAMS="${@:3}"
     local _GENESIS="${CAUR_PACKAGES}/entries/${_PKGTAG}"
 

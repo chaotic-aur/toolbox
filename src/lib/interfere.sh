@@ -62,7 +62,7 @@ function interference-generic() {
 function interference-makepkg() {
     set -o errexit
 
-    $CAUR_PUSH exec /usr/local/bin/internal-makepkg -s --noprogressbar $@
+    $CAUR_PUSH exec /usr/local/bin/internal-makepkg -s --noprogressbar $@ \$\@
 
     return 0
 }

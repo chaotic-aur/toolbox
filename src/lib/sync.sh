@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-function package-sync() {
+function sync() {
     set -o errexit
 
-    pushd "$CAUR_PACKAGES"
+    pushd "${CAUR_PACKAGES}"
     git pull --ff-only
     git submodule update
     popd
