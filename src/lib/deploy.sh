@@ -8,7 +8,8 @@ function deploy() {
     if [[ -z "${CAUR_SIGN_KEY}" ]]; then
         echo 'An signing key is required for deploying.'
         return 17
-    elif [[ `cat "${_INPUTDIR}/building.result"` != 'success' ]]; then
+    elif [[ ! -e "${_INPUTDIR}/building.result" ]] ||\
+            [[ `cat "${_INPUTDIR}/building.result"` != 'success' ]]; then
         echo 'Invalid package or last build did not succeed.'
         return 18
     fi

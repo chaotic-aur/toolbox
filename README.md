@@ -78,10 +78,10 @@ Let us reinvent the wheel once more.
     Install/Upgrade one of the mirroring services.
     RSync is one-way (primary->cluster) only, and Syncthing both ways.
 
-* `chaotic firebase-feed-httpd-logs`
+* `chaotic analytics-feed-httpd-logs`
 
     (TODO)
-    Uploads httpd (Apache and Nginx) logs entries to the main firebase database.
+    Uploads httpd (Apache and Nginx) logs entries to the main analytics database.
 
 ## Involved directories
 

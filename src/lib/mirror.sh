@@ -10,7 +10,7 @@ function mirror-install() {
         echo "Sorry, I haven't automated this yet!"
         echo '1) Install syncthing'
         echo '2) Add my device: 4HGSY2A-JLFMQFF-GZWBRJP-DHICO4G-55SJODJ-7E2OHCR-M4Y7EJ3-2I4YOAJ'
-        echo '3) Add folder "rhwpj-nvfkj" as "Receive Only" with "Ignore Permissions".'
+        echo '3) Add folder "rhwpj-nvfkj" as "Receive Only" with "Ignore Permissions" and "Pull Order" by "Oldest First".'
         echo '4) Wait for me to accept it!'
         ;;
     'rsync')
