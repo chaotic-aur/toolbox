@@ -10,7 +10,9 @@ Let us reinvent the wheel once more.
 
     * `bash` for `arch-chroot` or `systemd-nspawn`.
     * `simg` for Singularity.
-    * `dockerfile` for Docker or Podman. 
+    * `dockerfile` for Docker or Podman.
+
+    TODO: `-dockerfile` and `-simg` are not done yet.
 
 * `chaotic lower-prepare`
 
@@ -20,6 +22,8 @@ Let us reinvent the wheel once more.
 
     Runs a container.
     `$INPUTDIR` is the result of a `makepkg-gen`
+
+    TODO: `-chroot`, `-docker` and `-singularity` are not done yet.
 
 * `chaotic sync`
 
@@ -33,11 +37,13 @@ Let us reinvent the wheel once more.
 
     It generates, builds, and deploys an entire queue of packages.
 
+    TODO: `-chroot`, `-docker` and `-singularity` are not done yet.
+
 * `chaotic db-bump`
 
     Add recently deployed packages to the database.
     Move older packages to archive.
-    Uses `repoctl`
+    Uses `repoctl`.
 
 * `chaotic cleanup ${INPUTDIR}`
 
