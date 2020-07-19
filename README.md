@@ -8,7 +8,7 @@ Let us reinvent the wheel once more.
 
     It generates a building script to be later run in a containerized environment. 
 
-    * `bash` for `arch-chroot` or SystemD-NSpawn.
+    * `bash` for `arch-chroot` or `systemd-nspawn`.
     * `simg` for Singularity.
     * `dockerfile` for Docker or Podman. 
 
@@ -43,6 +43,42 @@ Let us reinvent the wheel once more.
 
     Safely deletes old package sources.
 
+* `chaotic queue-srvc-{add,rem} ${QUEUENAME}`
+
+    (TODO)
+    Add or remove some queue systemd's unit.
+
+* `chaotic queue-srvc{,-timer} ${QUEUENAME} {enable,disable,start,stop,status}`
+
+    (TODO)
+    Forward command to systemd.
+
+* `chaotic queue-srvc-journal{,-reverse,-follow} ${QUEUNAME}`
+
+    (TODO)
+    Access the queue unit logs in journal.
+
+* `chaotic upgrade`
+
+    (TODO)
+    Upgrade the infra executable/libraries.
+
+* `chaotic repo-{health,cure}`
+
+    (TODO)
+    Check/Fix missing signatures, duplicate packages, cache corruption, and conflicts with archlinux's official repositories.
+
+* `chaotic mirror-install {syncthing,rsync}`
+
+    (TODO)
+    Install/Upgrade one of the mirroring services.
+    RSync is one-way (primary->cluster) only, and Syncthing both ways.
+
+* `chaotic firebase-feed-httpd-logs`
+
+    (TODO)
+    Uploads httpd (Apache and Nginx) logs entries to the main firebase database.
+
 ## Involved directories
 
 * `/var/cache/chaotic/sources/${PACKAGETAG}`
@@ -56,6 +92,10 @@ Let us reinvent the wheel once more.
 * `/var/cache/chaotic/cc/{PACKAGETAG}`
 
     Per-package `~/.ccache`.
+
+* `/var/cache/chaotic/issues/{PACKAGETAG}`
+
+    Per-package auto-detected issues. (TODO)
 
 * `/var/cache/chaotic/packages`
 
@@ -80,7 +120,12 @@ One must have an active mirror of chaotic-aur running locally and some signing k
 export CAUR_DEST_PKG="/var/www/chaotic-aur/x86_64"
 export CAUR_URL="http://localhost:8080/chaotic-aur/x86_64"
 export CAUR_SIGN_KEY='8A9E14A07010F7E3'
+export CAUR_TYPE='cluster'
 ```
+
+You'll find more options in `src/chaotic` first lines.
+
+Supported `type` values are: `primary`, `cluster`, and `dev`.
 
 ## Installation
 

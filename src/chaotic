@@ -21,7 +21,8 @@ CAUR_DB_EXT='tar.zst'
 CAUR_DEST_PKG="/srv/http/${CAUR_DB_NAME}/x86_64"
 CAUR_URL="http://localhost/${CAUR_DB_NAME}/x86_64"
 CAUR_SIGN_KEY=''
-CAUR_TYPE='primary'
+CAUR_SIGN_USER='root' # who owns the key in gnupg's keyring.
+CAUR_TYPE='primary' # only the primary cluster manages the database.
 
 [[ -f '/etc/chaotic.conf' ]] && source '/etc/chaotic.conf'
 
@@ -34,6 +35,7 @@ pushd() { command pushd $@ > /dev/null; }
 popd() { command popd $@ > /dev/null; }
 stee() { command tee $@ > /dev/null; }
 
+shopt -s extglob
 for _LIB in "${CAUR_PREFIX}/lib/chaotic"/*.sh; do
     source "${_LIB}"
 done

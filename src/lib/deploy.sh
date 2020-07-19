@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-shopt -s extglob
 
 function deploy() {
     set -o errexit
@@ -16,12 +15,13 @@ function deploy() {
 
     pushd "${_INPUTDIR}/dest"
     for f in !(*.sig); do
-        gpg --detach-sign --use-agent -u "${CAUR_SIGN_KEY}" --no-armor "$f"
+        sudo -u "${CAUR_SIGN_USER}" \
+            gpg --detach-sign \
+                --use-agent -u "${CAUR_SIGN_KEY}" \
+                --no-armor "$f"
     done
     cp * "${CAUR_DEST_PKG}/"
     popd
 
     return 0
 }
-
-shopt -u extglob
