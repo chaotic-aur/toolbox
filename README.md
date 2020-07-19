@@ -41,8 +41,7 @@ Let us reinvent the wheel once more.
 
 * `chaotic db-bump`
 
-    Add recently deployed packages to the database.
-    Move older packages to archive.
+    It adds recently deployed packages to the database, while moving replaced packages to archive.
     Uses `repoctl`.
 
 * `chaotic cleanup ${INPUTDIR}`
@@ -76,7 +75,6 @@ Let us reinvent the wheel once more.
 
 * `chaotic mirror-install {syncthing,rsync}`
 
-    (TODO)
     Install/Upgrade one of the mirroring services.
     RSync is one-way (primary->cluster) only, and Syncthing both ways.
 

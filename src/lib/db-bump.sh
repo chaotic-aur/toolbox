@@ -42,7 +42,7 @@ function db-bump() {
 function db-last-bump() {
     if [ $(date -d "$_RUN_TIME" +'%s') -ge $(date -r ~/last-add +'%s') ]; then
         touch -d "$_RUN_TIME" "${CAUR_DB_LAST}"
-        date +'%s' > "${CAUR_DB_LAST}"
+        date +'%s' > "${CAUR_DEST_LAST}"
         echo 'Checkpoints updated'
     fi
 }

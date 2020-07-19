@@ -19,6 +19,7 @@ CAUR_CACHE_PKG='/var/cache/chaotic/packages'
 CAUR_DB_NAME='chaotic-aur'
 CAUR_DB_EXT='tar.zst'
 CAUR_DEST_PKG="/srv/http/${CAUR_DB_NAME}/x86_64"
+CAUR_DEST_LAST="/srv/http/${CAUR_DB_NAME}/x86_64/lastupdate"
 CAUR_URL="http://localhost/${CAUR_DB_NAME}/x86_64"
 CAUR_SIGN_KEY=''
 CAUR_SIGN_USER='root' # who owns the key in gnupg's keyring.
