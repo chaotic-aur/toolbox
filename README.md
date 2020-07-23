@@ -78,6 +78,11 @@ Let us reinvent the wheel once more.
     Install/Upgrade one of the mirroring services.
     RSync is one-way (primary->cluster) only, and Syncthing both ways.
 
+* `chaotic machine-setup ${MACHINENAME}`
+
+    (TODO)
+    Install services and configuration of a pre-stablished machine.
+
 * `chaotic analytics-feed-httpd-logs`
 
     (TODO)

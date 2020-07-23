@@ -14,14 +14,18 @@ function deploy() {
         return 18
     fi
 
+    mkdir -p "${CAUR_ADD_QUEUE}"
+
     pushd "${_INPUTDIR}/dest"
     for f in !(*.sig); do
         sudo -u "${CAUR_SIGN_USER}" \
             gpg --detach-sign \
                 --use-agent -u "${CAUR_SIGN_KEY}" \
                 --no-armor "$f"
+
+        cp "$f"{,.sig} "${CAUR_DEST_PKG}/"
+        touch "${CAUR_ADD_QUEUE}/$f"
     done
-    cp * "${CAUR_DEST_PKG}/"
     popd
 
     return 0
