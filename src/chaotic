@@ -22,6 +22,7 @@ CAUR_LOWER_DIR='/var/cache/chaotic/lower'
 CAUR_LOWER_PKGS='base base-devel'
 CAUR_PACKAGES='/var/lib/chaotic'
 CAUR_QUEUES="/tmp/chaotic/queues"
+CAUR_SERVICES_PREFIX='chaotic-'
 CAUR_SIGN_KEY=''
 CAUR_SIGN_USER='root' # who owns the key in gnupg's keyring.
 CAUR_TYPE='primary' # only the primary cluster manages the database.
