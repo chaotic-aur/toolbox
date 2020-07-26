@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 function makepkg-gen-bash() {
-    set -o errexit
+    set -euo pipefail
 
     local _PKGTAG="$1"
     local _DEST_PARENT="$( cd "$2"; pwd -P )"
@@ -85,7 +85,7 @@ function makepkg-gen-bash() {
 }
 
 function makepkg-gen-bash-init() {
-    set -o errexit
+    set -euo pipefail
 
     local _DEST="$1"
 
@@ -97,7 +97,7 @@ function makepkg-gen-bash-init() {
 }
 
 function makepkg-gen-bash-append() {
-    set -o errexit
+    set -euo pipefail
 
     echo "${@}" | tee -a "${CAUR_WIZARD}" > /dev/null
 
@@ -105,7 +105,7 @@ function makepkg-gen-bash-append() {
 }
 
 function makepkg-gen-bash-finish() {
-    set -o errexit
+    set -euo pipefail
 
     local _DEST="$1"
 

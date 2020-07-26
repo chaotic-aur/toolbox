@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 function interference-apply() {
-    set -o errexit
+    set -euo pipefail
     
     local _PKGTAG="$1"
     local _GENESIS="${CAUR_PACKAGES}/${_PKGTAG}"
@@ -25,7 +25,7 @@ function interference-apply() {
 }
 
 function interference-generic() {
-    set -o errexit
+    set -euo pipefail
 
     local _PKGTAG="$1"
 
@@ -60,7 +60,7 @@ function interference-generic() {
 }
 
 function interference-makepkg() {
-    set -o errexit
+    set -euo pipefail
 
     $CAUR_PUSH exec /usr/local/bin/internal-makepkg -s --noprogressbar $@ \$\@
 

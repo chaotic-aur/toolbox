@@ -1,46 +1,70 @@
 #!/usr/bin/env bash
 
 function db-bump() {
-    set -o errexit
+    set -euo pipefail
 
-    if [[ "${CAUR_TYPE}" != 'primary' ]]; then
+    if [[ "${CAUR_TYPE}" != 'primary' ]] && [[ "${CAUR_TYPE}" != 'dev' ]]; then
         echo 'Secondary and mirrors should not bump database'
         return 0
     fi
 
-    pushd "${CAUR_ADD_QUEUE}"
-    local _PKGS=(*)
-    if [[ "${_PKGS[@]}" == '*' ]]; then
-        echo 'No packages to add.'
-        return 0;
-    fi
-    rm ${_PKGS[@]} || echo 'ok'
-    popd # CAUR_ADD_QUEUE
-
+    # Lock bump operations
     while [[ -f "${CAUR_DB_LOCK}" ]]; do
         sleep 2
     done
     echo -n $$ > "${CAUR_DB_LOCK}"
 
-    pushd "${CAUR_DEST_PKG}"
-    repoctl add \
-        ${_PKGS[@]} \
-        && db-last-bump && \
-        db-pkglist
-    popd # CAUR_DEST_PKG
+    # List packages to add
+    pushd "${CAUR_ADD_QUEUE}"   
+    local _PKGS=(!(*.sig))
+    if [[ "${_PKGS[@]}" == '*' ]]; then
+        echo 'No packages to add.'
 
-    rm "${CAUR_DB_LOCK}"
+        db-unlock
+        return 0
+    fi
+
+    # Add them all
+    if repoctl add ${_PKGS[@]} && db-last-bump; then
+        db-pkglist
+    else
+        db-unlock
+        return 3
+    fi
+
+    # Remove files after adding
+    rm ${_PKGS[@]}{,.sig} || true
+    popd # CAUR_ADD_QUEUE
+
+    db-unlock
     return 0
 }
 
 function db-last-bump() {
-    if [ $(date -d "$_RUN_TIME" +'%s') -ge $(date -r ~/last-add +'%s') ]; then
-        date +'%s' > "${CAUR_DEST_LAST}"
-        echo 'Checkpoints updated'
-    fi
+    set -euo pipefail
+
+    date +'%s' > "${CAUR_DEST_LAST}"
+    echo 'Checkpoints updated'
+
+    return 0
 }
 
 function db-pkglist() {
-    tar -tv --zstd -f "${CAUR_DB_NAME}.db.${CAUR_DB_EXT}" | awk '/^d/{print $6}' > ../pkgs.txt
-    echo "Database's package list dumped again"
+    set -euo pipefail
+
+    pushd "${CAUR_DEST_PKG}"
+    tar -tv --zstd -f "${CAUR_DB_NAME}.db.${CAUR_DB_EXT}" |\
+        awk '/^d/{print $6}' > ../pkgs.txt &&\
+        echo "Database's package list dumped" ||\
+        echo 'Failed to dump package list'
+    popd # CAUR_DEST_PKG
+
+    return 0
+}
+
+function db-unlock() {
+    # doesn't matter if it fails
+    rm "${CAUR_DB_LOCK}"
+
+    return 0
 }

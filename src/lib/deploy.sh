@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 function deploy() {
-    set -o errexit
+    set -euo pipefail
 
     local _INPUTDIR="$( cd "$1"; pwd -P )"
 
@@ -23,8 +23,7 @@ function deploy() {
                 --use-agent -u "${CAUR_SIGN_KEY}" \
                 --no-armor "$f"
 
-        cp "$f"{,.sig} "${CAUR_DEST_PKG}/"
-        touch "${CAUR_ADD_QUEUE}/$f"
+        cp "$f"{,.sig} "${CAUR_ADD_QUEUE}/"
     done
     popd
 

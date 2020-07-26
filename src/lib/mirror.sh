@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 function mirror-install() {
-    set -o errexit
+    set -euo pipefail
 
     local _MIRROR_TYPE="$1"
 

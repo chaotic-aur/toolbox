@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 function makepkg-run-nspawn() {
-    #set -o errexit # This one we may prefer that go till the end
+    #set -euo pipefail # This one we may prefer that go till the end
 
     local _INPUTDIR="$( cd "$1"; pwd -P )"
     local _PARAMS="${@:2}"
@@ -41,19 +41,20 @@ function makepkg-run-nspawn() {
     mount --bind "${_CCACHE}" "${_HOME}/.ccache" 
     mount --bind "${_SRCCACHE}" "${_HOME}/pkgsrc"
     mount --bind "${CAUR_CACHE_PKG}" 'machine/root/var/cache/pacman/pkg'
-    mount overlay -t overlay -olowerdir=${CAUR_DEST_PKG},upperdir=./dest,workdir=./machine/destwork "${_PKGDEST}"
+    #mount overlay -t overlay -olowerdir=${CAUR_DEST_PKG},upperdir=./dest,workdir=./machine/destwork "${_PKGDEST}"
 
-    local _CAUR_WIZARD="machine/root/home/${BUILD_USER}/wizard.sh"
+    local _CAUR_WIZARD="machine/root/home/${CAUR_GUEST_USER}/wizard.sh"
     cp "${CAUR_BASH_WIZARD}" "${_CAUR_WIZARD}"
     chown -R ${CAUR_GUEST_UID}:${CAUR_GUEST_GID} "${_CAUR_WIZARD}" pkgwork "${_PKGDEST}" "$_CCACHE" "$_SRCCACHE"
     chmod 755 "${_CAUR_WIZARD}"
 
     local _MECHA_NAME="pkg$(echo -n "$_PKGTAG" | sha256sum | cut -c1-11)"
+    local _BUILD_FAILED=''
     systemd-nspawn -M ${_MECHA_NAME} \
         -u "${CAUR_GUEST_USER}" \
         --capability=CAP_IPC_LOCK,CAP_SYS_NICE \
         -D machine/root \
-        "/home/${BUILD_USER}/wizard.sh" ${_PARAMS} || local _BUILD_FAILED="$?"
+        "/home/${CAUR_GUEST_USER}/wizard.sh" ${_PARAMS} || local _BUILD_FAILED="$?"
 
     if [[ -z "${_BUILD_FAILED}" ]]; then
         echo 'success' >  'building.result'

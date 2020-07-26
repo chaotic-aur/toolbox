@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 function cleanup() {
-    set -o errexit
+    set -euo pipefail
 
     local _INPUTDIR="$( cd "$1"; pwd -P )"
     

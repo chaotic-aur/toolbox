@@ -1,29 +1,30 @@
 #!/usr/bin/env bash
 CAUR_PREFIX="$( cd "$(dirname "$0")" >/dev/null 2>&1; cd .. ; pwd -P )"
-CAUR_PACKAGES='/var/lib/chaotic'
-CAUR_LOWER_DIR='/var/cache/chaotic/lower'
-CAUR_DB_LOCK='/var/cache/db.lock'
-CAUR_LOWER_PKGS='base base-devel'
-CAUR_GUEST_USER='main-builder'
-CAUR_GUEST_UID=1000
-CAUR_GUEST_GID=1000
-CAUR_GUEST_ETC="${CAUR_PREFIX}/lib/chaotic/guest/etc"
-CAUR_GUEST_BIN="${CAUR_PREFIX}/lib/chaotic/guest/bin"
-CAUR_GUEST_GNUPG="${CAUR_PACKAGES}/gnupg"
-CAUR_QUEUES="/tmp/chaotic/queues"
+
+CAUR_ADD_QUEUE="/var/cache/chaotic/add-queue"
 CAUR_BASH_WIZARD='wizard.sh'
 CAUR_CACHE_CC='/var/cache/chaotic/cc'
-CAUR_CACHE_SRC='/var/cache/chaotic/sources'
 CAUR_CACHE_PKG='/var/cache/chaotic/packages'
-CAUR_DB_NAME='chaotic-aur'
+CAUR_CACHE_SRC='/var/cache/chaotic/sources'
 CAUR_DB_EXT='tar.zst'
+CAUR_DB_LOCK='/var/cache/db.lock'
+CAUR_DB_NAME='chaotic-aur'
+CAUR_DEST_LAST="/srv/http/${CAUR_DB_NAME}/lastupdate"
 CAUR_DEST_PKG="/srv/http/${CAUR_DB_NAME}/x86_64"
-CAUR_ADD_QUEUE="/srv/http/${CAUR_DB_NAME}/x86_64/.add-queue"
-CAUR_DEST_LAST="/srv/http/${CAUR_DB_NAME}/x86_64/lastupdate"
-CAUR_URL="http://localhost/${CAUR_DB_NAME}/x86_64"
+CAUR_GUEST_BIN="${CAUR_PREFIX}/lib/chaotic/guest/bin"
+CAUR_GUEST_ETC="${CAUR_PREFIX}/lib/chaotic/guest/etc"
+CAUR_GUEST_GID=1000
+CAUR_GUEST_GNUPG="${CAUR_PACKAGES}/gnupg"
+CAUR_GUEST_UID=1000
+CAUR_GUEST_USER='main-builder'
+CAUR_LOWER_DIR='/var/cache/chaotic/lower'
+CAUR_LOWER_PKGS='base base-devel'
+CAUR_PACKAGES='/var/lib/chaotic'
+CAUR_QUEUES="/tmp/chaotic/queues"
 CAUR_SIGN_KEY=''
 CAUR_SIGN_USER='root' # who owns the key in gnupg's keyring.
 CAUR_TYPE='primary' # only the primary cluster manages the database.
+CAUR_URL="http://localhost/${CAUR_DB_NAME}/x86_64"
 
 [[ -f '/etc/chaotic.conf' ]] && source '/etc/chaotic.conf'
 

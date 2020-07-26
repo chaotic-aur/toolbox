@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 function lower-prepare() {
-    set -o errexit
+    set -euo pipefail
 
     if [[ -f "$CAUR_LOWER_DIR/lock" ]]; then
         echo 'Somone is already building a lowerdir, waiting...'
@@ -37,7 +37,7 @@ EOF
 
     arch-chroot . /usr/bin/bash <<EOF
 #!/usr/bin/env sh
-set -o errexit
+set -euo pipefail
 
 locale-gen
 useradd -Uu $CAUR_GUEST_UID -m -s /bin/bash "$CAUR_GUEST_USER"

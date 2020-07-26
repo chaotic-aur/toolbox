@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 function queue-run-nspawn() {
-    set -o errexit
+    set -euo pipefail
 
     if [[ -d "${CAUR_PACKAGES}/queues/$1" ]]; then
         local _INPUTDIR="${CAUR_QUEUES}/${1}.$(date '+%Y%m%d%H%M%S')"
