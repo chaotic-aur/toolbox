@@ -1,14 +1,16 @@
 #!/usr/bin/env bash
 CAUR_PREFIX="$( cd "$(dirname "$0")" >/dev/null 2>&1; cd .. ; pwd -P )"
 
+CAUR_DB_NAME='chaotic-aur'
+CAUR_PACKAGES='/var/lib/chaotic'
+
 CAUR_ADD_QUEUE="/var/cache/chaotic/add-queue"
 CAUR_BASH_WIZARD='wizard.sh'
 CAUR_CACHE_CC='/var/cache/chaotic/cc'
 CAUR_CACHE_PKG='/var/cache/chaotic/packages'
 CAUR_CACHE_SRC='/var/cache/chaotic/sources'
 CAUR_DB_EXT='tar.zst'
-CAUR_DB_LOCK='/var/cache/db.lock'
-CAUR_DB_NAME='chaotic-aur'
+CAUR_DB_LOCK='/var/cache/chaotic/db.lock'
 CAUR_DB_USER='main-builder'
 CAUR_DEST_LAST="/srv/http/chaotic-aur/lastupdate"
 CAUR_DEST_PKG="/srv/http/${CAUR_DB_NAME}/x86_64"
@@ -21,7 +23,6 @@ CAUR_GUEST_USER='main-builder'
 CAUR_HACK_USEOVERLAYDEST=0
 CAUR_LOWER_DIR='/var/cache/chaotic/lower'
 CAUR_LOWER_PKGS='base base-devel'
-CAUR_PACKAGES='/var/lib/chaotic'
 CAUR_QUEUES="/tmp/chaotic/queues"
 CAUR_SERVICES_PREFIX='chaotic-'
 CAUR_SIGN_KEY=''
