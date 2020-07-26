@@ -44,10 +44,9 @@ ExecStart=${CAUR_PREFIX}/bin/chaotic queue-run-nspawn ${_QUEUE}
 [Install]
 WantedBy=multi-user.target
 EOF
-        done
 
-        if [[ -f "${_SCHED}.timer" ]]; then
-            cat << EOF | stee "/etc/systemd/system/${CAUR_SERVICES_PREFIX}${_SCHED}.timer"
+            if [[ -f "${_SCHED}.timer" ]]; then
+                cat << EOF | stee "/etc/systemd/system/${CAUR_SERVICES_PREFIX}${_SCHED}.timer"
 [Unit]
 Description=Chaotic's scheduled ${_SCHED} build
 
@@ -58,9 +57,11 @@ $(cat "${_SCHED}.timer")
 WantedBy=timers.target
 EOF
 
-        systemctl daemon-reload
-        systemctl enable "${CAUR_SERVICES_PREFIX}${_SCHED}.timer"
-        fi 
+            systemctl daemon-reload
+            systemctl enable "${CAUR_SERVICES_PREFIX}${_SCHED}.timer"
+        fi
+        
+        done
 
         popd
     fi
