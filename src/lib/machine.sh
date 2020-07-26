@@ -59,7 +59,7 @@ WantedBy=timers.target
 EOF
 
         systemctl daemon-reload
-        systemctl enable "${_SCHED}.timer"
+        systemctl enable "${CAUR_SERVICES_PREFIX}${_SCHED}.timer"
         fi 
 
         popd
