@@ -31,7 +31,7 @@ function machine-setup() {
                 return 5
             fi
 
-            cat << EOF | stee "/etc/systemd/system/${CAUR_SERVICES_PREFIX}${_SCHED}"
+            cat << EOF | stee "/etc/systemd/system/${CAUR_SERVICES_PREFIX}${_SCHED}.service"
 [Unit]
 Description=Chaotic's scheduled ${_SCHED} build
 
