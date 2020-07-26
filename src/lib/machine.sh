@@ -22,8 +22,8 @@ function machine-setup() {
     if [[ -d "${_SCHEDS}" ]]; then
         pushd "${_SCHEDS}"
 
-        for _SCHED in !(.timer); do
-            [[ "${_SCHED}" == '!(.timer)' ]] && continue
+        for _SCHED in !(*.timer); do
+            [[ "${_SCHED}" == '!(*.timer)' ]] && continue
 
             local _QUEUE="$(readlink -f "${_SCHED}" | xargs basename)"
             if [[ -z "${_QUEUE}" ]]; then
