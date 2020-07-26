@@ -16,7 +16,7 @@ function lower-prepare() {
     local _CURRENT="$(date +%Y%m%d%H%M%S)"
 
     mkdir "$_CURRENT"
-    pacstrap -cC "$CAUR_GUEST_PACMAN" "./$_CURRENT" $CAUR_LOWER_PKGS
+    pacstrap -c "./$_CURRENT" $CAUR_LOWER_PKGS
     pushd "$_CURRENT"
 
     install -dm755 './usr/local/bin'
