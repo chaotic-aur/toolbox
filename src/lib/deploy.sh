@@ -19,6 +19,7 @@ function deploy() {
     pushd "${_INPUTDIR}/dest"
     chown "${CAUR_SIGN_USER}" .
     for f in !(*.sig); do
+        [[ "$f" == '!(*.sig)' ]] && continue
         sudo -u "${CAUR_SIGN_USER}" \
             gpg --detach-sign \
                 --use-agent -u "${CAUR_SIGN_KEY}" \

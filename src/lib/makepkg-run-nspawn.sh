@@ -41,6 +41,7 @@ function makepkg-run-nspawn() {
     mount --bind "${_CCACHE}" "${_HOME}/.ccache" 
     mount --bind "${_SRCCACHE}" "${_HOME}/pkgsrc"
     mount --bind "${CAUR_CACHE_PKG}" 'machine/root/var/cache/pacman/pkg'
+    mount --bind 'dest' "${_PKGDEST}"
     #mount overlay -t overlay -olowerdir=${CAUR_DEST_PKG},upperdir=./dest,workdir=./machine/destwork "${_PKGDEST}"
 
     local _CAUR_WIZARD="machine/root/home/${CAUR_GUEST_USER}/wizard.sh"

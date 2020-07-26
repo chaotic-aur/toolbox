@@ -17,7 +17,7 @@ function db-bump() {
     # List packages to add
     pushd "${CAUR_ADD_QUEUE}"   
     local _PKGS=(!(*.sig))
-    if [[ "${_PKGS[@]}" == '*' ]]; then
+    if [[ "${_PKGS[@]}" == '!(*.sig)' ]]; then
         echo 'No packages to add.'
 
         db-unlock
