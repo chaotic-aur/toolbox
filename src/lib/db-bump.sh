@@ -25,7 +25,7 @@ function db-bump() {
     fi
 
     # Add them all
-    if repoctl add ${_PKGS[@]} && db-last-bump; then
+    if sudo -u "${CAUR_DB_USER}" repoctl add ${_PKGS[@]} && db-last-bump; then
         db-pkglist
     else
         db-unlock

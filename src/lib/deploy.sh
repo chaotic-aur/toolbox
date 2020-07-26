@@ -17,6 +17,7 @@ function deploy() {
     mkdir -p "${CAUR_ADD_QUEUE}"
 
     pushd "${_INPUTDIR}/dest"
+    chown "${CAUR_SIGN_USER}" .
     for f in !(*.sig); do
         sudo -u "${CAUR_SIGN_USER}" \
             gpg --detach-sign \

@@ -9,6 +9,7 @@ CAUR_CACHE_SRC='/var/cache/chaotic/sources'
 CAUR_DB_EXT='tar.zst'
 CAUR_DB_LOCK='/var/cache/db.lock'
 CAUR_DB_NAME='chaotic-aur'
+CAUR_DB_USER='main-builder'
 CAUR_DEST_LAST="/srv/http/${CAUR_DB_NAME}/lastupdate"
 CAUR_DEST_PKG="/srv/http/${CAUR_DB_NAME}/x86_64"
 CAUR_GUEST_BIN="${CAUR_PREFIX}/lib/chaotic/guest/bin"
