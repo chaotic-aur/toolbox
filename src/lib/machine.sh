@@ -47,7 +47,7 @@ EOF
         done
 
         if [[ -f "${_SCHED}.timer" ]]; then
-            cat << EOF | stee "/etc/systemd/system/${CAUR_SERVICES_PREFIX}${_SCHED}"
+            cat << EOF | stee "/etc/systemd/system/${CAUR_SERVICES_PREFIX}${_SCHED}.timer"
 [Unit]
 Description=Chaotic's scheduled ${_SCHED} build
 
