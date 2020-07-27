@@ -38,7 +38,6 @@ Description=Chaotic's scheduled ${_SCHED} build
 [Service]
 User=root
 Group=root
-WorkingDirectory=${CAUR_QUEUES}
 ExecStart=${CAUR_PREFIX}/bin/chaotic queue-run-nspawn ${_QUEUE}
 
 [Install]
