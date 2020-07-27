@@ -39,6 +39,11 @@ Let us reinvent the wheel once more.
 
     TODO: `-chroot`, `-docker` and `-singularity` are not done yet.
 
+* `chaotic queue-from-commit ${COMMITHASH}~${COMMITSQUANTITY}`
+
+    (TODO)
+    Generates a queue with packages that updated within some range of commits.
+
 * `chaotic db-bump`
 
     It adds recently deployed packages to the database, while moving replaced packages to archive.

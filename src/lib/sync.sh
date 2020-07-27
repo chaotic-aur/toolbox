@@ -5,7 +5,7 @@ function sync() {
 
     pushd "${CAUR_PACKAGES}"
     git pull --ff-only
-    git submodule update
+    git submodule update --init
     popd
 
     return 0
