@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 function makepkg-run-nspawn() {
-    #set -euo pipefail # This one we may prefer that go till the end
+    set -euo pipefail
 
     local _INPUTDIR="$( cd "$1"; pwd -P )"
     local _PARAMS="${@:2}"
@@ -33,9 +33,11 @@ function makepkg-run-nspawn() {
     local _CCACHE="${CAUR_CACHE_CC}/${_PKGTAG}"
     local _SRCCACHE="${CAUR_CACHE_SRC}/${_PKGTAG}"
     local _PKGDEST="${_HOME}/pkgdest"
+    local _CAUR_WIZARD="machine/root/home/${CAUR_GUEST_USER}/${CAUR_BASH_WIZARD}"
 
-    mkdir -p machine/{up,work,root,destwork} dest "${_CCACHE}" "${_SRCCACHE}" "${CAUR_CACHE_PKG}" "${CAUR_DEST_PKG}" 
+    mkdir -p machine/{up,work,root} dest{.up,.work} "${_CCACHE}" "${_SRCCACHE}" "${CAUR_CACHE_PKG}" "${CAUR_DEST_PKG}"
     mount overlay -t overlay -olowerdir=${_LOWER},upperdir=machine/up,workdir=machine/work machine/root
+    chown ${CAUR_GUEST_UID}:${CAUR_GUEST_GID} "${_CCACHE}" "${_SRCCACHE}" "${CAUR_CACHE_PKG}" dest.up
     
     mount --bind 'pkgwork' "${_HOME}/pkgwork" 
     mount --bind "${_CCACHE}" "${_HOME}/.ccache" 
@@ -43,15 +45,14 @@ function makepkg-run-nspawn() {
     mount --bind "${CAUR_CACHE_PKG}" 'machine/root/var/cache/pacman/pkg'
     if [[ "${CAUR_HACK_USEOVERLAYDEST}" == '1' ]]; then
         mount overlay -t overlay \
-            -olowerdir=${CAUR_DEST_PKG},upperdir=./dest,workdir=./machine/destwork \
+            -olowerdir=${CAUR_DEST_PKG},upperdir=./dest.up,workdir=./dest.work \
             "${_PKGDEST}"
     else
-        mount --bind 'dest' "${_PKGDEST}"
+        mount --bind 'dest.up' "${_PKGDEST}"
     fi
 
-    local _CAUR_WIZARD="machine/root/home/${CAUR_GUEST_USER}/wizard.sh"
     cp "${CAUR_BASH_WIZARD}" "${_CAUR_WIZARD}"
-    chown -R ${CAUR_GUEST_UID}:${CAUR_GUEST_GID} "${_CAUR_WIZARD}" pkgwork "${_PKGDEST}" "$_CCACHE" "$_SRCCACHE"
+    chown ${CAUR_GUEST_UID}:${CAUR_GUEST_GID} -R "${_CAUR_WIZARD}" pkgwork
     chmod 755 "${_CAUR_WIZARD}"
 
     local _MECHA_NAME="pkg$(echo -n "$_PKGTAG" | sha256sum | cut -c1-11)"
