@@ -25,7 +25,7 @@ function db-bump() {
     fi
 
     # Add them all
-    if sudo -u "${CAUR_DB_USER}" repoctl add ${_PKGS[@]} && db-last-bump; then
+    if sudo -u "${CAUR_DB_USER}" repoctl add -r ${_PKGS[@]} && db-last-bump; then
         db-pkglist
     else
         db-unlock
@@ -33,7 +33,9 @@ function db-bump() {
     fi
 
     # Remove files after adding
-    rm ${_PKGS[@]}{,.sig} || true
+    for f in ${_PKGS[@]}; do
+        rm -v $f $f.sig || true
+    done
     popd # CAUR_ADD_QUEUE
 
     db-unlock
