@@ -24,7 +24,7 @@ function makepkg-gen-bash() {
         
         local _i=0
         "${_GENESIS}"/variations.sh | while read _VARIATION; do
-            local _DEST="${_DEST_PARENT}/${_PKGTAG}.${_i}"
+            local _DEST="${_DEST_PARENT}/${_PKGTAG}.$(printf '%04d' $_i)"
             local _i=$((_i+1))
 
             [[ -d "${_DEST}" ]] && continue # Don't prepare a new one if there is another pending
