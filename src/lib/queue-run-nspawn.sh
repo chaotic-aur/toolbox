@@ -3,7 +3,9 @@
 function queue-run-nspawn() {
     set -euo pipefail
 
-    if [[ -d "${CAUR_PACKAGES}/queues/$1" ]]; then
+    if [[ -d "$1" ]]; then
+        local _INPUTDIR="$( cd "$1"; pwd -P )"
+    elif [[ -d "${CAUR_PACKAGES}/queues/$1" ]]; then
         local _INPUTDIR="${CAUR_QUEUES}/${1}.$(date '+%Y%m%d%H%M%S')"
 
         pushd "${CAUR_PACKAGES}/queues/$1"
@@ -19,8 +21,6 @@ function queue-run-nspawn() {
 
         popd
 
-    elif [[ -d "$1" ]]; then
-        local _INPUTDIR="$( cd "$1"; pwd -P )"
     else
         echo 'Invalid parameters'
         return 19
