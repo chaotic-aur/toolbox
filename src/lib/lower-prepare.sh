@@ -26,7 +26,7 @@ function lower-prepare() {
     stee -a './etc/pacman.conf' <<EOF
 
 [${CAUR_DB_NAME}]
-SigLevel = Optional TrustAll
+SigLevel = Never
 Server = ${CAUR_URL}
 
 EOF
