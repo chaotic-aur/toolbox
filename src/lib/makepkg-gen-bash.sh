@@ -44,6 +44,7 @@ function prepare() {
         done
 
         rm -rf --one-file-system 'genesis'
+        mv "${_PKGTAG}."* ../
     else
         echo -n "${_PKGTAG}" > 'PKGTAG'
         makepkg-gen-bash-init "${_PKGDIR}"

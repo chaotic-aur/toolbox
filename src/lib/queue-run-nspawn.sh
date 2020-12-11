@@ -11,7 +11,11 @@ function queue-run-nspawn() {
             echo "Skipping \"${_pkg}\", does not contains a PKGBUILD."
             continue
         fi
-        prepare "${_pkg}" || continue
+        prepare "${_pkg}" 
+    fi
+
+    for _pkg in *; do
+        [ ! -f "${_pkg}/PKGTAG" ] || continue
         makepkg "${_pkg}" --noconfirm | tee "${_pkg}.log" || continue
         deploy "${_pkg}" && db-bump || continue
         cleanup "${_pkg}" || continue
