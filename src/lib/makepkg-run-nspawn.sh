@@ -6,11 +6,11 @@ function makepkg() {
     local _INPUTDIR="$( cd "$1"; pwd -P )"
     local _PARAMS="${@:2}"
 
-    if [[ ! -f "${_INPUTDIR}/type" ]]; then
+    if [[ ! -f "${_INPUTDIR}/PKGTAG" ]]; then
         echo "\"${_INPUTDIR}\" doesn't look like a valid input directory."
         return 14
-    elif [[ `cat ${_INPUTDIR}/type` != 'bash' ]]; then
-        echo "\"${_INPUTDIR}\" is not valid for systemd-nspawn."
+    elif [[ `cat ${_INPUTDIR}/PKGBUILD` ]]; then
+        echo "\"${_INPUTDIR}\" was not prepared correctly."
         return 15
     elif [[ -f "${_INPUTDIR}/building.pid" ]]; then
         echo 'This package is already building.'
@@ -25,8 +25,8 @@ function makepkg() {
 
     pushd "${_INPUTDIR}"
     [[ -e 'building.result' ]] && rm 'building.result'
-    local _PKGTAG=`cat tag`
-    local _GENESIS="${CAUR_PACKAGES}/entries/${_PKGTAG}"
+    local _PKGTAG=`cat PKGTAG`
+    local _INTERFERE="${CAUR_INTERFERE}/${_PKGTAG}"
     local _LOWER="$( cd "${CAUR_LOWER_DIR}" ; cd $(readlink latest) ; pwd -P )"
 
     local _HOME="machine/root/home/${CAUR_GUEST_USER}"
@@ -38,7 +38,7 @@ function makepkg() {
     mkdir -p machine/{up,work,root} dest{,.work} "${_CCACHE}" "${_SRCCACHE}" "${CAUR_CACHE_PKG}" "${CAUR_DEST_PKG}"
     mount overlay -t overlay -olowerdir=${_LOWER},upperdir=machine/up,workdir=machine/work machine/root
     chown ${CAUR_GUEST_UID}:${CAUR_GUEST_GID} "${_CCACHE}" "${_SRCCACHE}" "${CAUR_CACHE_PKG}" dest
-    
+
     mount --bind 'pkgwork' "${_HOME}/pkgwork" 
     mount --bind "${_CCACHE}" "${_HOME}/.ccache" 
     mount --bind "${_SRCCACHE}" "${_HOME}/pkgsrc"
@@ -65,9 +65,9 @@ function makepkg() {
 
     if [[ -z "${_BUILD_FAILED}" ]]; then
         echo 'success' >  'building.result'
-    elif  [[ -f "${_GENESIS}/on-failure.sh" ]]; then
+    elif  [[ -f "${_INTERFERE}/on-failure.sh" ]]; then
         echo "${_BUILD_FAILED}" >  'building.result'
-        source "${_GENESIS}/on-failure.sh"
+        source "${_INTERFERE}/on-failure.sh"
     fi
 
     umount -Rv machine/root && \
