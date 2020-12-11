@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-function lower-prepare() {
+function lowerstrap() {
     set -euo pipefail
 
     if [[ -f "$CAUR_LOWER_DIR/lock" ]]; then

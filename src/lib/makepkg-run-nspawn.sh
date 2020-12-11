@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-function makepkg-run-nspawn() {
+function makepkg() {
     set -euo pipefail
 
     local _INPUTDIR="$( cd "$1"; pwd -P )"
@@ -20,7 +20,7 @@ function makepkg-run-nspawn() {
     echo -n $$ > "${_INPUTDIR}/building.pid"
 
     if [[ ! -e "${CAUR_LOWER_DIR}/latest" ]]; then
-        lower-prepare
+        lowerstrap || return $?
     fi
 
     pushd "${_INPUTDIR}"

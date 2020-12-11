@@ -35,16 +35,15 @@ $(DESTDIR)$(PREFIX)/lib/chaotic/guest/bin/%: guest/bin/%
 	$(dir_guard)
 	install -m755 $< $@
 
-/var/lib/chaotic:
+/var/lib/chaotic/interfere:
 	$(dir_guard)
-	cd /var/lib && git clone 'https://github.com/chaotic-aur/packages.git' chaotic
-	cd /var/lib/chaotic && git submodule init && git submodule update
+	cd "$(@D)" && git clone 'https://github.com/chaotic-aur/interfere.git' interfere
 
 install: \
 	$(foreach f, $(LIBS), $(DESTDIR)$(PREFIX)/lib/chaotic/${f}.sh) \
 	$(foreach l, $(GUEST_ETC), $(DESTDIR)$(PREFIX)/lib/chaotic/guest/etc/${l}.conf) \
 	$(foreach l, $(GUEST_BIN), $(DESTDIR)$(PREFIX)/lib/chaotic/guest/bin/${l}) \
 	$(DESTDIR)$(PREFIX)/bin/chaotic \
-	/var/lib/chaotic
+	/var/lib/chaotic/interfere
 
 .PHONY: install

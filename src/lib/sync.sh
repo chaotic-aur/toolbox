@@ -3,10 +3,10 @@
 function sync() {
     set -euo pipefail
 
-    pushd "${CAUR_PACKAGES}"
+    pushd "${CAUR_INTERFERE}"
     git pull --ff-only
     git submodule update --init
-    popd
+    popd #CAUR_INTERFERE
 
     return 0
 }

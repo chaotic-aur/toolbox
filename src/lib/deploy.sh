@@ -14,8 +14,6 @@ function deploy() {
         return 18
     fi
 
-    mkdir -p "${CAUR_ADD_QUEUE}"
-
     pushd "${_INPUTDIR}/dest"
     chown "${CAUR_SIGN_USER}" .
     for f in !(*.sig); do
@@ -25,7 +23,7 @@ function deploy() {
                 --use-agent -u "${CAUR_SIGN_KEY}" \
                 --no-armor "$f"
 
-        cp "$f"{,.sig} "${CAUR_ADD_QUEUE}/"
+        scp "$f"{,.sig} "${CAUR_ADD_DEST}/"
     done
     popd
 

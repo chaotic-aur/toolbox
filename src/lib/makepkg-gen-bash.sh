@@ -1,84 +1,63 @@
 #!/usr/bin/env bash
 
-function makepkg-gen-bash() {
+function prepare() {
     set -euo pipefail
 
-    local _PKGTAG="$1"
-    local _DEST_PARENT="$( cd "$2"; pwd -P )"
-    local _PARAMS="${@:3}"
-    local _GENESIS="${CAUR_PACKAGES}/entries/${_PKGTAG}"
+    local _PKGDIR="$( cd "$1"; pwd -P )"
+    local _PARAMS="${@:2}"
+    local _INTERFERE="${CAUR_INTERFERE}/${_PKGDIR}"
 
-    if [[ -z "${_PKGTAG}" ]]; then
-        echo "Invalid parameters package tag."
-        return 11
-    elif [[ -z "${_DEST_PARENT}" ]]; then
-        echo "Invalid destination directory."
-        return 12
-    elif [[ ! -d "${_GENESIS}/source" ]]; then
-        echo "\"${_PKGTAG}\" is not a valid package."
+    if [[ -e "${_PKGDIR}/PKGTAG" ]]; then
+        echo "Package already was prepared."
+        return 0
+    if [[ -e "${_PKGDIR}/PKGBUILD" ]]; then
+        echo "Invalid parameter, \"${_PKGDIR}\" does not contains a PKGBUILD."
         return 10
     fi
 
-    if [[ -f "${_GENESIS}/variations.sh" ]]; then
-        source "${_GENESIS}"/variate.sh
-        
+    pushd "${_PKGDIR}"
+    local _PKGTAG="$(basename $PWD)"
+
+    mkdir 'genesis'
+    mv *!(genesis) 'genesis/'
+
+    if [[ -f "${_INTERFERE}/variations.sh" ]]; then
         local _i=0
-        "${_GENESIS}"/variations.sh | while read _VARIATION; do
-            local _DEST="${_DEST_PARENT}/${_PKGTAG}.$(printf '%04d' $_i)"
+        "${_INTERFERE}"/variations.sh | while read _VARIATION; do
+            local _DEST="var.$(printf '%04d' $_i)"
             local _i=$((_i+1))
 
-            [[ -d "${_DEST}" ]] && continue # Don't prepare a new one if there is another pending
-            
-            mkdir -p "${_DEST}/source"
-            echo -n "${_PKGTAG}" > "${_DEST}/tag"
+            mkdir -p "${_DEST}/pkgwork"
+            echo -n "${_PKGTAG}" > "${_DEST}/PKGTAG"
             echo -n "${_VARIATION}" > "${_DEST}/variation"
             makepkg-gen-bash-init "${_DEST}"
 
-            pushd "$_GENESIS/source"
-            cp -r * "${_DEST}/source" # We don't need hidden files
-            popd
-
-            pushd "${_DEST}/source"
-            variate ${_VARIATION}
-            popd
-
-
-            pushd "${_DEST}"
-            if [[ -n "${CAUR_SUBPKGDIR}" ]]; then
-                mv "source/${CAUR_SUBPKGDIR}" 'pkgwork'
-                unset CAUR_SUBPKGDIR
-                rm -r 'source'
-            else
-                mv 'source' 'pkgwork'
-            fi
+            pushd 'genesis'
+            cp -r * "${_DEST}/pkgwork"
             popd
 
             pushd "${_DEST}/pkgwork"
-            interference-apply "${_PKGTAG}"
+            "${_INTERFERE}"/variate.sh ${_VARIATION}
+            interference-apply "${_INTERFERE}"
             popd
 
             interference-makepkg ${_PARAMS}
-            makepkg-gen-bash-finish "${_DEST}"
+            makepkg-gen-bash-finish
         done
+        
+        echo "$PKGTAG" > 'PKGTAG'
     else
-        local _DEST="${_DEST_PARENT}/${_PKGTAG}"
+        echo -n "${_PKGTAG}" > 'PKGTAG'
+        makepkg-gen-bash-init "${_PKGDIR}"
 
-        [[ -d "${_DEST}" ]] && return # Don't prepare a new one if there is another pending
-            
-        mkdir -p "${_DEST}/pkgwork"
-        echo -n "${_PKGTAG}" > "${_DEST}/tag"
-        makepkg-gen-bash-init "${_DEST}"
+        mv 'genesis' 'pkgwork'
 
-        pushd "$_GENESIS/source"
-        cp -r * "${_DEST}/pkgwork" # We don't need hidden files
-        popd
-
-        pushd "${_DEST}/pkgwork"
-        interference-apply "${_PKGTAG}"
+        pushd 'pkgwork'
+        interference-apply "${_INTERFERE}"
         popd
 
         interference-makepkg ${_PARAMS}
-        makepkg-gen-bash-finish "${_DEST}"
+        makepkg-gen-bash-finish
     fi
 
     return 0
@@ -107,11 +86,8 @@ function makepkg-gen-bash-append() {
 function makepkg-gen-bash-finish() {
     set -euo pipefail
 
-    local _DEST="$1"
-
     unset CAUR_PUSH
     unset CAUR_WIZARD
-    echo -n 'bash' > "${_DEST}/type"
 
     return 0
 }

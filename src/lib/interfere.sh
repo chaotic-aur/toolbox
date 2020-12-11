@@ -2,24 +2,23 @@
 function interference-apply() {
     set -euo pipefail
     
-    local _PKGTAG="$1"
-    local _GENESIS="${CAUR_PACKAGES}/${_PKGTAG}"
+    local _INTERFERE="$1"
 
     interference-generic "${_PKGTAG}"
     
-    [[ -f "${_GENESIS}/prepare" ]] && \
-        source "${_GENESIS}/prepare"
+    [[ -f "${_INTERFERE}/prepare" ]] && \
+        source "${_INTERFERE}/prepare"
 
-    if [[ -f "${_GENESIS}/PKGBUILD.prepend" ]]; then
+    if [[ -f "${_INTERFERE}/PKGBUILD.prepend" ]]; then
         # The worst one, but KISS and easier to maintain
-        local _PREPEND="$(cat "${_GENESIS}/PKGBUILD.prepend")"
+        local _PREPEND="$(cat "${_INTERFERE}/PKGBUILD.prepend")"
         local _PKGBUILD="$(cat PKGBUILD)"
         echo "$_PREPEND" > PKGBUILD
         echo "$_PKGBUILD" >> PKGBUILD
     fi
 
-    [[ -f "${_GENESIS}/PKGBUILD.append" ]] && \
-        cat "${_GENESIS}/PKGBUILD.append" >> PKGBUILD
+    [[ -f "${_INTERFERE}/PKGBUILD.append" ]] && \
+        cat "${_INTERFERE}/PKGBUILD.append" >> PKGBUILD
 
     return 0
 }
@@ -43,7 +42,7 @@ function interference-generic() {
         $CAUR_PUSH sudo pacman -S --needed --noconfirm breezy
     fi
     if [[ ! -z "$(echo "$_PKGTAG" | grep -P '\-hg$')" ]]; then
-        $CAUR_PUSH sudo pacman -S --needed --noconfirm mercurial-python3 #mercurial
+        $CAUR_PUSH sudo pacman -S --needed --noconfirm mercurial
     fi
 
     # * Read options

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-function mirror-install() {
+function help-mirror() {
     set -euo pipefail
 
     local _MIRROR_TYPE="$1"

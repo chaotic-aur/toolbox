@@ -56,9 +56,11 @@ $(cat "${_SCHED}.timer")
 WantedBy=timers.target
 EOF
 
-            systemctl daemon-reload
-            systemctl enable "${CAUR_SERVICES_PREFIX}${_SCHED}.timer"
-        fi
+                systemctl daemon-reload
+                systemctl enable "${CAUR_SERVICES_PREFIX}${_SCHED}.timer"
+            fi
+
+            # TODO: Add a scheduled db-bump
         
         done
 

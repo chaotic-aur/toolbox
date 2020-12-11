@@ -14,29 +14,13 @@ function db-bump() {
     done
     echo -n $$ > "${CAUR_DB_LOCK}"
 
-    # List packages to add
-    pushd "${CAUR_ADD_QUEUE}"   
-    local _PKGS=(!(*.sig))
-    if [[ "${_PKGS[@]}" == '!(*.sig)' ]]; then
-        echo 'No packages to add.'
-
-        db-unlock
-        return 0
-    fi
-
     # Add them all
-    if sudo -u "${CAUR_DB_USER}" repoctl add -r ${_PKGS[@]} && db-last-bump; then
+    if sudo -u "${CAUR_DB_USER}" repoctl update && db-last-bump; then
         db-pkglist
     else
         db-unlock
         return 3
     fi
-
-    # Remove files after adding
-    for f in ${_PKGS[@]}; do
-        rm -v $f $f.sig || true
-    done
-    popd # CAUR_ADD_QUEUE
 
     db-unlock
     return 0
