@@ -9,7 +9,6 @@ LIBS = \
 	deploy \
 	interfere \
 	lower-prepare \
-	machine \
 	makepkg-gen-bash \
 	makepkg-run-nspawn \
 	queue-run-nspawn \
