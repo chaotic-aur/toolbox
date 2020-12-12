@@ -18,6 +18,10 @@ Let us reinvent the wheel once more.
   Builds the package in a container using systed-nspawn.
   `$INPUTDIR` is the result of a `prepare`
 
+- `chaotic makepwd $@`
+
+  Prepare and build all packages in the current directory.
+
 - `chaotic sync`
 
   It syncs package interference.

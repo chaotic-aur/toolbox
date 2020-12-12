@@ -3,7 +3,9 @@
 function deploy() {
   set -euo pipefail
 
-  local _INPUTDIR="$(
+  local _INPUTDIR
+
+  _INPUTDIR="$(
     cd "$1"
     pwd -P
   )"

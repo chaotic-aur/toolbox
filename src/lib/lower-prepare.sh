@@ -3,6 +3,8 @@
 function lowerstrap() {
   set -euo pipefail
 
+  local _CURRENT
+
   if [[ -f "$CAUR_LOWER_DIR/lock" ]]; then
     echo 'Somone is already building a lowerdir, waiting...'
     while [[ -f "$CAUR_LOWER_DIR/lock" ]]; do sleep 2; done
@@ -13,10 +15,10 @@ function lowerstrap() {
   pushd "$CAUR_LOWER_DIR"
 
   echo $$ >"lock" # We're building a new
-  local _CURRENT="$(date +%Y%m%d%H%M%S)"
+  _CURRENT="$(date +%Y%m%d%H%M%S)"
 
   mkdir "$_CURRENT"
-  pacstrap -c "./$_CURRENT" $CAUR_LOWER_PKGS
+  pacstrap -c "./$_CURRENT" "$CAUR_LOWER_PKGS"
   pushd "$_CURRENT"
 
   install -dm755 './usr/local/bin'
@@ -45,16 +47,16 @@ EOF
 
   echo "$CAUR_GUEST_USER ALL=(ALL) NOPASSWD: ALL" | stee -a "./etc/sudoers"
 
-  install -dm755 -o${CAUR_GUEST_UID} -g${CAUR_GUEST_GID} \
+  install -dm755 -o"${CAUR_GUEST_UID}" -g"${CAUR_GUEST_GID}" \
     "./home/$CAUR_GUEST_USER/"{pkgwork,.ccache,pkgdest,pkgsrc,makepkglogs}
-  install -dm700 -o${CAUR_GUEST_UID} -g${CAUR_GUEST_GID} \
+  install -dm700 -o"${CAUR_GUEST_UID}" -g"${CAUR_GUEST_GID}" \
     "./home/$CAUR_GUEST_USER/.gnupg"
-  install -Dm700 -o${CAUR_GUEST_UID} -g${CAUR_GUEST_UID} \
+  install -Dm700 -o"${CAUR_GUEST_UID}" -g"${CAUR_GUEST_UID}" \
     "$CAUR_GUEST_GNUPG"/{pubring.kbx,tofu.db,trustdb.gpg} \
     "./home/$CAUR_GUEST_USER/.gnupg/"
-  install -dm700 -o${CAUR_GUEST_UID} -g${CAUR_GUEST_UID} \
+  install -dm700 -o"${CAUR_GUEST_UID}" -g"${CAUR_GUEST_UID}" \
     "./home/$CAUR_GUEST_USER/.gnupg/crls.d"
-  install -Dm700 -o${CAUR_GUEST_UID} -g${CAUR_GUEST_UID} \
+  install -Dm700 -o"${CAUR_GUEST_UID}" -g"${CAUR_GUEST_UID}" \
     "$CAUR_GUEST_GNUPG/crls.d/DIR.txt" \
     "./home/$CAUR_GUEST_USER/.gnupg/crls.d/"
 

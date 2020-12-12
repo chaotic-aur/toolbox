@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-function queue-run-nspawn() {
+function makepwd() {
   set -euo pipefail
 
   for _pkg in *; do
@@ -17,7 +17,7 @@ function queue-run-nspawn() {
   for _pkg in *; do
     [ ! -f "${_pkg}/PKGTAG" ] || continue
     makepkg "${_pkg}" --noconfirm | tee "${_pkg}.log" || continue
-    deploy "${_pkg}" && db-bump || continue
+    if (deploy "${_pkg}"); then db-bump; else continue; fi
     cleanup "${_pkg}" || continue
   done
 

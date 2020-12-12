@@ -2,17 +2,20 @@
 function interference-apply() {
   set -euo pipefail
 
-  local _INTERFERE="$1"
+  local _INTERFERE _PREPEND _PKGBUILD
+
+  _INTERFERE="$1"
 
   interference-generic "${_PKGTAG}"
 
+  # shellcheck source=/dev/null
   [[ -f "${_INTERFERE}/prepare" ]] \
     && source "${_INTERFERE}/prepare"
 
   if [[ -f "${_INTERFERE}/PKGBUILD.prepend" ]]; then
     # The worst one, but KISS and easier to maintain
-    local _PREPEND="$(cat "${_INTERFERE}/PKGBUILD.prepend")"
-    local _PKGBUILD="$(cat PKGBUILD)"
+    _PREPEND="$(cat "${_INTERFERE}/PKGBUILD.prepend")"
+    _PKGBUILD="$(cat PKGBUILD)"
     echo "$_PREPEND" >PKGBUILD
     echo "$_PKGBUILD" >>PKGBUILD
   fi
@@ -26,32 +29,34 @@ function interference-apply() {
 function interference-generic() {
   set -euo pipefail
 
-  local _PKGTAG="$1"
+  local _PKGTAG
+
+  _PKGTAG="$1"
 
   # * CHROOT Update
   $CAUR_PUSH sudo pacman -Syu --noconfirm
 
   # * Treats VCs
-  if [[ ! -z "$(echo "$_PKGTAG" | grep -P '\-git$')" ]]; then
+  if (echo "$_PKGTAG" | grep -qP '\-git$'); then
     $CAUR_PUSH sudo pacman -S --needed --noconfirm git
   fi
-  if [[ ! -z "$(echo "$_PKGTAG" | grep -P '\-svn$')" ]]; then
+  if (echo "$_PKGTAG" | grep -qP '\-svn$'); then
     $CAUR_PUSH sudo pacman -S --needed --noconfirm subversion
   fi
-  if [[ ! -z "$(echo "$_PKGTAG" | grep -P '\-bzr$')" ]]; then
+  if (echo "$_PKGTAG" | grep -qP '\-bzr$'); then
     $CAUR_PUSH sudo pacman -S --needed --noconfirm breezy
   fi
-  if [[ ! -z "$(echo "$_PKGTAG" | grep -P '\-hg$')" ]]; then
+  if (echo "$_PKGTAG" | grep -qP '\-hg$'); then
     $CAUR_PUSH sudo pacman -S --needed --noconfirm mercurial
   fi
 
   # * Read options
-  if [[ ! -z $(grep -Po "^options=\([a-z! \"']*(?<!!)ccache[ '\"\)]" PKGBUILD) ]]; then
+  if (grep -qPo "^options=\([a-z! \"']*(?<!!)ccache[ '\"\)]" PKGBUILD); then
     $CAUR_PUSH sudo pacman -S --needed --noconfirm ccache
   fi
 
   # * People who think they're smart
-  if [[ ! -z "$(grep -P '^PKGEXT=' PKGBUILD)" ]]; then
+  if (grep -qP '^PKGEXT=' PKGBUILD); then
     sed -i'' 's/^PKGEXT=.*$//g' PKGBUILD
   fi
 
@@ -61,7 +66,7 @@ function interference-generic() {
 function interference-makepkg() {
   set -euo pipefail
 
-  $CAUR_PUSH exec /usr/local/bin/internal-makepkg -s --noprogressbar $@ \$\@
+  $CAUR_PUSH exec /usr/local/bin/internal-makepkg -s --noprogressbar "$@" \$\@
 
   return 0
 }

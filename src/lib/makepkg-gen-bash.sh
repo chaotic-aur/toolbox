@@ -3,11 +3,13 @@
 function prepare() {
   set -euo pipefail
 
-  local _PKGDIR="$(
+  local _PKGDIR _PARAMS _PKGTAG _INTERFERE
+
+  _PKGDIR="$(
     cd "$1"
     pwd -P
   )"
-  local _PARAMS="${@:2}"
+  _PARAMS=("${@:2}")
 
   if [[ -e "${_PKGDIR}/PKGTAG" ]]; then
     echo "Package already was prepared."
@@ -18,49 +20,21 @@ function prepare() {
   fi
 
   pushd "${_PKGDIR}"
-  local _PKGTAG="$(basename $PWD)"
-  local _INTERFERE="${CAUR_INTERFERE}/${_PKGTAG}"
+  _PKGTAG="$(basename "$PWD")"
+  _INTERFERE="${CAUR_INTERFERE}/${_PKGTAG}"
 
-  mkdir 'genesis'
-  mv *!(genesis) 'genesis/'
+  mkdir 'pkgwork'
+  mv ./*!(pkgwork) 'pkgwork/'
 
-  if [[ -f "${_INTERFERE}/variations.sh" ]]; then
-    local _i=0
-    "${_INTERFERE}"/variations.sh | while read _VARIATION; do
-      local _DEST="${_PKGTAG}.$(printf '%04d' $_i)"
-      local _i=$((_i + 1))
+  echo -n "${_PKGTAG}" >'PKGTAG'
+  makepkg-gen-bash-init "${_PKGDIR}"
 
-      mkdir -p "${_DEST}/pkgwork"
-      echo -n "${_PKGTAG}" >"${_DEST}/PKGTAG"
-      echo -n "${_VARIATION}" >"${_DEST}/PKGVAR"
-      makepkg-gen-bash-init "${_DEST}"
+  pushd 'pkgwork'
+  interference-apply "${_INTERFERE}"
+  popd
 
-      cp -r genesis "${_DEST}/pkgwork"
-
-      pushd "${_DEST}/pkgwork"
-      "${_INTERFERE}"/variate.sh ${_VARIATION}
-      interference-apply "${_INTERFERE}"
-      popd
-
-      interference-makepkg ${_PARAMS}
-      makepkg-gen-bash-finish
-    done
-
-    rm -rf --one-file-system 'genesis'
-    mv "${_PKGTAG}."* ../
-  else
-    echo -n "${_PKGTAG}" >'PKGTAG'
-    makepkg-gen-bash-init "${_PKGDIR}"
-
-    mv 'genesis' 'pkgwork'
-
-    pushd 'pkgwork'
-    interference-apply "${_INTERFERE}"
-    popd
-
-    interference-makepkg ${_PARAMS}
-    makepkg-gen-bash-finish
-  fi
+  interference-makepkg "${_PARAMS[@]}"
+  makepkg-gen-bash-finish
 
   return 0
 }
