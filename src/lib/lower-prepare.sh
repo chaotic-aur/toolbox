@@ -18,7 +18,7 @@ function lowerstrap() {
   _CURRENT="$(date +%Y%m%d%H%M%S)"
 
   mkdir "$_CURRENT"
-  pacstrap -c "./$_CURRENT" "$CAUR_LOWER_PKGS"
+  pacstrap -c "./$_CURRENT" "${CAUR_LOWER_PKGS[@]}"
   pushd "$_CURRENT"
 
   install -dm755 './usr/local/bin'
