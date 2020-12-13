@@ -16,8 +16,8 @@ function makepkg() {
   if [[ ! -f "${_INPUTDIR}/PKGTAG" ]]; then
     echo "\"${_INPUTDIR}\" doesn't look like a valid input directory."
     return 14
-  elif [[ ! -f "${_INPUTDIR}/PKGBUILD" ]]; then
-    echo "\"${_INPUTDIR}\" was not prepared correctly."
+  elif [[ -f "${_INPUTDIR}/PKGBUILD" ]]; then
+    echo "\"${_INPUTDIR}\" was not prepared yet."
     return 15
   elif [[ -f "${_INPUTDIR}/building.pid" ]]; then
     echo 'This package is already building.'
