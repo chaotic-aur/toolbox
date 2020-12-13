@@ -15,7 +15,7 @@ function cleanup() {
   if [[ -e 'building.pid' ]]; then
     echo "Package is still building in PID: $(cat building.pid)."
     return 11
-  elif [[ ! -e 'tag' ]]; then
+  elif [[ ! -e 'PKGTAG' ]]; then
     echo 'Invalid package directory.'
     return 12
   fi

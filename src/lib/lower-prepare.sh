@@ -60,10 +60,10 @@ EOF
     "$CAUR_GUEST_GNUPG/crls.d/DIR.txt" \
     "./home/$CAUR_GUEST_USER/.gnupg/crls.d/"
 
-  popd
+  popd # _CURRENT
   ln -s "./$_CURRENT" "./latest"
   rm lock
-
-  popd
+ 
+  popd # CAUR_LOWER_DIR
   return 0
 }

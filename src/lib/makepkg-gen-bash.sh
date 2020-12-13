@@ -32,9 +32,11 @@ function prepare() {
 
   pushd 'pkgwork'
   interference-apply "${_INTERFERE}"
-  popd
+  popd # pkgwork
 
   interference-makepkg "${_PARAMS[@]}"
+
+  popd #_PKGDIR
   makepkg-gen-bash-finish
 
   return 0
