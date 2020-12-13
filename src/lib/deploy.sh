@@ -34,6 +34,8 @@ function deploy() {
     fi
 
     scp "$f"{,.sig} "${CAUR_ADD_DEST}/"
+    # shellcheck disable=SC2029
+    ssh "$CAUR_DEPLOY_DEST" "$CAUR_DEPLOY_CMD"
   done
   popd
 
