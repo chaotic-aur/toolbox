@@ -1,26 +1,31 @@
 #!/usr/bin/env bash
 
 function cleanup() {
-    set -euo pipefail
+  set -euo pipefail
 
-    local _INPUTDIR="$( cd "$1"; pwd -P )"
-    
-    pushd "${_INPUTDIR}"
-    
-    if [[ -e 'building.pid' ]]; then
-        echo "Package is still building in PID: $(cat building.pid)."
-        return 18
-    elif [[ ! -e 'tag' ]]; then
-        echo 'Invalid package directory.'
-        return 19
-    fi
+  local _INPUTDIR
 
-    if [[ -d 'machine/root' ]]; then
-        umount -Rv 'machine/root'
-    fi
+  _INPUTDIR="$(
+    cd "$1"
+    pwd -P
+  )"
 
-    popd # _INPUTDIR
+  pushd "${_INPUTDIR}"
 
-    rm --one-file-system -rf "${_INPUTDIR}"
-    return 0 
+  if [[ -e 'building.pid' ]]; then
+    echo "Package is still building in PID: $(cat building.pid)."
+    return 11
+  elif [[ ! -e 'tag' ]]; then
+    echo 'Invalid package directory.'
+    return 12
+  fi
+
+  if [[ -d 'machine/root' ]]; then
+    umount -Rv 'machine/root'
+  fi
+
+  popd # _INPUTDIR
+
+  rm --one-file-system -rf "${_INPUTDIR}"
+  return 0
 }

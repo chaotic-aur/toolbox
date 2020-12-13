@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
 function sync() {
-    set -euo pipefail
+  set -euo pipefail
 
-    pushd "${CAUR_PACKAGES}"
-    git pull --ff-only
-    git submodule update --init
-    popd
+  pushd "${CAUR_INTERFERE}"
+  git pull --ff-only
+  git submodule update --init
+  popd #CAUR_INTERFERE
 
-    return 0
+  return 0
 }

@@ -4,129 +4,75 @@ Let us reinvent the wheel once more.
 
 ## CLI
 
-* `chaotic makepkg-gen-{bash,dockerfile,simg} ${PACKAGETAG} ${OUTPUTDIR} $@`
+- `chaotic prepare ${INPUTDIR} $@`
 
-    It generates a building script to be later run in a containerized environment. 
+  It generates a building script to be later run in a containerized environment.
+  `$INPUTDIR` is the name of directory in "$PWD" which contains a PKGBUILD.
 
-    * `bash` for `arch-chroot` or `systemd-nspawn`.
-    * `simg` for Singularity.
-    * `dockerfile` for Docker or Podman.
+- `chaotic lowerstrap`
 
-    TODO: `-dockerfile` and `-simg` are not done yet.
+  It generates a lowerdir for later chrooting.
 
-* `chaotic lower-prepare`
+- `chaotic makepkg ${INPUTDIR} $@`
 
-    It generates a lowerdir for later chrooting.
+  Builds the package in a container using systed-nspawn.
+  `$INPUTDIR` is the result of a `prepare`
 
-* `chaotic makepkg-run-{nspawn,chroot,docker,singularity} ${INPUTDIR} $@`
+- `chaotic makepwd $@`
 
-    Runs a container.
-    `$INPUTDIR` is the result of a `makepkg-gen`
+  Prepare and build all packages in the current directory.
 
-    TODO: `-chroot`, `-docker` and `-singularity` are not done yet.
+- `chaotic sync`
 
-* `chaotic sync`
+  It syncs package interference.
 
-    It syncs package list and their sources.
+- `chaotic deploy ${INPUTDIR}`
 
-* `chaotic deploy ${INPUTDIR}`
+  Sign the package and send to primary node.
 
-    Sign the package and append
+- `chaotic db-bump`
 
-* `chaotic queue-run-{nspawn,chroot,docker,singularity} ${QUEUENAME_OR_PATH}`
+  It adds recently deployed packages to the database, while moving replaced packages to archive.
+  Uses `repoctl`.
 
-    It generates, builds, and deploys an entire queue of packages.
+- `chaotic cleanup ${INPUTDIR}`
 
-    TODO: `-chroot`, `-docker` and `-singularity` are not done yet.
+  Safely deletes old package sources.
 
-* `chaotic queue-from-commit ${COMMITHASH}~${COMMITSQUANTITY}`
+- `chaotic help-mirror {syncthing,rsync}`
 
-    (TODO)
-    Generates a queue with packages that updated within some range of commits.
-
-* `chaotic db-bump`
-
-    It adds recently deployed packages to the database, while moving replaced packages to archive.
-    Uses `repoctl`.
-
-* `chaotic cleanup ${INPUTDIR}`
-
-    Safely deletes old package sources.
-
-* `chaotic queue-srvc-{add,rem} ${QUEUENAME}`
-
-    (TODO)
-    Add or remove some queue systemd's unit.
-
-* `chaotic queue-srvc{,-timer} ${QUEUENAME} {enable,disable,start,stop,status}`
-
-    (TODO)
-    Forward command to systemd.
-
-* `chaotic queue-srvc-journal{,-reverse,-follow} ${QUEUNAME}`
-
-    (TODO)
-    Access the queue unit logs in journal.
-
-* `chaotic upgrade`
-
-    (TODO)
-    Upgrade the infra executable/libraries.
-
-* `chaotic repo-{health,cure}`
-
-    (TODO)
-    Check/Fix missing signatures, duplicate packages, cache corruption, and conflicts with archlinux's official repositories.
-
-* `chaotic mirror-install {syncthing,rsync}`
-
-    Install/Upgrade one of the mirroring services.
-    RSync is one-way (primary->cluster) only, and Syncthing both ways.
-
-* `chaotic machine-setup ${MACHINENAME}`
-
-    (TODO)
-    Install services and configuration of a pre-stablished machine.
-
-* `chaotic analytics-feed-httpd-logs`
-
-    (TODO)
-    Uploads httpd (Apache and Nginx) logs entries to the main analytics database.
+  Instructions to the mirroring services.
+  RSync is one-way (primary->cluster) only, and Syncthing both ways.
 
 ## Involved directories
 
-* `/var/cache/chaotic/sources/${PACKAGETAG}`
+- `/var/cache/chaotic/sources/${PACKAGETAG}`
 
-    Per-package `SRCDEST`.
+  Per-package `SRCDEST`.
 
-* `/var/cache/chaotic/lower/{latest,$DATESTAMP}`
+- `/var/cache/chaotic/lower/{latest,$DATESTAMP}`
 
-    Lowerdirs.
+  Lowerdirs.
 
-* `/var/cache/chaotic/cc/{PACKAGETAG}`
+- `/var/cache/chaotic/cc/{PACKAGETAG}`
 
-    Per-package `~/.ccache`.
+  Per-package `~/.ccache`.
 
-* `/var/cache/chaotic/issues/{PACKAGETAG}`
+- `/var/cache/chaotic/issues/{PACKAGETAG}`
 
-    Per-package auto-detected issues. (TODO)
+  Per-package auto-detected issues. (TODO)
 
-* `/var/cache/chaotic/packages`
+- `/var/cache/chaotic/packages`
 
-    Container-shared pacman's cache.
+  Container-shared pacman's cache.
 
-* `/var/lib/chaotic`
+- `/var/lib/chaotic/interfere`
 
-    Cloned version of [packages' repository](https://github.com/chaotic-aur/packages)
-
-* `/tmp/chaotic/queues`
-
-    Current running queues.
-
+  Cloned version of [interfere repository](https://github.com/chaotic-aur/interfere)
 
 # Dependencies
 
-`pacman -S --needed base-devel git arch-install-scripts repoctl-devel`
+`pacman -S --needed base-devel git arch-install-scripts repoctl aurutils`
 
 One must have an active mirror of chaotic-aur running locally and some signing key. Configure them in `/etc/chaotic.conf`, like this:
 
