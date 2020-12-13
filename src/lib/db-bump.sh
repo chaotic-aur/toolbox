@@ -39,10 +39,14 @@ function db-pkglist() {
   set -euo pipefail
 
   pushd "${CAUR_DEST_PKG}"
-  tar -tv --zstd -f "${CAUR_DB_NAME}.db.${CAUR_DB_EXT}" \
-    | awk '/^d/{print $6}' >../pkgs.txt \
-    && echo "Database's package list dumped" \
-    || echo 'Failed to dump package list'
+  if (tar -tv --zstd \
+    -f "${CAUR_DB_NAME}.db.${CAUR_DB_EXT}" \
+    | awk '/^d/{print $6}' >../pkgs.txt); then
+
+    echo "Database's package list dumped"
+  else
+    echo 'Failed to dump package list'
+  fi
   popd # CAUR_DEST_PKG
 
   return 0

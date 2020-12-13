@@ -11,7 +11,7 @@ function deploy() {
   )"
 
   if [[ -z "${CAUR_SIGN_KEY}" ]]; then
-    echo 'An signing key is required for deploying.'
+    echo 'A signing key is required for deploying.'
     return 17
   elif [[ ! -e "${_INPUTDIR}/building.result" ]] \
     || [[ $(cat "${_INPUTDIR}/building.result") != 'success' ]]; then
@@ -39,7 +39,7 @@ function deploypwd() {
   set -euo pipefail
 
   if [[ -z "${CAUR_SIGN_KEY}" ]]; then
-    echo 'An signing key is required for deploying.'
+    echo 'A signing key is required for deploying.'
     return 17
   fi
 
