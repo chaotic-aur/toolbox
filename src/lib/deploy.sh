@@ -3,19 +3,21 @@
 function deploy() {
   set -euo pipefail
 
-  local _INPUTDIR
+  local _INPUTDIR _RESULT
 
   _INPUTDIR="$(
     cd "$1"
     pwd -P
   )"
 
+  _RESULT="${_INPUTDIR}/building.result"
+
   if [[ -z "${CAUR_SIGN_KEY}" ]]; then
     echo 'A signing key is required for deploying.'
     return 17
-  elif [[ ! -e "${_INPUTDIR}/building.result" ]] \
-    || [[ $(cat "${_INPUTDIR}/building.result") != 'success' ]]; then
-    echo 'Invalid package or last build did not succeed.'
+  elif [[ ! -e "${_RESULT}" ]] \
+    || [[ "$(cat "${_RESULT}")" != 'success' ]]; then
+    echo 'Invalid package, last build did not succeed, or aready deployed.'
     return 18
   fi
 
@@ -23,14 +25,19 @@ function deploy() {
   chown "${CAUR_SIGN_USER}" .
   for f in !(*.sig); do
     [[ "$f" == '!(*.sig)' ]] && continue
-    sudo -u "${CAUR_SIGN_USER}" \
-      gpg --detach-sign \
-      --use-agent -u "${CAUR_SIGN_KEY}" \
-      --no-armor "$f"
+
+    if [[ ! -e "${f}.sig" ]]; then
+      sudo -u "${CAUR_SIGN_USER}" \
+        gpg --detach-sign \
+        --use-agent -u "${CAUR_SIGN_KEY}" \
+        --no-armor "$f"
+    fi
 
     scp "$f"{,.sig} "${CAUR_ADD_DEST}/"
   done
   popd
+
+  echo 'deployed' >"${_RESULT}"
 
   return 0
 }

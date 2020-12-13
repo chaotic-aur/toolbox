@@ -3,7 +3,7 @@
 function prepare() {
   set -euo pipefail
 
-  local _PKGDIR _PARAMS _PKGTAG _INTERFERE
+  local _PKGDIR _PARAMS _PKGTAG _INTERFERE _LS
 
   _PKGDIR="$(
     cd "$1"
@@ -14,7 +14,7 @@ function prepare() {
   if [[ -e "${_PKGDIR}/PKGTAG" ]]; then
     echo "Package already was prepared."
     return 0
-  elif [[ -e "${_PKGDIR}/PKGBUILD" ]]; then
+  elif [[ ! -e "${_PKGDIR}/PKGBUILD" ]]; then
     echo "Invalid parameter, \"${_PKGDIR}\" does not contains a PKGBUILD."
     return 10
   fi
@@ -23,8 +23,9 @@ function prepare() {
   _PKGTAG="$(basename "$PWD")"
   _INTERFERE="${CAUR_INTERFERE}/${_PKGTAG}"
 
+  _LS=(*)
   mkdir 'pkgwork'
-  mv ./*!(pkgwork) 'pkgwork/'
+  mv "${_LS[@]}" 'pkgwork/'
 
   echo -n "${_PKGTAG}" >'PKGTAG'
   makepkg-gen-bash-init "${_PKGDIR}"

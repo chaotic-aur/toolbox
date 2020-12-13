@@ -16,7 +16,7 @@ function makepkg() {
   if [[ ! -f "${_INPUTDIR}/PKGTAG" ]]; then
     echo "\"${_INPUTDIR}\" doesn't look like a valid input directory."
     return 14
-  elif [[ $(cat "${_INPUTDIR}"/PKGBUILD) ]]; then
+  elif [[ ! -f "${_INPUTDIR}/PKGBUILD" ]]; then
     echo "\"${_INPUTDIR}\" was not prepared correctly."
     return 15
   elif [[ -f "${_INPUTDIR}/building.pid" ]]; then
