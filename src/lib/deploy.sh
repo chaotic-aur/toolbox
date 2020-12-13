@@ -34,3 +34,18 @@ function deploy() {
 
   return 0
 }
+
+function deploypwd() {
+  set -euo pipefail
+
+  if [[ -z "${CAUR_SIGN_KEY}" ]]; then
+    echo 'An signing key is required for deploying.'
+    return 17
+  fi
+
+  for _pkg in ./*; do
+    deploy "$_pkg" || continue
+  done
+
+  return 0
+}

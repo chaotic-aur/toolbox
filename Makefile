@@ -12,6 +12,7 @@ LIBS = \
 	makepkg-gen-bash \
 	makepkg-run-nspawn \
 	queue-run-nspawn \
+	routines \
 	sync	
 GUEST_ETC = pacman makepkg
 GUEST_BIN = internal-makepkg x11-wrapper

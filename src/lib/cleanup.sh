@@ -14,10 +14,10 @@ function cleanup() {
 
   if [[ -e 'building.pid' ]]; then
     echo "Package is still building in PID: $(cat building.pid)."
-    return 18
+    return 11
   elif [[ ! -e 'tag' ]]; then
     echo 'Invalid package directory.'
-    return 19
+    return 12
   fi
 
   if [[ -d 'machine/root' ]]; then
