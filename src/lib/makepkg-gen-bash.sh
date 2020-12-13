@@ -35,6 +35,7 @@ function prepare() {
   popd # pkgwork
 
   interference-makepkg "${_PARAMS[@]}"
+  interference-finish
 
   popd #_PKGDIR
   makepkg-gen-bash-finish

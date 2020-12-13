@@ -66,7 +66,15 @@ function interference-generic() {
 function interference-makepkg() {
   set -euo pipefail
 
-  $CAUR_PUSH exec /usr/local/bin/internal-makepkg -s --noprogressbar "$@" \$\@
+  $CAUR_PUSH exec /usr/local/bin/internal-makepkg -s --noprogressbar "$@" "${TARGET_ARGS:-}" \$\@
+
+  return 0
+}
+
+function interference-finish() {
+  set -euo pipefail
+
+  unset TARGET_ARGS
 
   return 0
 }

@@ -15,7 +15,7 @@ function makepwd() {
   done
 
   for _pkg in *; do
-    [[ ! -f "${_pkg}/PKGTAG" ]] || continue
+    [[ ! -f "${_pkg}/PKGTAG" ]] && continue
     makepkg "${_pkg}" --noconfirm | tee "${_pkg}.log" || continue
     if (deploy "${_pkg}"); then db-bump; else continue; fi
     cleanup "${_pkg}" || continue

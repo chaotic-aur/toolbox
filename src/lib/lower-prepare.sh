@@ -63,7 +63,7 @@ EOF
   popd # _CURRENT
   ln -s "./$_CURRENT" "./latest"
   rm lock
- 
+
   popd # CAUR_LOWER_DIR
   return 0
 }
