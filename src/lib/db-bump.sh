@@ -19,7 +19,7 @@ function db-bump() {
     db-pkglist
   else
     db-unlock
-    return 3
+    return 20
   fi
 
   db-unlock
