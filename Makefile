@@ -4,13 +4,16 @@ ifeq ($(PREFIX),)
 endif
 
 LIBS = \
-	db-bump \
+	aur \
 	cleanup \
+	db-bump \
 	deploy \
 	interfere \
+	keyring \
 	lower-prepare \
 	makepkg-gen-bash \
 	makepkg-run-nspawn \
+	mirror \
 	queue-run-nspawn \
 	routines \
 	sync	

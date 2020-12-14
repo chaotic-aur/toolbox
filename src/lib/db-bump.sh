@@ -53,8 +53,33 @@ function db-pkglist() {
 }
 
 function db-unlock() {
-  # doesn't matter if it fails
   rm "${CAUR_DB_LOCK}"
 
+  return 0
+}
+
+function remove() {
+  set -euo pipefail
+
+  if [[ "${CAUR_TYPE}" != 'primary' ]] && [[ "${CAUR_TYPE}" != 'dev' ]]; then
+    echo 'Secondary and mirrors should not manage database'
+    return 0
+  fi
+
+  # Lock bump operations
+  while [[ -f "${CAUR_DB_LOCK}" ]]; do
+    sleep 2
+  done
+  echo -n $$ >"${CAUR_DB_LOCK}"
+
+  # Remove them all
+  if sudo -u "${CAUR_DB_USER}" repoctl remove "$@"; then
+    db-pkglist
+  else
+    db-unlock
+    return 21
+  fi
+
+  db-unlock
   return 0
 }

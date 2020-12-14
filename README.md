@@ -1,7 +1,5 @@
 # Chaotic AUR
 
-Let us reinvent the wheel once more.
-
 ## CLI
 
 - `chaotic prepare ${INPUTDIR} $@`
@@ -35,6 +33,21 @@ Let us reinvent the wheel once more.
   It adds recently deployed packages to the database, while moving replaced packages to archive.
   Uses `repoctl`.
 
+- `chaotic remove ${PACKAGES[@]}`
+
+  Remove and archive all listed packages.
+  Uses `repoctl`.
+
+- `chaotic aur-download [-r] ${PACKAGES[@]}`
+
+  Download listed packages' sources from AUR.
+  Uses `repoctl`.
+
+- `chaotic key-trust ${KEYS[@]}`
+
+  Add some key to keyring.
+  Uses `gpg`
+
 - `chaotic cleanup ${INPUTDIR}`
 
   Safely deletes old package sources.
@@ -57,10 +70,6 @@ Let us reinvent the wheel once more.
 - `/var/cache/chaotic/cc/{PACKAGETAG}`
 
   Per-package `~/.ccache`.
-
-- `/var/cache/chaotic/issues/{PACKAGETAG}`
-
-  Per-package auto-detected issues. (TODO)
 
 - `/var/cache/chaotic/packages`
 

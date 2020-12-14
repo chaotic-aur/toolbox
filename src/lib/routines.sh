@@ -5,14 +5,14 @@ function hourly() {
 
   push-routine-dir 'hourly' || return 12
 
-  repoctl down libpdfium-nojs | tee _repoctl_down.log
-  repoctl down -ru | tee -a _repoctl_down.log
+  aur-download libpdfium-nojs | tee _repoctl_down.log
+  aur-download -ru | tee -a _repoctl_down.log
   xargs rm -rf <"${CAUR_INTERFERE}/ignore-hourly.txt"
 
   repoctl list \
     | grep '\-\(git\|svn\|bzr\|hg\|nightly\)$' \
     | sort | comm -13 "${CAUR_INTERFERE}/ignore-hourly.txt" - \
-    | xargs -L 200 repoctl down 2>&1 \
+    | xargs -L 200 aur-download 2>&1 \
     | tee -a _repoctl_down.log
 
   makepwd
@@ -65,7 +65,7 @@ function push-routine-dir() {
   mkdir -p "$_DIR"
   pushd "$_DIR"
 
-  if [ -z "$FREEZE_NOTIFIER" ]; then
+  if [ -z "${FREEZE_NOTIFIER:-}" ]; then
     freeze-notify &
     export FREEZE_NOTIFIER=$!
   fi
@@ -106,7 +106,9 @@ function freeze-notify() {
 function kill-freeze-notify() {
   set -euo pipefail
 
-  [ -n "$FREEZE_NOTIFIER" ] && kill "$FREEZE_NOTIFIER"
+  [[ -z "${FREEZE_NOTIFIER:-}" ]] && return 0
+
+  kill "$FREEZE_NOTIFIER"
 
   return 0
 }
