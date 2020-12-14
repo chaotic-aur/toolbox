@@ -3,6 +3,8 @@
 function hourly() {
   set -euo pipefail
 
+  iterfere-sync
+
   push-routine-dir 'hourly' || return 12
 
   aur-download libpdfium-nojs | tee _repoctl_down.log
@@ -78,7 +80,7 @@ function pop-routine-dir() {
 
   local _DIR
 
-  _DIR="$(basename)"
+  _DIR="$(basename "$PWD")"
 
   cd ..
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-function sync() {
+function iterfere-sync() {
   set -euo pipefail
 
   pushd "${CAUR_INTERFERE}"

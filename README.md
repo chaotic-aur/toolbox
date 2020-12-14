@@ -2,57 +2,57 @@
 
 ## CLI
 
-- `chaotic prepare ${INPUTDIR} $@`
+- `chaotic pr{,epare} ${INPUTDIR} $@`
 
   It generates a building script to be later run in a containerized environment.
   `$INPUTDIR` is the name of directory in "$PWD" which contains a PKGBUILD.
 
-- `chaotic lowerstrap`
+- `chaotic {lw,lowerstrap}`
 
   It generates a lowerdir for later chrooting.
 
-- `chaotic makepkg ${INPUTDIR} $@`
+- `chaotic {mk,makepkg} ${INPUTDIR} $@`
 
   Builds the package in a container using systed-nspawn.
   `$INPUTDIR` is the result of a `prepare`
 
-- `chaotic makepwd $@`
+- `chaotic {mkd,makepwd} $@`
 
   Prepare and build all packages in the current directory.
 
-- `chaotic sync`
+- `chaotic {si,iterfere-sync}`
 
-  It syncs package interference.
+  Sync packages' interference repo.
 
-- `chaotic deploy ${INPUTDIR}`
+- `chaotic {dp,deploy} ${INPUTDIR}`
 
   Sign the package and send to primary node.
 
-- `chaotic db-bump`
+- `chaotic {dbb,db-bump}`
 
-  It adds recently deployed packages to the database, while moving replaced packages to archive.
+  Add recently deployed packages to the database, while moving replaced packages to archive.
   Uses `repoctl`.
 
-- `chaotic remove ${PACKAGES[@]}`
+- `chaotic {rm,remove} ${PACKAGES[@]}`
 
   Remove and archive all listed packages.
   Uses `repoctl`.
 
-- `chaotic aur-download [-r] ${PACKAGES[@]}`
+- `chaotic {get,aur-download} [-r] ${PACKAGES[@]}`
 
   Download listed packages' sources from AUR.
   Uses `repoctl`.
 
-- `chaotic key-trust ${KEYS[@]}`
+- `chaotic {kt,key-trust} ${KEYS[@]}`
 
   Add some key to keyring.
   Uses `gpg`
 
-- `chaotic cleanup ${INPUTDIR}`
+- `chaotic cl{,eanup} ${INPUTDIR}`
 
   Safely deletes old package sources.
 
-- `chaotic help-mirror {syncthing,rsync}`
+- `chaotic help {syncthing,rsync}`
 
   Instructions to the mirroring services.
   RSync is one-way (primary->cluster) only, and Syncthing both ways.
@@ -81,7 +81,7 @@
 
 # Dependencies
 
-`pacman -S --needed base-devel git arch-install-scripts repoctl aurutils`
+`pacman -S --needed base-devel git arch-install-scripts repoctl`
 
 One must have an active mirror of chaotic-aur running locally and some signing key. Configure them in `/etc/chaotic.conf`, like this:
 

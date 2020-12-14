@@ -1,10 +1,9 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC2034,SC2164
 
-pushd() { command pushd "$@" > /dev/null; }
-popd() { command popd > /dev/null; }
-stee() { command tee "$@" > /dev/null; }
-
+pushd() { command pushd "$@" >/dev/null; }
+popd() { command popd >/dev/null; }
+stee() { command tee "$@" >/dev/null; }
 
 pushd "$(dirname "$0")/.." || exit 2
 CAUR_PREFIX="$(pwd -P)"
@@ -38,21 +37,73 @@ CAUR_ROUTINES='/tmp/chaotic/routines'
 CAUR_SERVICES_PREFIX='chaotic-'
 CAUR_SIGN_KEY=''
 CAUR_SIGN_USER='root' # who owns the key in gnupg's keyring.
-CAUR_TYPE='primary' # only the primary cluster manages the database.
+CAUR_TYPE='primary'   # only the primary cluster manages the database.
 CAUR_URL="http://localhost/${CAUR_DB_NAME}/x86_64"
 
 # shellcheck source=/dev/null
 [[ -f '/etc/chaotic.conf' ]] && source '/etc/chaotic.conf'
 
 if [ "$EUID" -ne 0 ]; then
-    echo 'This script must be run as root.'
-    exit 255
+  echo 'This script must be run as root.'
+  exit 255
 fi
 
 shopt -s extglob
 for _LIB in "${CAUR_PREFIX}/lib/chaotic"/*.sh; do
-    # shellcheck source=src/lib/*
-    source "${_LIB}"
+  # shellcheck source=src/lib/*
+  source "${_LIB}"
 done
 
-"$@"
+function main() {
+  set -euo pipefail
+
+  local _CMD _PARAMS
+
+  _CMD="$1"
+  _PARAMS=("${@:2}")
+
+  case "${_CMD}" in
+  'prepare' | 'pr')
+    prepare "${_PARAMS[@]}"
+    ;;
+  'lowerstrap' | 'lw')
+    lowerstrap "${_PARAMS[@]}"
+    ;;
+  'makepkg' | 'mk')
+    makepkg "${_PARAMS[@]}"
+    ;;
+  'makepwd' | 'mkd')
+    makepwd "${_PARAMS[@]}"
+    ;;
+  'iterfere-sync' | 'si')
+    iterfere-sync "${_PARAMS[@]}"
+    ;;
+  'deploy' | 'dp')
+    deploy "${_PARAMS[@]}"
+    ;;
+  'db-bump' | 'dbb')
+    db-bump "${_PARAMS[@]}"
+    ;;
+  'remove' | 'rm')
+    remove "${_PARAMS[@]}"
+    ;;
+  'aur-download' | 'get')
+    aur-download "${_PARAMS[@]}"
+    ;;
+  'key-trust' | 'kt')
+    key-trust "${_PARAMS[@]}"
+    ;;
+  'cleanup' | 'cl')
+    cleanup "${_PARAMS[@]}"
+    ;;
+  'help' | '?')
+    help-mirror "${_PARAMS[@]}"
+    ;;
+  *)
+    echo 'Wrong usage, check https://github.com/chaotic-aur/toolbox/blob/main/README.md for details on how to use.'
+    return 254
+    ;;
+  esac
+}
+
+main "$@"
