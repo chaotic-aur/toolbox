@@ -22,9 +22,17 @@ GUEST_BIN = internal-makepkg x11-wrapper
 
 dir_guard=@install -dm755 "$(@D)"
 
-$(DESTDIR)$(PREFIX)/bin/chaotic: src/chaotic
+build/chaotic.elf: src/chaotic.c
+	$(dir_guard)
+	gcc -DPREFIX="\"$(PREFIX)\"" $< -o $@
+
+$(DESTDIR)$(PREFIX)/bin/chaotic.sh: src/chaotic.sh
 	$(dir_guard)
 	install -m755 $< $@
+
+$(DESTDIR)$(PREFIX)/bin/chaotic: build/chaotic.elf
+	$(dir_guard)
+	install -o root -g chaotic_op -m4750 $< $@
 
 $(DESTDIR)$(PREFIX)/lib/chaotic/%.sh: src/lib/%.sh
 	$(dir_guard)
@@ -42,11 +50,14 @@ $(DESTDIR)$(PREFIX)/lib/chaotic/guest/bin/%: guest/bin/%
 	$(dir_guard)
 	cd "$(@D)" && git clone 'https://github.com/chaotic-aur/interfere.git' interfere
 
+build: build/chaotic.elf
+
 install: \
 	$(foreach f, $(LIBS), $(DESTDIR)$(PREFIX)/lib/chaotic/${f}.sh) \
 	$(foreach l, $(GUEST_ETC), $(DESTDIR)$(PREFIX)/lib/chaotic/guest/etc/${l}.conf) \
 	$(foreach l, $(GUEST_BIN), $(DESTDIR)$(PREFIX)/lib/chaotic/guest/bin/${l}) \
+	$(DESTDIR)$(PREFIX)/bin/chaotic.sh \
 	$(DESTDIR)$(PREFIX)/bin/chaotic \
 	/var/lib/chaotic/interfere
 
-.PHONY: install
+.PHONY: install build

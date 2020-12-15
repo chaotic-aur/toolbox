@@ -98,4 +98,9 @@ Supported `type` values are: `primary`, `cluster`, and `dev`.
 
 ## Installation
 
-`sudo make install`
+Install dependencies, then:
+
+```
+make build
+sudo make install
+```
