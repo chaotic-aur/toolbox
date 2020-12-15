@@ -3,8 +3,10 @@
 function db-bump() {
   set -euo pipefail
 
-  if [[ "${CAUR_TYPE}" != 'primary' ]] && [[ "${CAUR_TYPE}" != 'dev' ]]; then
-    echo 'Secondary and mirrors should not bump database'
+  if [[ "$CAUR_TYPE" == 'cluster' ]]; then  
+    # shellcheck disable=SC2029
+    ssh "$CAUR_DEPLOY_DEST" 'chaotic db-bump'
+
     return 0
   fi
 

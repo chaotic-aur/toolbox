@@ -35,9 +35,6 @@ function deploy() {
 
     if [[ "$CAUR_TYPE" == 'cluster' ]]; then
       scp "$f"{,.sig} "${CAUR_ADD_DEST}/"
-    
-      # shellcheck disable=SC2029
-      ssh "$CAUR_DEPLOY_DEST" "$CAUR_DEPLOY_CMD"
     else
       cp -v "$f"{,.sig} "${CAUR_DEST_PKG}/"
     fi
