@@ -23,3 +23,20 @@ function makepwd() {
 
   return 0
 }
+
+function clean-logs() {
+  set -euo pipefail
+
+  local _TOREM
+
+  mapfile -t _TOREM < <(grep -l -P 'ERROR: (A|The) package( group)? has already been built' ./*.log)
+  [[ -n "${_TOREM[0]}" ]] && echo "${_TOREM[@]}" | xargs rm
+
+  mapfile -t _TOREM < <(grep -l 'Finished making: ' ./*.log)
+  [[ -n "${_TOREM[0]}" ]] && echo "${_TOREM[@]}" | xargs rm
+
+  mapfile -t _TOREM < <(grep -l 'PKGBUILD does not exist.' ./*.log)
+  [[ -n "${_TOREM[0]}" ]] && echo "${_TOREM[@]}" | xargs rm
+
+  return 0
+}

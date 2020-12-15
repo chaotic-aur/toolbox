@@ -57,6 +57,18 @@
   Instructions to the mirroring services.
   RSync is one-way (primary->cluster) only, and Syncthing both ways.
 
+- `chaotic routine {hourly,morning,afternoon,nightly,midnight}`
+
+  Run the specified routine.
+
+- `chaotic routine clean-archive`
+
+  When on a primary node, clean up the archive folder.
+
+- `chaotic routine clean-logs`
+
+  After a `chaotic makepwd`, remove successfull and "already built" logs.
+
 ## Involved directories
 
 - `/var/cache/chaotic/sources/${PACKAGETAG}`

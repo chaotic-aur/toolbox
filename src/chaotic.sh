@@ -99,6 +99,9 @@ function main() {
   'routine')
     routine "${_PARAMS[@]}"
     ;;
+  'clean-logs' | 'clg')
+    clean-logs
+    ;;
   *)
     echo 'Wrong usage, check https://github.com/chaotic-aur/toolbox/blob/main/README.md for details on how to use.'
     return 254
