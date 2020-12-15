@@ -122,7 +122,7 @@ function pop-routine-dir() {
   cd ..
 
   kill-freeze-notify
-  rm -rf --one-file-system "$_DIR"
+  #rm -rf --one-file-system "$_DIR"
 
   popd
 
