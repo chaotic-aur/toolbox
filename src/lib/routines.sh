@@ -1,5 +1,37 @@
 #!/usr/bin/env bash
 
+function routine() {
+  set -euo pipefail
+
+  local _CMD
+
+  _CMD="${1:-}"
+
+  case "${_CMD}" in
+  'hourly')
+    hourly
+    ;;
+  'morning')
+    daily-morning
+    ;;
+  'afternoon')
+    daily-afternoon
+    ;;
+  'nightly')
+    daily-night
+    ;;
+  'midnight')
+    daily-midnight
+    ;;
+  *)
+    echo 'Unrecognized routine'
+    return 22
+    ;;
+  esac
+
+  return 0
+}
+
 function hourly() {
   set -euo pipefail
 
@@ -31,7 +63,7 @@ function daily-morning() {
   return 0
 }
 
-function daily-moon() {
+function daily-afternoon() {
   set -euo pipefail
 
   # todo

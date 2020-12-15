@@ -99,6 +99,9 @@ function main() {
   'help' | '?')
     help-mirror "${_PARAMS[@]}"
     ;;
+  'routine')
+    routine "${_PARAMS[@]}"
+    ;;
   *)
     echo 'Wrong usage, check https://github.com/chaotic-aur/toolbox/blob/main/README.md for details on how to use.'
     return 254
