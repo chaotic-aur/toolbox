@@ -21,7 +21,6 @@ CAUR_CACHE_SRC='/var/cache/chaotic/sources'
 CAUR_DB_EXT='tar.zst'
 CAUR_DB_LOCK='/var/cache/chaotic/db.lock'
 CAUR_DEPLOY_DEST='builds.garudalinux.org'
-CAUR_DEPLOY_CMD='chaotic db-bump'
 CAUR_DEST_LAST="/srv/http/chaotic-aur/lastupdate"
 CAUR_DEST_PKG="/srv/http/${CAUR_DB_NAME}/x86_64"
 CAUR_GUEST_BIN="${CAUR_PREFIX}/lib/chaotic/guest/bin"
