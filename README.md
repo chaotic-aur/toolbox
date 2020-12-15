@@ -104,7 +104,5 @@ Install dependencies, then:
 sudo groupadd chaotic_op
 sudo usermod -aG chaotic_op $(whoami)
 
-make build
-
-sudo make install
+make build && sudo make install
 ```
