@@ -28,7 +28,7 @@ function deploy() {
 
     if [[ ! -e "${f}.sig" ]]; then
       sudo -u "${CAUR_SIGN_USER}" \
-        gpg --detach-sign \
+        /usr/bin/gpg --detach-sign \
         --use-agent -u "${CAUR_SIGN_KEY}" \
         --no-armor "$f"
     fi
