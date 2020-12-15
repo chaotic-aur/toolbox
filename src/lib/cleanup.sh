@@ -6,7 +6,7 @@ function cleanup() {
   local _INPUTDIR
 
   _INPUTDIR="$(
-    cd "$1"
+    cd "${1:-}"
     pwd -P
   )"
 

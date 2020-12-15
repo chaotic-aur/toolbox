@@ -6,7 +6,7 @@ function prepare() {
   local _PKGDIR _PARAMS _PKGTAG _INTERFERE _LS
 
   _PKGDIR="$(
-    cd "$1"
+    cd "${1:-}"
     pwd -P
   )"
   _PARAMS=("${@:2}")
@@ -46,7 +46,7 @@ function prepare() {
 function makepkg-gen-bash-init() {
   set -euo pipefail
 
-  local _DEST="$1"
+  local _DEST="${1:-}"
 
   export CAUR_WIZARD="${_DEST}/${CAUR_BASH_WIZARD}"
   echo '#!/usr/bin/env bash' | tee "${CAUR_WIZARD}" >/dev/null

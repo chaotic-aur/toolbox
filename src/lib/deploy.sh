@@ -6,7 +6,7 @@ function deploy() {
   local _INPUTDIR _RESULT
 
   _INPUTDIR="$(
-    cd "$1"
+    cd "${1:-}"
     pwd -P
   )"
 

@@ -3,7 +3,7 @@
 function help-mirror() {
   set -euo pipefail
 
-  local _MIRROR_TYPE="$1"
+  local _MIRROR_TYPE="${1:-}"
 
   case "${_MIRROR_TYPE}" in
   'syncthing')

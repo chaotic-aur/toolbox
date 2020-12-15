@@ -4,7 +4,7 @@ function interference-apply() {
 
   local _INTERFERE _PREPEND _PKGBUILD
 
-  _INTERFERE="$1"
+  _INTERFERE="${1:-}"
 
   interference-generic "${_PKGTAG}"
 
@@ -31,7 +31,7 @@ function interference-generic() {
 
   local _PKGTAG
 
-  _PKGTAG="$1"
+  _PKGTAG="${1:-}"
 
   # * CHROOT Update
   $CAUR_PUSH sudo pacman -Syu --noconfirm

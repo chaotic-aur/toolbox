@@ -55,7 +55,7 @@ function daily-midnight() {
 function push-routine-dir() {
   set -euo pipefail
 
-  if [ -z "$1" ]; then
+  if [ -z "${1:-}" ]; then
     echo 'Invalid routine'
     return 13
   fi

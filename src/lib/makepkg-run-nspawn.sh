@@ -8,7 +8,7 @@ function makepkg() {
     _CAUR_WIZARD _MECHA_NAME _BUILD_FAILED
 
   _INPUTDIR="$(
-    cd "$1"
+    cd "${1:-}"
     pwd -P
   )"
   _PARAMS=("${@:2}")
