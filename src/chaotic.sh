@@ -10,7 +10,7 @@ CAUR_PREFIX="$(pwd -P)"
 popd || exit 2
 
 CAUR_DB_NAME='chaotic-aur'
-CAUR_GUEST_GNUPG='/et/chaotic/gnupg'
+CAUR_GUEST_GNUPG='/etc/chaotic/gnupg'
 CAUR_INTERFERE='/var/lib/chaotic/interfere'
 
 CAUR_ADD_DEST="builds.garudalinux.org:~/chaotic/queues/$(whoami)/"
@@ -34,7 +34,6 @@ CAUR_HACK_USEOVERLAYDEST=1
 CAUR_LOWER_DIR='/var/cache/chaotic/lower'
 CAUR_LOWER_PKGS=(base base-devel)
 CAUR_ROUTINES='/tmp/chaotic/routines'
-CAUR_SERVICES_PREFIX='chaotic-'
 CAUR_SIGN_KEY=''
 CAUR_SIGN_USER='root' # who owns the key in gnupg's keyring.
 CAUR_TYPE='primary'   # only the primary cluster manages the database.
