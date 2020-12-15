@@ -52,7 +52,7 @@ EOF
   install -dm700 -o"${CAUR_GUEST_UID}" -g"${CAUR_GUEST_GID}" \
     "./home/$CAUR_GUEST_USER/.gnupg"
   install -Dm700 -o"${CAUR_GUEST_UID}" -g"${CAUR_GUEST_UID}" \
-    "$CAUR_GUEST_GNUPG"/{pubring.kbx,tofu.db,trustdb.gpg} \
+    "$CAUR_GUEST_GNUPG"/{pubring.kbx,trustdb.gpg} \
     "./home/$CAUR_GUEST_USER/.gnupg/"
   install -dm700 -o"${CAUR_GUEST_UID}" -g"${CAUR_GUEST_UID}" \
     "./home/$CAUR_GUEST_USER/.gnupg/crls.d"
