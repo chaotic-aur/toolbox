@@ -15,7 +15,7 @@ function db-bump() {
   echo -n $$ >"${CAUR_DB_LOCK}"
 
   # Add them all
-  if sudo -u "${CAUR_DB_USER}" repoctl update && db-last-bump; then
+  if repoctl update && db-last-bump; then
     db-pkglist
   else
     db-unlock
@@ -73,7 +73,7 @@ function remove() {
   echo -n $$ >"${CAUR_DB_LOCK}"
 
   # Remove them all
-  if sudo -u "${CAUR_DB_USER}" repoctl remove "$@"; then
+  if repoctl remove "$@"; then
     db-pkglist
   else
     db-unlock

@@ -20,7 +20,6 @@ CAUR_CACHE_PKG='/var/cache/chaotic/packages'
 CAUR_CACHE_SRC='/var/cache/chaotic/sources'
 CAUR_DB_EXT='tar.zst'
 CAUR_DB_LOCK='/var/cache/chaotic/db.lock'
-CAUR_DB_USER='main-builder'
 CAUR_DEPLOY_DEST='builds.garudalinux.org'
 CAUR_DEPLOY_CMD='chaotic db-bump'
 CAUR_DEST_LAST="/srv/http/chaotic-aur/lastupdate"
@@ -41,10 +40,6 @@ CAUR_URL="http://localhost/${CAUR_DB_NAME}/x86_64"
 
 # shellcheck source=/dev/null
 [[ -f '/etc/chaotic.conf' ]] && source '/etc/chaotic.conf'
-
-# clean envs
-[[ -z "${HOME:-}" ]] && export HOME='/root'
-[[ -z "${PATH:-}" ]] && export PATH='/usr/local/sbin:/usr/local/bin:/usr/bin'
 
 if [ "$EUID" -ne 0 ]; then
   echo 'This script must be run as root.'
