@@ -46,9 +46,16 @@ $(DESTDIR)$(PREFIX)/lib/chaotic/guest/bin/%: guest/bin/%
 	$(dir_guard)
 	install -m755 $< $@
 
-/var/lib/chaotic/interfere:
+$(DESTDIR)/var/lib/chaotic/interfere:
 	$(dir_guard)
 	cd "$(@D)" && git clone 'https://github.com/chaotic-aur/interfere.git' interfere
+
+$(DESTDIR)/var/cache/chaotic:
+	@install -dm755 $@
+
+$(DESTDIR)/etc/chaotic/gnupg:
+	@install -o root -g root -dm700 $@
+	gpg --homedir "$@" --recv-keys 8A9E14A07010F7E3
 
 build: build/chaotic.elf
 
@@ -58,6 +65,7 @@ install: \
 	$(foreach l, $(GUEST_BIN), $(DESTDIR)$(PREFIX)/lib/chaotic/guest/bin/${l}) \
 	$(DESTDIR)$(PREFIX)/bin/chaotic.sh \
 	$(DESTDIR)$(PREFIX)/bin/chaotic \
-	/var/lib/chaotic/interfere
+	$(DESTDIR)/var/lib/chaotic/interfere \
+	$(DESTDIR)/var/cache/chaotic
 
 .PHONY: install build
