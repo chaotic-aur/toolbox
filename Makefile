@@ -66,6 +66,7 @@ install: \
 	$(DESTDIR)$(PREFIX)/bin/chaotic.sh \
 	$(DESTDIR)$(PREFIX)/bin/chaotic \
 	$(DESTDIR)/var/lib/chaotic/interfere \
-	$(DESTDIR)/var/cache/chaotic
+	$(DESTDIR)/var/cache/chaotic \
+	$(DESTDIR)/etc/chaotic/gnupg
 
 .PHONY: install build
