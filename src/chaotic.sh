@@ -42,7 +42,9 @@ CAUR_URL="http://localhost/${CAUR_DB_NAME}/x86_64"
 # shellcheck source=/dev/null
 [[ -f '/etc/chaotic.conf' ]] && source '/etc/chaotic.conf'
 
+# clean envs
 [[ -z "${HOME:-}" ]] && export HOME='/root'
+[[ -z "${PATH:-} "]] && export PATH='/usr/local/sbin:/usr/local/bin:/usr/bin'
 
 if [ "$EUID" -ne 0 ]; then
   echo 'This script must be run as root.'
