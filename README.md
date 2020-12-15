@@ -101,6 +101,10 @@ Supported `type` values are: `primary`, `cluster`, and `dev`.
 Install dependencies, then:
 
 ```
+sudo groupadd chaotic_op
+sudo usermod -aG chaotic_op $(whoami)
+
 make build
+
 sudo make install
 ```
