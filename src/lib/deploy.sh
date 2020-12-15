@@ -37,7 +37,7 @@ function deploy() {
     # shellcheck disable=SC2029
     ssh "$CAUR_DEPLOY_DEST" "$CAUR_DEPLOY_CMD"
   done
-  popd
+  popd # "${_INPUTDIR}/dest"
 
   echo 'deployed' >"${_RESULT}"
 
