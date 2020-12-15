@@ -3,7 +3,7 @@
 function db-bump() {
   set -euo pipefail
 
-  if [[ "$CAUR_TYPE" == 'cluster' ]]; then  
+  if [[ "$CAUR_TYPE" == 'cluster' ]]; then
     # shellcheck disable=SC2029
     ssh "$CAUR_DEPLOY_DEST" 'chaotic db-bump'
 

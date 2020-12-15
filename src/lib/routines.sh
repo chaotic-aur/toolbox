@@ -52,6 +52,8 @@ function hourly() {
 
   makepwd
 
+  clean-logs
+
   pop-routine-dir
 
   return 0
@@ -59,6 +61,8 @@ function hourly() {
 
 function daily-morning() {
   set -euo pipefail
+
+  clean-archives
 
   # todo
   return 0
@@ -146,4 +150,31 @@ function kill-freeze-notify() {
   kill "$FREEZE_NOTIFIER"
 
   return 0
+}
+
+function clean-logs() {
+  set -euo pipefail
+
+  local _TOREM
+
+  mapfile -t _TOREM < <(grep -l -P 'ERROR: (A|The) package( group)? has already been built' ./*.log)
+  [[ -n "${_TOREM[0]}" ]] && echo "${_TOREM[@]}" | xargs rm
+
+  mapfile -t _TOREM < <(grep -l 'Finished making: ' ./*.log)
+  [[ -n "${_TOREM[0]}" ]] && echo "${_TOREM[@]}" | xargs rm
+
+  mapfile -t _TOREM < <(grep -l 'PKGBUILD does not exist.' ./*.log)
+  [[ -n "${_TOREM[0]}" ]] && echo "${_TOREM[@]}" | xargs rm
+
+  return 0
+}
+
+function clean-archives() {
+  set -euo pipefail
+
+  [[ "$CAUR_TYPE" != 'primary' ]] && return 0
+
+  cd /srv/http/chaotic-aur/archive
+
+  find . -type f -mtime +7 -name '*' -execdir rm -- '{}' \;
 }
