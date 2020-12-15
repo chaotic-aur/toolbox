@@ -39,15 +39,16 @@ function hourly() {
 
   push-routine-dir 'hourly' || return 12
 
-  aur-download libpdfium-nojs | tee _repoctl_down.log
-  aur-download -ru | tee -a _repoctl_down.log
-  xargs rm -rf <"${CAUR_INTERFERE}/ignore-hourly.txt"
+  aur-download libpdfium-nojs | tee _repoctl_down.log || true
+  aur-download -ru | tee -a _repoctl_down.log || true
+  xargs rm -rf <"${CAUR_INTERFERE}/ignore-hourly.txt" || true
 
   repoctl list \
     | grep '\-\(git\|svn\|bzr\|hg\|nightly\)$' \
     | sort | comm -13 "${CAUR_INTERFERE}/ignore-hourly.txt" - \
     | xargs -L 200 repoctl down 2>&1 \
-    | tee -a _repoctl_down.log
+    | tee -a _repoctl_down.log \
+    || true
 
   makepwd
 
