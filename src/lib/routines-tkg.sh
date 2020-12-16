@@ -24,7 +24,7 @@ function routine-tkg() {
   return 0
 }
 
-function kernel-variate() {
+function tkg-kernel-variate() {
   set -euo pipefail
 
   local _VER _SCHED _YIELD _MARCH _PKGBASE _TIMER_FREQ _RQ
@@ -95,7 +95,7 @@ function kernel-variate() {
   return 0
 }
 
-function kernel-variations() {
+function tkg-kernels-variations() {
   set -euo pipefail
 
   local _LINUX_LTS _LINUX_STABLE _LINUX_MARCH _VAR_SCHED _VAR_SCHED
@@ -133,5 +133,38 @@ function kernel-variations() {
     done
   done
 
+  return 0
+}
+
+function routine-tkg-kernels() {
+  set -euo pipefail
+  iterfere-sync
+  push-routine-dir 'tkg.kernels' || return 12
+
+  git clone 'https://github.com/Frogging-Family/linux-tkg.git' 'linux-tkg'
+
+  local _VARIATIONS _VARIATION _i _DEST
+
+  mapfile -t _VARIATIONS < <(tkg-kernels-variations)
+
+  _i=0
+  for _VARIATION in "${_VARIATIONS[@]}"; do
+    _i=$((_i + 1))
+    _DEST="linut-tkg.$(printf '%04d' $_i)"
+
+    mkdir "$_DEST"
+    cp -r 'linux-tkg'/* "$_DEST/"
+
+    pushd "$_DEST"
+    # shellcheck disable=SC2086
+    tkg-kernel-variate $_VARIATION
+    popd
+  done
+
+  rm -rf --one-file-system 'linux-tkg'
+
+  makepwd
+  clean-logs
+  pop-routine-dir
   return 0
 }

@@ -23,6 +23,9 @@ function routine() {
   'midnight')
     daily-midnight
     ;;
+  'tkg-kernels')
+    routine-tkg-kernels
+    ;;
   'clean-archive')
     clean-archive
     ;;
@@ -74,6 +77,7 @@ function daily-morning() {
 
   git clone https://github.com/torvic9/plasmafox.git
   git clone https://github.com/torvic9/kplasmafoxhelper.git
+  git clone https://github.com/chaotic-aur/nvidia-tkg.git 'chaotic-nvidia-tkg'
 
   makepwd
   clean-logs
