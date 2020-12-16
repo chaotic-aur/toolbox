@@ -50,8 +50,8 @@ function hourly() {
   repoctl list \
     | grep '\-\(git\|svn\|bzr\|hg\|nightly\)$' \
     | sort | comm -13 "${CAUR_INTERFERE}/ignore-hourly.txt" - \
-    | xargs -L 200 repoctl down 2>&1 \
-    | tee -a _repoctl_down.log \
+    | xargs -L 200 auracle clone 2>&1 \
+    | tee -a _repoctl_clone.log \
     || true
 
   (makepwd) || true
