@@ -51,7 +51,7 @@ function hourly() {
     | grep '\-\(git\|svn\|bzr\|hg\|nightly\)$' \
     | sort | comm -13 "${CAUR_INTERFERE}/ignore-hourly.txt" - \
     | xargs -L 200 auracle clone 2>&1 \
-    | tee -a _repoctl_clone.log \
+    | tee -a _repoctl_clone_get.log \
     || true
 
   (makepwd) || true

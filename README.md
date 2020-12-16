@@ -94,7 +94,7 @@
 
 # Dependencies
 
-`pacman -S --needed base-devel git arch-install-scripts repoctl`
+`pacman -S --needed base-devel git arch-install-scripts repoctl auracle-git`
 
 One must have an active mirror of chaotic-aur running locally and some signing key. Configure them in `/etc/chaotic.conf`, like this:
 
