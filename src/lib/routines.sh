@@ -40,7 +40,7 @@ function routine() {
 
 function hourly() {
   set -euo pipefail
-  iterfere-sync
+  (iterfere-sync)
   push-routine-dir 'hourly' || return 12
 
   aur-download libpdfium-nojs | tee _repoctl_down.log || true
@@ -62,7 +62,7 @@ function hourly() {
 
 function daily-morning() {
   set -euo pipefail
-  iterfere-sync
+  (iterfere-sync)
 
   clean-archive
 
@@ -88,7 +88,7 @@ function daily-morning() {
 
 function daily-afternoon() {
   set -euo pipefail
-  iterfere-sync
+  (iterfere-sync)
   push-routine-dir 'afternoon' || return 12
 
   git clone 'https://gitlab.com/garuda-linux/packages/pkgbuilds/garuda-pkgbuilds.git' 'garuda-pkgbuilds' || true
@@ -122,7 +122,10 @@ function daily-night() {
 
 function daily-midnight() {
   set -euo pipefail
-  iterfere-sync
+
+  ([[ -e "$CAUR_LOWER_DIR/latest" ]] && rm "$CAUR_LOWER_DIR/latest") || true
+
+  (iterfere-sync)
   push-routine-dir 'midnight' || return 12
 
   git clone 'https://github.com/SolarAquarion/PKGBUILD-CHAOTIC.git' 'schoina' || true
