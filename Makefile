@@ -16,6 +16,7 @@ LIBS = \
 	mirror \
 	queue-run-nspawn \
 	routines \
+	routines-tkg \
 	sync	
 GUEST_ETC = pacman makepkg
 GUEST_BIN = internal-makepkg x11-wrapper

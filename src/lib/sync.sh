@@ -4,8 +4,7 @@ function iterfere-sync() {
   set -euo pipefail
 
   pushd "${CAUR_INTERFERE}"
-  git pull --ff-only
-  git submodule update --init
+  git pull --ff-only || true
   popd #CAUR_INTERFERE
 
   return 0

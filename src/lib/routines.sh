@@ -110,7 +110,8 @@ function daily-afternoon() {
 function daily-night() {
   set -euo pipefail
 
-  # todo
+  routine-tkg
+
   return 0
 }
 
