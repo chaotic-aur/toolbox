@@ -1,5 +1,13 @@
 # Chaotic AUR
 
+## Disclaimer
+
+I receive questions like "Why didn't you write it in language X? Why didn't you use sudoers instead of `setuid`? Why don't you guarantee reproducible builds? Why don't you use submodules and review every PKGBUILD change?"
+
+Because I can't, I am only one person, taking care of all the steps required for updating 3800 packages non-stop, treating all the differences between those PKGBUILDs and their sources, in an infra that runs in donated VMs which are not any similar.
+
+If at some point you see something that could be better, then please open a PR. And keep it simple, the more complex the codebase becomes, the more complicated will be in the future for one man alone to maintain it.
+
 ## CLI
 
 - `chaotic pr{,epare} ${INPUTDIR} $@`
