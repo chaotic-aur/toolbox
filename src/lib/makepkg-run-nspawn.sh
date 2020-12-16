@@ -5,7 +5,8 @@ function makepkg() {
 
   local _INPUTDIR _PARAMS _PKGTAG _INTERFERE \
     _LOWER _HOME _CCACHE _SRCCACHE _PKGDEST \
-    _CAUR_WIZARD _MECHA_NAME _BUILD_FAILED
+    _CAUR_WIZARD _MECHA_NAME _BUILD_FAILED \
+    _CONTAINER_ARGS
 
   _INPUTDIR="$(
     cd "${1:-}"
@@ -66,12 +67,15 @@ function makepkg() {
   chown "${CAUR_GUEST_UID}":"${CAUR_GUEST_GID}" -R "${_CAUR_WIZARD}" pkgwork
   chmod 755 "${_CAUR_WIZARD}"
 
+  _CONTAINER_ARGS=()
+  [[ -f 'CONTAINER_ARGS' ]] && mapfile -t _CONTAINER_ARGS <CONTAINER_ARGS
+
   _MECHA_NAME="pkg$(echo -n "$_PKGTAG" | sha256sum | cut -c1-11)"
   _BUILD_FAILED=''
   systemd-nspawn -M "${_MECHA_NAME}" \
     -u "${CAUR_GUEST_USER}" \
     --capability=CAP_IPC_LOCK,CAP_SYS_NICE \
-    -D machine/root \
+    -D machine/root "${_CONTAINER_ARGS[@]}" \
     "/home/${CAUR_GUEST_USER}/wizard.sh" "${_PARAMS[@]}" || local _BUILD_FAILED="$?"
 
   if [[ -z "${_BUILD_FAILED}" ]]; then

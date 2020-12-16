@@ -74,7 +74,13 @@ function interference-makepkg() {
 function interference-finish() {
   set -euo pipefail
 
-  unset TARGET_ARGS
+  unset TARGET_ARGS || true
+
+  if [[ -n "${TARGET_RUN:-}" ]]; then
+    echo "${TARGET_RUN}" >'CONTAINER_ARGS'
+  fi
+
+  unset TARGET_RUN || true
 
   return 0
 }
