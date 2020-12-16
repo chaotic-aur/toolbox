@@ -3,7 +3,15 @@
 function makepwd() {
   set -euo pipefail
 
-  for _pkg in *; do
+  local _LS
+
+  if [ ${#@} -eq 0 ]; then
+    _LS=(./*/)
+  else
+    _LS=("$@")
+  fi
+
+  for _pkg in "${_LS[@]}"; do
     if [[ ! -d "${_pkg}" ]]; then
       echo "Skipping \"${_pkg}\", not a directory."
       continue
@@ -14,10 +22,11 @@ function makepwd() {
     prepare "${_pkg}"
   done
 
-  for _pkg in *; do
+  for _pkg in "${_LS[@]}"; do
     [[ ! -f "${_pkg}/PKGTAG" ]] && continue
-    makepkg "${_pkg}" --noconfirm | tee "${_pkg}.log" || continue
-    if deploy "${_pkg}"; then db-bump; else continue; fi
+    makepkg "${_pkg}" --noconfirm | tee "${_pkg}.log" \
+      || true # we want to cleanup even if it failed
+    if deploy "${_pkg}"; then db-bump; fi
     cleanup "${_pkg}"
   done
 

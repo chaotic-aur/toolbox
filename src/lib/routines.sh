@@ -37,9 +37,7 @@ function routine() {
 
 function hourly() {
   set -euo pipefail
-
   iterfere-sync
-
   push-routine-dir 'hourly' || return 12
 
   aur-download libpdfium-nojs | tee _repoctl_down.log || true
@@ -54,27 +52,58 @@ function hourly() {
     || true
 
   makepwd
-
   clean-logs
-
   pop-routine-dir
-
   return 0
 }
 
 function daily-morning() {
   set -euo pipefail
+  iterfere-sync
 
   clean-archive
 
-  # todo
+  push-routine-dir 'morning' || return 12
+
+  repoctl down vlc-git rpcs3-git wireguard-dkms-git ffmpeg-full ffmpeg-amd-full-git \
+    retdec-git ungoogled-chromium{,-git} {chromium,electron}-ozone brave \
+    jellyfin-git godot-git zapcc-git visual-studio-code-insiders cling-git \
+    blender-git nginx-zest-git onivim2-git \
+    \
+    firefox-wayland-hg waterfox-current-git firefox-kde-opensuse
+
+  git clone https://github.com/torvic9/plasmafox.git
+  git clone https://github.com/torvic9/kplasmafoxhelper.git
+
+  makepwd
+  clean-logs
+  pop-routine-dir
   return 0
 }
 
 function daily-afternoon() {
   set -euo pipefail
+  iterfere-sync
+  push-routine-dir 'afternoon' || return 12
 
-  # todo
+  git clone 'https://gitlab.com/garuda-linux/packages/pkgbuilds/garuda-pkgbuilds.git' 'garuda-pkgbuilds'
+  git clone 'https://github.com/excalibur1234/pacui.git' 'pacui-repo'
+  git clone 'https://github.com/librewish/wishbuilds.git' 'wishbuilds'
+  #git clone 'https://github.com/flightlessmango/PKGBUILDS.git' 'mangos'
+
+  mv 'garuda-pkgbuilds/pkgbuilds'/* ./ || true
+  mv 'wishbuilds/manjarowish'/* ./ || true
+  #mv 'mangos'/* ./ || true
+
+  mkdir 'pacui' 'pacui-git'
+  mv 'pacui-repo/PKGBUILD' 'pacui/'
+  mv 'pacui-repo/PKGBUILD-git' 'pacui-git/'
+
+  rm -rf --one-file-system 'garuda-pkgbuilds' 'pacui-repo' 'wishbuilds' # 'mangos'
+
+  makepwd
+  clean-logs
+  pop-routine-dir
   return 0
 }
 
@@ -87,8 +116,18 @@ function daily-night() {
 
 function daily-midnight() {
   set -euo pipefail
+  iterfere-sync
+  push-routine-dir 'midnight' || return 12
 
-  # todo
+  git clone 'https://github.com/SolarAquarion/PKGBUILD-CHAOTIC.git' 'schoina'
+
+  mv 'schoina'/* ./ || true
+
+  rm -rf --one-file-system 'schoina'
+
+  makepwd 'mesa-git' 'llvm-git'
+  clean-logs
+  pop-routine-dir
   return 0
 }
 

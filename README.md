@@ -16,9 +16,10 @@
   Builds the package in a container using systed-nspawn.
   `$INPUTDIR` is the result of a `prepare`
 
-- `chaotic {mkd,makepwd} $@`
+- `chaotic {mkd,makepwd} [${PACKAGES[@]}]`
 
   Prepare and build all packages in the current directory.
+  If `PACKAGES` are not provided then it will try to build all sub-directories.
 
 - `chaotic {si,iterfere-sync}`
 
