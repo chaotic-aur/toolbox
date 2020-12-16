@@ -43,8 +43,8 @@ function hourly() {
   iterfere-sync
   push-routine-dir 'hourly' || return 12
 
-  aur-download libpdfium-nojs | tee _repoctl_down.log || true
-  aur-download -ru | tee -a _repoctl_down.log || true
+  aur-download libpdfium-nojs | tee _auracle_get.log || true
+  aur-download -r | tee -a _auracle_get.log || true
   xargs rm -rf <"${CAUR_INTERFERE}/ignore-hourly.txt" || true
 
   repoctl list \
@@ -68,7 +68,7 @@ function daily-morning() {
 
   push-routine-dir 'morning' || return 12
 
-  repoctl down vlc-git rpcs3-git wireguard-dkms-git ffmpeg-full ffmpeg-amd-full-git \
+  aur-download vlc-git rpcs3-git wireguard-dkms-git ffmpeg-full ffmpeg-amd-full-git \
     retdec-git ungoogled-chromium{,-git} {chromium,electron}-ozone brave \
     jellyfin-git godot-git zapcc-git visual-studio-code-insiders cling-git \
     blender-git nginx-zest-git onivim2-git \
