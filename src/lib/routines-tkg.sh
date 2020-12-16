@@ -7,16 +7,16 @@ function routine-tkg() {
   push-routine-dir 'tkg' || return 12
 
   _ORG='https://github.com/Frogging-Family'
-  git clone "$_ORG/vulkan-headers-git.git" 'vulkan-headers-tkg-git'
-  git clone "$_ORG/llvm-git.git" 'llvm-tkg-git'
-  git clone "$_ORG/mesa-git.git" 'mesa-tkg-git'
-  git clone "$_ORG/spirv-tools-git.git" 'spirv-tools-tkg-git'
-  git clone "$_ORG/gamescope-git.git" 'gamescope-tkg-git'
-  git clone "$_ORG/vulkan-icd-loader-git.git" 'vulkan-icd-loader-tkg-git'
-  git clone "$_ORG/amdvlk-opt.git" 'amdvlk-tkg'
-  git clone "$_ORG/vkd3d-git.git" 'vkd3d-tkg-git'
-  git clone "$_ORG/faudio-git.git" 'faudio-tkg-git'
-  git clone "$_ORG/neofrog-git.git" 'neofrog-git'
+  git clone "$_ORG/vulkan-headers-git.git" 'vulkan-headers-tkg-git' || true
+  git clone "$_ORG/llvm-git.git" 'llvm-tkg-git' || true
+  git clone "$_ORG/mesa-git.git" 'mesa-tkg-git' || true
+  git clone "$_ORG/spirv-tools-git.git" 'spirv-tools-tkg-git' || true
+  git clone "$_ORG/gamescope-git.git" 'gamescope-tkg-git' || true
+  git clone "$_ORG/vulkan-icd-loader-git.git" 'vulkan-icd-loader-tkg-git' || true
+  git clone "$_ORG/amdvlk-opt.git" 'amdvlk-tkg' || true
+  git clone "$_ORG/vkd3d-git.git" 'vkd3d-tkg-git' || true
+  git clone "$_ORG/faudio-git.git" 'faudio-tkg-git' || true
+  git clone "$_ORG/neofrog-git.git" 'neofrog-git' || true
 
   makepwd
   clean-logs
@@ -101,7 +101,7 @@ function tkg-kernels-variations() {
   local _LINUX_LTS _LINUX_STABLE _LINUX_MARCH _VAR_SCHED _VAR_SCHED
 
   _LINUX_LTS='5.4'
-  _LINUX_STABLE='5.9'
+  _LINUX_STABLE='5.10'
 
   _LINUX_SCHED=(
     'bmq 1'
@@ -161,9 +161,9 @@ function routine-tkg-kernels() {
     popd
   done
 
-  rm -rf --one-file-system 'linux-tkg'
+  rm -rf --one-file-system 'linux-tkg' || true
 
-  makepwd
+  (makepwd) || true
   clean-logs
   pop-routine-dir
   return 0

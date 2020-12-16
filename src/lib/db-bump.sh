@@ -11,14 +11,17 @@ function db-bump() {
   fi
 
   # Lock bump operations
-  while [[ -f "${CAUR_DB_LOCK}" ]]; do
-    sleep 2
-  done
+  if [[ -f "${CAUR_DB_LOCK}" ]]; then
+    echo 'Lock found, waiting for the other process to finish...'
+    while [[ -f "${CAUR_DB_LOCK}" ]]; do
+      sleep 2
+    done
+  fi
   echo -n $$ >"${CAUR_DB_LOCK}"
 
   # Add them all
   if repoctl update && db-last-bump; then
-    db-pkglist
+    (db-pkglist) || true # we want to unlock even if it fails
   else
     db-unlock
     return 20
@@ -69,14 +72,17 @@ function remove() {
   fi
 
   # Lock bump operations
-  while [[ -f "${CAUR_DB_LOCK}" ]]; do
-    sleep 2
-  done
+  if [[ -f "${CAUR_DB_LOCK}" ]]; then
+    echo 'Lock found, waiting for the other process to finish...'
+    while [[ -f "${CAUR_DB_LOCK}" ]]; do
+      sleep 2
+    done
+  fi
   echo -n $$ >"${CAUR_DB_LOCK}"
 
   # Remove them all
   if repoctl remove "$@"; then
-    db-pkglist
+    (db-pkglist) || true # we want to unlock even if it fails
   else
     db-unlock
     return 21

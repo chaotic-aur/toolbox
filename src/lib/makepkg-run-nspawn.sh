@@ -28,7 +28,7 @@ function makepkg() {
   echo -n $$ >"${_INPUTDIR}/building.pid"
 
   if [[ ! -e "${CAUR_LOWER_DIR}/latest" ]]; then
-    lowerstrap || return $?
+    (lowerstrap) || return $?
   fi
 
   pushd "${_INPUTDIR}"

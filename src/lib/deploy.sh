@@ -49,13 +49,21 @@ function deploy() {
 function deploypwd() {
   set -euo pipefail
 
+  local _LS
+
+  if [ ${#@} -eq 0 ]; then
+    _LS=(./*/)
+  else
+    _LS=("$@")
+  fi
+
   if [[ -z "${CAUR_SIGN_KEY}" ]]; then
     echo 'A signing key is required for deploying.'
     return 17
   fi
 
-  for _pkg in ./*; do
-    deploy "$_pkg" || continue
+  for _pkg in "${_LS[@]}"; do
+    (deploy "$_pkg") || continue
   done
 
   return 0

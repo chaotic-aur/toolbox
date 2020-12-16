@@ -54,7 +54,7 @@ function hourly() {
     | tee -a _repoctl_down.log \
     || true
 
-  makepwd
+  (makepwd) || true
   clean-logs
   pop-routine-dir
   return 0
@@ -73,13 +73,14 @@ function daily-morning() {
     jellyfin-git godot-git zapcc-git visual-studio-code-insiders cling-git \
     blender-git nginx-zest-git onivim2-git \
     \
-    firefox-wayland-hg waterfox-current-git firefox-kde-opensuse
+    firefox-wayland-hg waterfox-current-git firefox-kde-opensuse \
+    || true
 
-  git clone https://github.com/torvic9/plasmafox.git
-  git clone https://github.com/torvic9/kplasmafoxhelper.git
-  git clone https://github.com/chaotic-aur/nvidia-tkg.git 'chaotic-nvidia-tkg'
+  git clone https://github.com/torvic9/plasmafox.git 'plasmafox' || true
+  git clone https://github.com/torvic9/kplasmafoxhelper.git 'kplasmafoxhelper' || true
+  git clone https://github.com/chaotic-aur/nvidia-tkg.git 'chaotic-nvidia-tkg' || true
 
-  makepwd
+  (makepwd) || true
   clean-logs
   pop-routine-dir
   return 0
@@ -90,10 +91,10 @@ function daily-afternoon() {
   iterfere-sync
   push-routine-dir 'afternoon' || return 12
 
-  git clone 'https://gitlab.com/garuda-linux/packages/pkgbuilds/garuda-pkgbuilds.git' 'garuda-pkgbuilds'
-  git clone 'https://github.com/excalibur1234/pacui.git' 'pacui-repo'
-  git clone 'https://github.com/librewish/wishbuilds.git' 'wishbuilds'
-  #git clone 'https://github.com/flightlessmango/PKGBUILDS.git' 'mangos'
+  git clone 'https://gitlab.com/garuda-linux/packages/pkgbuilds/garuda-pkgbuilds.git' 'garuda-pkgbuilds' || true
+  git clone 'https://github.com/excalibur1234/pacui.git' 'pacui-repo' || true
+  git clone 'https://github.com/librewish/wishbuilds.git' 'wishbuilds' || true
+  #git clone 'https://github.com/flightlessmango/PKGBUILDS.git' 'mangos' || true
 
   mv 'garuda-pkgbuilds/pkgbuilds'/* ./ || true
   mv 'wishbuilds/manjarowish'/* ./ || true
@@ -105,7 +106,7 @@ function daily-afternoon() {
 
   rm -rf --one-file-system 'garuda-pkgbuilds' 'pacui-repo' 'wishbuilds' # 'mangos'
 
-  makepwd
+  (makepwd) || true
   clean-logs
   pop-routine-dir
   return 0
@@ -124,13 +125,13 @@ function daily-midnight() {
   iterfere-sync
   push-routine-dir 'midnight' || return 12
 
-  git clone 'https://github.com/SolarAquarion/PKGBUILD-CHAOTIC.git' 'schoina'
+  git clone 'https://github.com/SolarAquarion/PKGBUILD-CHAOTIC.git' 'schoina' || true
 
   mv 'schoina'/* ./ || true
 
   rm -rf --one-file-system 'schoina'
 
-  makepwd 'mesa-git' 'llvm-git'
+  (makepwd 'mesa-git' 'llvm-git') || true
   clean-logs
   pop-routine-dir
   return 0
@@ -194,7 +195,9 @@ function kill-freeze-notify() {
 
   [[ -z "${FREEZE_NOTIFIER:-}" ]] && return 0
 
-  kill "$FREEZE_NOTIFIER"
+  kill "$FREEZE_NOTIFIER" || true
+
+  unset FREEZE_NOTIFIER
 
   return 0
 }
@@ -204,7 +207,10 @@ function clean-archive() {
 
   [[ "$CAUR_TYPE" != 'primary' ]] && return 0
 
-  cd "${CAUR_DEST_PKG}/../archive"
+  pushd "${CAUR_DEST_PKG}/../archive"
 
-  find . -type f -mtime +7 -name '*' -execdir rm -- '{}' \;
+  find . -type f -mtime +7 -name '*' -execdir rm -- '{}' \; || true
+
+  popd
+  return 0
 }

@@ -19,15 +19,15 @@ function makepwd() {
       echo "Skipping \"${_pkg}\", does not contains a PKGBUILD."
       continue
     fi
-    prepare "${_pkg}"
+    (prepare "${_pkg}") || true # we want build to continue even if one pkg failed
   done
 
   for _pkg in "${_LS[@]}"; do
     [[ ! -f "${_pkg}/PKGTAG" ]] && continue
-    makepkg "${_pkg}" --noconfirm | tee "${_pkg}.log" \
+    (makepkg "${_pkg}" --noconfirm | tee "${_pkg}.log") \
       || true # we want to cleanup even if it failed
-    if deploy "${_pkg}"; then db-bump; fi
-    cleanup "${_pkg}"
+    (deploy "${_pkg}" && db-bump) || true
+    (cleanup "${_pkg}") || true
   done
 
   return 0
@@ -39,13 +39,13 @@ function clean-logs() {
   local _TOREM
 
   mapfile -t _TOREM < <(grep -l -P 'ERROR: (A|The) package( group)? has already been built' ./*.log)
-  [ ${#_TOREM[@]} -eq 0 ] || echo "${_TOREM[@]}" | xargs rm
+  [ ${#_TOREM[@]} -eq 0 ] || echo "${_TOREM[@]}" | xargs rm || true
 
   mapfile -t _TOREM < <(grep -l 'Finished making: ' ./*.log)
-  [ ${#_TOREM[@]} -eq 0 ] || echo "${_TOREM[@]}" | xargs rm
+  [ ${#_TOREM[@]} -eq 0 ] || echo "${_TOREM[@]}" | xargs rm || true
 
   mapfile -t _TOREM < <(grep -l 'PKGBUILD does not exist.' ./*.log)
-  [ ${#_TOREM[@]} -eq 0 ] || echo "${_TOREM[@]}" | xargs rm
+  [ ${#_TOREM[@]} -eq 0 ] || echo "${_TOREM[@]}" | xargs rm || true
 
   return 0
 }
