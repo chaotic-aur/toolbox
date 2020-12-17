@@ -23,8 +23,7 @@ ROUTINES = \
 	morning \
 	afternoon \
 	nightly \
-	midnight \
-	tkg-kernels
+	midnight 
 GUEST_ETC = pacman makepkg
 GUEST_BIN = internal-makepkg x11-wrapper
 
