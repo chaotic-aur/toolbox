@@ -76,9 +76,8 @@ function daily-morning() {
     firefox-wayland-hg waterfox-current-git firefox-kde-opensuse \
     || true
 
-  git clone https://github.com/torvic9/plasmafox.git 'plasmafox' || true
-  git clone https://github.com/torvic9/kplasmafoxhelper.git 'kplasmafoxhelper' || true
-  git clone https://github.com/chaotic-aur/nvidia-tkg.git 'chaotic-nvidia-tkg' || true
+  git clone 'https://github.com/torvic9/plasmafox.git' 'plasmafox' || true
+  git clone 'https://github.com/torvic9/kplasmafoxhelper.git' 'kplasmafoxhelper' || true
 
   (makepwd) || true
   clean-logs
@@ -94,8 +93,11 @@ function daily-afternoon() {
   git clone 'https://gitlab.com/garuda-linux/packages/pkgbuilds/garuda-pkgbuilds.git' 'garuda-pkgbuilds' || true
   git clone 'https://github.com/excalibur1234/pacui.git' 'pacui-repo' || true
   git clone 'https://github.com/librewish/wishbuilds.git' 'wishbuilds' || true
+  git clone 'https://github.com/chaotic-aur/nvidia-tkg.git' 'chaotic-nvidia-tkg' || true
+  git clone 'https://github.com/chaotic-aur/nvidia-tkg.git' 'chaotic-nvidia-dev-tkg' || true
   #git clone 'https://github.com/flightlessmango/PKGBUILDS.git' 'mangos' || true
 
+  touch 'chaotic-nvidia-dev-tkg/tkg.dev' || true
   mv 'garuda-pkgbuilds/pkgbuilds'/* ./ || true
   mv 'wishbuilds/manjarowish'/* ./ || true
   #mv 'mangos'/* ./ || true
