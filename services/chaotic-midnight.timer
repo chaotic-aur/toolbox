@@ -1,0 +1,9 @@
+[Unit]
+Description=Chaotic's midnight routine
+
+[Timer]
+OnCalendar=*-*-* 00:20:00
+Persistent=false
+
+[Install]
+WantedBy=timers.target

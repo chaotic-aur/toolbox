@@ -1,0 +1,11 @@
+[Unit]
+Description=Chaotic's hourly routine
+
+[Service]
+User=root
+Group=chaotic_op
+WorkingDirectory=/tmp
+ExecStart=/usr/local/bin/chaotic routine hourly
+
+[Install]
+WantedBy=multi-user.target

@@ -64,7 +64,7 @@ function daily-morning() {
   set -euo pipefail
   (iterfere-sync)
 
-  clean-archive
+  (clean-archive) || true
 
   push-routine-dir 'morning' || return 12
 

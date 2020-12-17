@@ -1,0 +1,11 @@
+[Unit]
+Description=Chaotic's afternoon routine
+
+[Service]
+User=root
+Group=chaotic_op
+WorkingDirectory=/tmp
+ExecStart=/usr/local/bin/chaotic routine afternoon
+
+[Install]
+WantedBy=multi-user.target

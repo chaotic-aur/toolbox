@@ -18,6 +18,13 @@ LIBS = \
 	routines \
 	routines-tkg \
 	sync	
+ROUTINES = \
+	hourly \
+	morning \
+	afternoon \
+	nightly \
+	midnight \
+	tkg-kernels
 GUEST_ETC = pacman makepkg
 GUEST_BIN = internal-makepkg x11-wrapper
 
@@ -58,6 +65,9 @@ $(DESTDIR)/etc/chaotic/gnupg:
 	@install -o root -g root -dm700 $@
 	gpg --homedir "$@" --recv-keys 8A9E14A07010F7E3
 
+$(DESTDIR)/usr/lib/systemd/system/%: services/%
+	install -o root -g root -m755 $< $@
+
 build: build/chaotic.elf
 
 install: \
@@ -70,4 +80,8 @@ install: \
 	$(DESTDIR)/var/cache/chaotic \
 	$(DESTDIR)/etc/chaotic/gnupg
 
-.PHONY: install build
+install-services: \
+	$(foreach s, $(ROUTINES), $(DESTDIR)/usr/lib/systemd/system/chaotic-${s}.service) \
+	$(foreach s, $(ROUTINES), $(DESTDIR)/usr/lib/systemd/system/chaotic-${s}.timer)
+
+.PHONY: install install-services build
