@@ -81,6 +81,7 @@ install: \
 
 install-services: \
 	$(foreach s, $(ROUTINES), $(DESTDIR)/usr/lib/systemd/system/chaotic-${s}.service) \
-	$(foreach s, $(ROUTINES), $(DESTDIR)/usr/lib/systemd/system/chaotic-${s}.timer)
+	$(foreach s, $(ROUTINES), $(DESTDIR)/usr/lib/systemd/system/chaotic-${s}.timer) \
+	systemctl daemon-reload
 
 .PHONY: install install-services build

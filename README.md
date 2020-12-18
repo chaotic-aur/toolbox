@@ -74,7 +74,7 @@ If at some point you see something that could be better, then please open a PR. 
 
   When on a primary node, clean up the archive folder.
 
-- `chaotic routine clean-logs`
+- `chaotic clean-logs`
 
   After a `chaotic makepwd`, remove successfull and "already built" logs.
 

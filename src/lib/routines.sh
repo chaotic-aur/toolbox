@@ -104,9 +104,9 @@ function daily-afternoon() {
 
   mkdir 'pacui' 'pacui-git'
   mv 'pacui-repo/PKGBUILD' 'pacui/'
-  mv 'pacui-repo/PKGBUILD-git' 'pacui-git/'
+  mv 'pacui-repo/PKGBUILD-git' 'pacui-git/PKGBUILD'
 
-  rm -rf --one-file-system 'garuda-pkgbuilds' 'pacui-repo' 'wishbuilds' # 'mangos'
+  rm -rf --one-file-system 'garuda-pkgbuilds' 'pacui-repo' 'wishbuilds' 'calamares-netinstall-settings' # 'mangos'
 
   (makepwd) || true
   clean-logs
