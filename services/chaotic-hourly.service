@@ -5,6 +5,7 @@ Description=Chaotic's hourly routine
 User=root
 Group=chaotic_op
 WorkingDirectory=/tmp
+Environment=CAUR_PARALLEL=4
 ExecStart=/usr/local/bin/chaotic routine hourly
 
 [Install]
