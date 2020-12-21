@@ -48,20 +48,16 @@ function makepkg() {
   _CAUR_WIZARD="machine/root/home/${CAUR_GUEST_USER}/${CAUR_BASH_WIZARD}"
 
   mkdir -p machine/{up,work,root} dest{,.work} "${_CCACHE}" "${_SRCCACHE}" "${CAUR_CACHE_PKG}" "${CAUR_DEST_PKG}"
-  mount overlay -t overlay -olowerdir="${_LOWER}",upperdir=machine/up,workdir=machine/work machine/root
+  fuse-overlayfs -olowerdir="${_LOWER}",upperdir='machine/up',workdir='machine/work' 'machine/root'
   chown "${CAUR_GUEST_UID}":"${CAUR_GUEST_GID}" "${_CCACHE}" "${_SRCCACHE}" "${CAUR_CACHE_PKG}" dest
 
   mount --bind 'pkgwork' "${_HOME}/pkgwork"
   mount --bind "${_CCACHE}" "${_HOME}/.ccache"
   mount --bind "${_SRCCACHE}" "${_HOME}/pkgsrc"
   mount --bind "${CAUR_CACHE_PKG}" 'machine/root/var/cache/pacman/pkg'
-  if [[ "${CAUR_HACK_USEOVERLAYDEST}" == '1' ]]; then
-    mount overlay -t overlay \
-      -olowerdir="${CAUR_DEST_PKG}",upperdir=./dest,workdir=./dest.work \
+  fuse-overlayfs \
+      -olowerdir="${CAUR_DEST_PKG}",upperdir='./dest',workdir='./dest.work' \
       "${_PKGDEST}"
-  else
-    mount --bind 'dest' "${_PKGDEST}"
-  fi
 
   cp "${CAUR_BASH_WIZARD}" "${_CAUR_WIZARD}"
   chown "${CAUR_GUEST_UID}":"${CAUR_GUEST_GID}" -R "${_CAUR_WIZARD}" pkgwork

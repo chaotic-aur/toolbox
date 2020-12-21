@@ -102,7 +102,7 @@ If at some point you see something that could be better, then please open a PR. 
 
 # Dependencies
 
-`pacman -S --needed base-devel git arch-install-scripts repoctl`
+`pacman -S --needed base-devel git arch-install-scripts repoctl fuse-overlayfs`
 
 One must have an active mirror of chaotic-aur running locally and some signing key. Configure them in `/etc/chaotic.conf`, like this:
 

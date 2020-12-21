@@ -40,6 +40,8 @@ function prepare() {
   popd #_PKGDIR
   makepkg-gen-bash-finish
 
+  echo "Finished preparing ${_PKGTAG}."
+
   return 0
 }
 
