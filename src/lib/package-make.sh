@@ -56,8 +56,8 @@ function makepkg() {
   mount --bind "${_SRCCACHE}" "${_HOME}/pkgsrc"
   mount --bind "${CAUR_CACHE_PKG}" 'machine/root/var/cache/pacman/pkg'
   fuse-overlayfs \
-      -olowerdir="${CAUR_DEST_PKG}",upperdir='./dest',workdir='./dest.work' \
-      "${_PKGDEST}"
+    -olowerdir="${CAUR_DEST_PKG}",upperdir='./dest',workdir='./dest.work' \
+    "${_PKGDEST}"
 
   cp "${CAUR_BASH_WIZARD}" "${_CAUR_WIZARD}"
   chown "${CAUR_GUEST_UID}":"${CAUR_GUEST_GID}" -R "${_CAUR_WIZARD}" pkgwork
