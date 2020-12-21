@@ -5,16 +5,16 @@ endif
 
 LIBS = \
 	aur \
+	base-make \
 	cleanup \
-	db-bump \
+	database \
 	deploy \
 	interfere \
 	keyring \
-	lower-prepare \
-	makepkg-gen-bash \
-	makepkg-run-nspawn \
 	mirror \
-	queue-run-nspawn \
+	package-make \
+	package-makedir \
+	package-prepare \
 	routines \
 	routines-tkg \
 	sync	
