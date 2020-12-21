@@ -23,14 +23,48 @@ function makepwd() {
   done
 
   for _pkg in "${_LS[@]}"; do
-    [[ ! -f "${_pkg}/PKGTAG" ]] && continue
-    (makepkg "${_pkg}" --noconfirm | tee "${_pkg}.log") \
-      || true # we want to cleanup even if it failed
-    (deploy "${_pkg}" && db-bump) || true
-    (cleanup "${_pkg}") || true
+    if [[ "$_pkg" == '--' ]]; then
+      echo 'Trapped, waiting jobs until here.'
+      wait
+    elif [[ -z "${CAUR_PARALLEL:-}" ]]; then
+      pipepkg "$_pkg"
+    else
+      pipelimit
+      pipepkg "$_pkg" &
+      sleep 1
+    fi
   done
 
+  if [[ -n "${CAUR_PARALLEL:-}" ]]; then
+    echo 'Waiting all jobs to finish'
+    wait
+  fi
+
   return 0
+}
+
+function pipepkg() {
+  set -euo pipefail
+
+  if [[ -z "$1" ]] || [[ ! -f "${_pkg}/PKGTAG" ]]; then
+    echo 'Invalid package name.'
+    return 24
+  fi
+
+  (makepkg "${_pkg}" --noconfirm | tee "${_pkg}.log") \
+    || true # we want to cleanup even if it failed
+  (deploy "${_pkg}" && db-bump) || true
+  (cleanup "${_pkg}") || true
+
+  return 0
+}
+
+function limit_build() {
+  set -euo pipefail
+
+  while [[ $(jobs -rp | wc -l) -ge "${CAUR_PARALLEL:-1}" ]]; do
+    sleep 1
+  done
 }
 
 function clean-logs() {
