@@ -24,6 +24,7 @@ CAUR_DEST_LAST="/srv/http/chaotic-aur/lastupdate"
 CAUR_DEST_PKG="/srv/http/${CAUR_DB_NAME}/x86_64"
 CAUR_GUEST_BIN="${CAUR_PREFIX}/lib/chaotic/guest/bin"
 CAUR_GUEST_ETC="${CAUR_PREFIX}/lib/chaotic/guest/etc"
+CAUR_LIB="${CAUR_PREFIX}/lib/chaotic"
 CAUR_GUEST_GID=1000
 CAUR_GUEST_UID=1000
 CAUR_GUEST_USER='main-builder'
@@ -48,7 +49,7 @@ if [ "$EUID" -ne 0 ]; then
 fi
 
 shopt -s extglob
-for _LIB in "${CAUR_PREFIX}/lib/chaotic"/*.sh; do
+for _LIB in "${CAUR_LIB}"/*.sh; do
   # shellcheck source=src/lib/*
   source "${_LIB}"
 done
