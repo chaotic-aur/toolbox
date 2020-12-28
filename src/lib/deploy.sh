@@ -3,7 +3,7 @@
 function deploy() {
   set -euo pipefail
 
-  local _INPUTDIR _RESULT
+  local _INPUTDIR _RESULT _NON_KISS_SUDO
 
   _INPUTDIR="$(
     cd "${1:-}"
@@ -11,6 +11,11 @@ function deploy() {
   )"
 
   _RESULT="${_INPUTDIR}/building.result"
+
+  _NON_KISS_SUDO=""
+  if [[ -n "${CAUR_SIGN_USER}" ]]; then
+    _NON_KISS_SUDO="sudo -u ${CAUR_SIGN_USER}"
+  fi
 
   if [[ -z "${CAUR_SIGN_KEY}" ]]; then
     echo 'A signing key is required for deploying.'
@@ -27,7 +32,7 @@ function deploy() {
     [[ "$f" == '!(*.sig)' ]] && continue
 
     if [[ ! -e "${f}.sig" ]]; then
-      sudo -u "${CAUR_SIGN_USER}" \
+      ${_NON_KISS_SUDO} \
         /usr/bin/gpg --detach-sign \
         --use-agent -u "${CAUR_SIGN_KEY}" \
         --no-armor "$f"
