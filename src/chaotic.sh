@@ -12,6 +12,7 @@ popd || exit 2
 CAUR_DB_NAME='chaotic-aur'
 CAUR_INTERFERE='/var/lib/chaotic/interfere'
 
+CAUR_ENGINE="systemd-nspawn"
 CAUR_ADD_DEST="builds.garudalinux.org:~/chaotic/queues/$(whoami)/"
 CAUR_BASH_WIZARD='wizard.sh'
 CAUR_CACHE_CC='/var/cache/chaotic/cc'
@@ -43,7 +44,7 @@ CAUR_URL="http://localhost/${CAUR_DB_NAME}/x86_64"
 # shellcheck source=/dev/null
 [[ -f "$HOME/.chaotic/chaotic.conf" ]] && source "$HOME/.chaotic/chaotic.conf"
 
-if [ "$EUID" -ne 0 ]; then
+if [ "$EUID" -ne 0 ] && [ "$CAUR_ENGINE" != "singularity" ]; then
   echo 'This script must be run as root.'
   exit 255
 fi
