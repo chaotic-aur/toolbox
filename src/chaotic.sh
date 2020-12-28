@@ -65,40 +65,40 @@ function main() {
 
   case "${_CMD}" in
   'prepare' | 'pr')
-    prepare "${_PARAMS[@]}"
+    prepare "${_PARAMS[@]+"${_PARAMS[@]}"}"
     ;;
   'lowerstrap' | 'lw')
-    lowerstrap "${_PARAMS[@]}"
+    lowerstrap "${_PARAMS[@]+"${_PARAMS[@]}"}"
     ;;
   'makepkg' | 'mk')
-    makepkg "${_PARAMS[@]}"
+    makepkg "${_PARAMS[@]+"${_PARAMS[@]}"}"
     ;;
   'makepwd' | 'mkd')
-    makepwd "${_PARAMS[@]}"
+    makepwd "${_PARAMS[@]+"${_PARAMS[@]}"}"
     ;;
   'iterfere-sync' | 'si')
-    iterfere-sync "${_PARAMS[@]}"
+    iterfere-sync "${_PARAMS[@]+"${_PARAMS[@]}"}"
     ;;
   'deploy' | 'dp')
-    deploy "${_PARAMS[@]}"
+    deploy "${_PARAMS[@]+"${_PARAMS[@]}"}"
     ;;
   'db-bump' | 'dbb')
-    db-bump "${_PARAMS[@]}"
+    db-bump "${_PARAMS[@]+"${_PARAMS[@]}"}"
     ;;
   'remove' | 'rm')
-    remove "${_PARAMS[@]}"
+    remove "${_PARAMS[@]+"${_PARAMS[@]}"}"
     ;;
   'aur-download' | 'get')
-    aur-download "${_PARAMS[@]}"
+    aur-download "${_PARAMS[@]+"${_PARAMS[@]}"}"
     ;;
   'cleanup' | 'cl')
-    cleanup "${_PARAMS[@]}"
+    cleanup "${_PARAMS[@]+"${_PARAMS[@]}"}"
     ;;
   'help' | '?')
-    help-mirror "${_PARAMS[@]}"
+    help-mirror "${_PARAMS[@]+"${_PARAMS[@]}"}"
     ;;
   'routine')
-    routine "${_PARAMS[@]}"
+    routine "${_PARAMS[@]+"${_PARAMS[@]}"}"
     ;;
   'clean-logs' | 'clg')
     clean-logs

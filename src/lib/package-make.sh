@@ -72,7 +72,7 @@ function makepkg() {
     -u "${CAUR_GUEST_USER}" \
     --capability=CAP_IPC_LOCK,CAP_SYS_NICE \
     -D machine/root "${_CONTAINER_ARGS[@]}" \
-    "/home/${CAUR_GUEST_USER}/wizard.sh" "${_PARAMS[@]}" || local _BUILD_FAILED="$?"
+    "/home/${CAUR_GUEST_USER}/wizard.sh" "${_PARAMS[@]+"${_PARAMS[@]}"}" || local _BUILD_FAILED="$?"
 
   if [[ -z "${_BUILD_FAILED}" ]]; then
     echo 'success' >'building.result'

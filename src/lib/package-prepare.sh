@@ -34,7 +34,7 @@ function prepare() {
   interference-apply "${_INTERFERE}"
   popd # pkgwork
 
-  interference-makepkg "${_PARAMS[@]}"
+  interference-makepkg "${_PARAMS[@]+"${_PARAMS[@]}"}"
   interference-finish
 
   popd #_PKGDIR
