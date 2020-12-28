@@ -10,7 +10,6 @@ CAUR_PREFIX="$(pwd -P)"
 popd || exit 2
 
 CAUR_DB_NAME='chaotic-aur'
-CAUR_GUEST_GNUPG='/etc/chaotic/gnupg'
 CAUR_INTERFERE='/var/lib/chaotic/interfere'
 
 CAUR_ADD_DEST="builds.garudalinux.org:~/chaotic/queues/$(whoami)/"
@@ -86,9 +85,6 @@ function main() {
     ;;
   'aur-download' | 'get')
     aur-download "${_PARAMS[@]}"
-    ;;
-  'key-trust' | 'kt')
-    key-trust "${_PARAMS[@]}"
     ;;
   'cleanup' | 'cl')
     cleanup "${_PARAMS[@]}"

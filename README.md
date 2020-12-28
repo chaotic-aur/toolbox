@@ -52,11 +52,6 @@ If at some point you see something that could be better, then please open a PR. 
   Download listed packages' sources from AUR.
   Uses `repoctl`.
 
-- `chaotic {kt,key-trust} ${KEYS[@]}`
-
-  Add some key to keyring.
-  Uses `gpg`
-
 - `chaotic cl{,eanup} ${INPUTDIR}`
 
   Safely deletes old package sources.
