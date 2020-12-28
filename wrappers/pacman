@@ -4,7 +4,7 @@ if [[ -z "${CAUR_PACMAN_SYNC}" ]]; then
 fi
 mkdir -p "${CAUR_PACMAN_SYNC}"
 
-exec singularity run \
+exec singularity run --fakeroot \
     -B "${CAUR_PACMAN_SYNC}":/var/lib/pacman/sync \
     docker://quay.io/chaotic/toolbox-deps \
     "$(basename "$0")" "$@"
