@@ -60,10 +60,6 @@ $(DESTDIR)/var/lib/chaotic/interfere:
 $(DESTDIR)/var/cache/chaotic:
 	@install -dm755 $@
 
-$(DESTDIR)/etc/chaotic/gnupg:
-	@install -o root -g root -dm700 $@
-	gpg --homedir "$@" --recv-keys 8A9E14A07010F7E3
-
 $(DESTDIR)/usr/lib/systemd/system/%: services/%
 	install -o root -g root -m755 $< $@
 
@@ -76,8 +72,7 @@ install: \
 	$(DESTDIR)$(PREFIX)/bin/chaotic.sh \
 	$(DESTDIR)$(PREFIX)/bin/chaotic \
 	$(DESTDIR)/var/lib/chaotic/interfere \
-	$(DESTDIR)/var/cache/chaotic \
-	$(DESTDIR)/etc/chaotic/gnupg
+	$(DESTDIR)/var/cache/chaotic
 
 install-services: \
 	$(foreach s, $(ROUTINES), $(DESTDIR)/usr/lib/systemd/system/chaotic-${s}.service) \

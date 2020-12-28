@@ -49,16 +49,6 @@ EOF
 
   install -dm755 -o"${CAUR_GUEST_UID}" -g"${CAUR_GUEST_GID}" \
     "./home/$CAUR_GUEST_USER/"{pkgwork,.ccache,pkgdest,pkgsrc,makepkglogs}
-  install -dm700 -o"${CAUR_GUEST_UID}" -g"${CAUR_GUEST_GID}" \
-    "./home/$CAUR_GUEST_USER/.gnupg"
-  install -Dm700 -o"${CAUR_GUEST_UID}" -g"${CAUR_GUEST_UID}" \
-    "$CAUR_GUEST_GNUPG"/{pubring.kbx,trustdb.gpg} \
-    "./home/$CAUR_GUEST_USER/.gnupg/"
-  install -dm700 -o"${CAUR_GUEST_UID}" -g"${CAUR_GUEST_UID}" \
-    "./home/$CAUR_GUEST_USER/.gnupg/crls.d"
-  install -Dm700 -o"${CAUR_GUEST_UID}" -g"${CAUR_GUEST_UID}" \
-    "$CAUR_GUEST_GNUPG/crls.d/DIR.txt" \
-    "./home/$CAUR_GUEST_USER/.gnupg/crls.d/"
 
   popd # _CURRENT
   ln -s "./$_CURRENT" "./latest"
