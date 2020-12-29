@@ -27,7 +27,11 @@ function deploy() {
   fi
 
   pushd "${_INPUTDIR}/dest"
-  chown "${CAUR_SIGN_USER}" .
+  if [[ "${CAUR_ENGINE}" = "singularity" ]]; then
+      singularity --silent exec --fakeroot -B .:/dest docker://alpine chown 0:0 /dest
+  elif [[ -n "${CAUR_SIGN_USER}" ]]; then
+      chown "${CAUR_SIGN_USER}" .
+  fi
   for f in !(*.sig); do
     [[ "$f" == '!(*.sig)' ]] && continue
 
