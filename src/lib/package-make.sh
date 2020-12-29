@@ -41,15 +41,15 @@ function makepkg() {
     pwd -P
   )"
 
-  _HOME="machine/root/home/${CAUR_GUEST_USER}"
+  _HOME="machine/root/home/main-builder"
   _CCACHE="${CAUR_CACHE_CC}/${_PKGTAG}"
   _SRCCACHE="${CAUR_CACHE_SRC}/${_PKGTAG}"
   _PKGDEST="${_HOME}/pkgdest"
-  _CAUR_WIZARD="machine/root/home/${CAUR_GUEST_USER}/${CAUR_BASH_WIZARD}"
+  _CAUR_WIZARD="machine/root/home/main-builder/${CAUR_BASH_WIZARD}"
 
   mkdir -p machine/{up,work,root} dest{,.work} "${_CCACHE}" "${_SRCCACHE}" "${CAUR_CACHE_PKG}" "${CAUR_DEST_PKG}"
   fuse-overlayfs -olowerdir="${_LOWER}",upperdir='machine/up',workdir='machine/work' 'machine/root'
-  chown "${CAUR_GUEST_UID}":"${CAUR_GUEST_GID}" "${_CCACHE}" "${_SRCCACHE}" "${CAUR_CACHE_PKG}" dest
+  chown "1000":"1000" "${_CCACHE}" "${_SRCCACHE}" "${CAUR_CACHE_PKG}" dest
 
   mount --bind 'pkgwork' "${_HOME}/pkgwork"
   mount --bind "${_CCACHE}" "${_HOME}/.ccache"
@@ -60,7 +60,7 @@ function makepkg() {
     "${_PKGDEST}"
 
   cp "${CAUR_BASH_WIZARD}" "${_CAUR_WIZARD}"
-  chown "${CAUR_GUEST_UID}":"${CAUR_GUEST_GID}" -R "${_CAUR_WIZARD}" pkgwork
+  chown "1000":"1000" -R "${_CAUR_WIZARD}" pkgwork
   chmod 755 "${_CAUR_WIZARD}"
 
   _CONTAINER_ARGS=()
@@ -72,7 +72,7 @@ function makepkg() {
     -u "root" \
     --capability=CAP_IPC_LOCK,CAP_SYS_NICE \
     -D machine/root "${_CONTAINER_ARGS[@]}" \
-    "/home/${CAUR_GUEST_USER}/wizard.sh" "${_PARAMS[@]+"${_PARAMS[@]}"}" || local _BUILD_FAILED="$?"
+    "/home/main-builder/wizard.sh" "${_PARAMS[@]+"${_PARAMS[@]}"}" || local _BUILD_FAILED="$?"
 
   if [[ -z "${_BUILD_FAILED}" ]]; then
     echo 'success' >'building.result'

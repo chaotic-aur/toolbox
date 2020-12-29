@@ -56,11 +56,11 @@ EOF
 set -euo pipefail
 
 locale-gen
-useradd -Uu $CAUR_GUEST_UID -m -s /bin/bash "$CAUR_GUEST_USER"
+useradd -Uu 1000 -m -s /bin/bash "main-builder"
 EOF
 
-  install -dm755 -o"${CAUR_GUEST_UID}" -g"${CAUR_GUEST_GID}" \
-    "./home/$CAUR_GUEST_USER/"{pkgwork,.ccache,pkgdest,pkgsrc,makepkglogs}
+  install -dm755 -o"1000" -g"1000" \
+    "./home/main-builder/"{pkgwork,.ccache,pkgdest,pkgsrc,makepkglogs}
 
   popd # _CURRENT
   ln -sf "./$_CURRENT" "./latest"
