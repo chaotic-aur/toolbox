@@ -17,7 +17,8 @@ LIBS = \
 	package-prepare \
 	routines \
 	routines-tkg \
-	sync	
+	sync \
+	utils	
 ROUTINES = \
 	hourly \
 	morning \

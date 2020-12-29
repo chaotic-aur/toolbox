@@ -59,13 +59,13 @@ function makepkg-systemd-nspawn() {
   _CAUR_WIZARD="machine/root/home/main-builder/${CAUR_BASH_WIZARD}"
 
   mkdir -p machine/{up,work,root} dest{,.work} "${_CCACHE}" "${_SRCCACHE}" "${CAUR_CACHE_PKG}" "${CAUR_DEST_PKG}"
-  fuse-overlayfs -olowerdir="${_LOWER}",upperdir='machine/up',workdir='machine/work' 'machine/root'
+  mount-overlayfs -olowerdir="${_LOWER}",upperdir='machine/up',workdir='machine/work' 'machine/root'
 
   mount --bind 'pkgwork' "${_HOME}/pkgwork"
   mount --bind "${_CCACHE}" "${_HOME}/.ccache"
   mount --bind "${_SRCCACHE}" "${_HOME}/pkgsrc"
   mount --bind "${CAUR_CACHE_PKG}" 'machine/root/var/cache/pacman/pkg'
-  fuse-overlayfs \
+  mount-overlayfs \
     -olowerdir="${CAUR_DEST_PKG}",upperdir='./dest',workdir='./dest.work' \
     "${_PKGDEST}"
 
