@@ -3,7 +3,7 @@
 function makepwd() {
   set -euo pipefail
 
-  local _LS
+  local _LS _pkg
 
   if [ ${#@} -eq 0 ]; then
     _LS=(./*/)
@@ -46,7 +46,16 @@ function makepwd() {
 function pipepkg() {
   set -euo pipefail
 
-  if [[ -z "$1" ]] || [[ ! -f "${_pkg}/PKGTAG" ]]; then
+  local _pkg
+
+  if [ ${#@} -ne 1 ]; then
+    echo 'Invalid number of parameters.'
+    return 24
+  fi
+
+  _pkg="$(basename "$1")"
+
+  if [[ -z "${_pkg}" ]] || [[ ! -f "${_pkg}/PKGTAG" ]]; then
     echo 'Invalid package name.'
     return 24
   fi
@@ -65,7 +74,7 @@ function limit_build() {
   local _MAX_JOBs
 
   if [[ -n "${FREEZE_NOTIFIER:-}" ]]; then
-    _MAX_JOBs="$(expr 1 + ${CAUR_PARALLEL:-1})"
+    _MAX_JOBs="$((1 + ${CAUR_PARALLEL:-1}))"
   else
     _MAX_JOBs="${CAUR_PARALLEL:-1}"
   fi
