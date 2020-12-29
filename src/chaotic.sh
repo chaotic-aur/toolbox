@@ -35,6 +35,7 @@ CAUR_SIGN_USER='root' # who owns the key in gnupg's keyring.
 CAUR_TYPE='primary'   # only the primary cluster manages the database.
 CAUR_URL="http://localhost/${CAUR_DB_NAME}/x86_64"
 CAUR_GPG_PATH="/usr/bin/gpg"
+CAUR_OVERLAY_TYPE='fuse'
 
 # shellcheck source=/dev/null
 [[ -f '/etc/chaotic.conf' ]] && source '/etc/chaotic.conf'
