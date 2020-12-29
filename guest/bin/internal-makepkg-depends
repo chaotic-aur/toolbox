@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+declare -r BUILDSCRIPT='PKGBUILD'
+
+LIBRARY=${LIBRARY:-'/usr/share/makepkg'}
+
+# Import libmakepkg
+for lib in "$LIBRARY"/*.sh; do
+	source "$lib"
+done
+
+BUILDFILE=${BUILDFILE:-$BUILDSCRIPT}
+unset "${!makedepends_@}" "${!depends_@}"
+source_buildfile "$BUILDFILE"
+
+echo ${depends[@]} ${makedepends[@]}
