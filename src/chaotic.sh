@@ -31,6 +31,7 @@ CAUR_GUEST_USER='main-builder'
 CAUR_HACK_USEOVERLAYDEST=1
 CAUR_LOWER_DIR='/var/cache/chaotic/lower'
 CAUR_LOWER_PKGS=(base base-devel)
+CAUR_SANDBOX='/tmp/chaotic/sandbox'
 CAUR_ROUTINES='/tmp/chaotic/routines'
 CAUR_SIGN_KEY=''
 CAUR_SIGN_USER='root' # who owns the key in gnupg's keyring.

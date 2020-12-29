@@ -69,7 +69,7 @@ function makepkg() {
   _MECHA_NAME="pkg$(echo -n "$_PKGTAG" | sha256sum | cut -c1-11)"
   _BUILD_FAILED=''
   systemd-nspawn -M "${_MECHA_NAME}" \
-    -u "${CAUR_GUEST_USER}" \
+    -u "root" \
     --capability=CAP_IPC_LOCK,CAP_SYS_NICE \
     -D machine/root "${_CONTAINER_ARGS[@]}" \
     "/home/${CAUR_GUEST_USER}/wizard.sh" "${_PARAMS[@]+"${_PARAMS[@]}"}" || local _BUILD_FAILED="$?"

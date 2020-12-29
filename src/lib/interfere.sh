@@ -34,25 +34,25 @@ function interference-generic() {
   _PKGTAG="${1:-}"
 
   # * CHROOT Update
-  $CAUR_PUSH sudo pacman -Syu --noconfirm
+  $CAUR_PUSH pacman -Syu --noconfirm
 
   # * Treats VCs
   if (echo "$_PKGTAG" | grep -qP '\-git$'); then
-    $CAUR_PUSH sudo pacman -S --needed --noconfirm git
+    $CAUR_PUSH pacman -S --needed --noconfirm git
   fi
   if (echo "$_PKGTAG" | grep -qP '\-svn$'); then
-    $CAUR_PUSH sudo pacman -S --needed --noconfirm subversion
+    $CAUR_PUSH pacman -S --needed --noconfirm subversion
   fi
   if (echo "$_PKGTAG" | grep -qP '\-bzr$'); then
-    $CAUR_PUSH sudo pacman -S --needed --noconfirm breezy
+    $CAUR_PUSH pacman -S --needed --noconfirm breezy
   fi
   if (echo "$_PKGTAG" | grep -qP '\-hg$'); then
-    $CAUR_PUSH sudo pacman -S --needed --noconfirm mercurial
+    $CAUR_PUSH pacman -S --needed --noconfirm mercurial
   fi
 
   # * Read options
   if (grep -qPo "^options=\([a-z! \"']*(?<!!)ccache[ '\"\)]" PKGBUILD); then
-    $CAUR_PUSH sudo pacman -S --needed --noconfirm ccache
+    $CAUR_PUSH pacman -S --needed --noconfirm ccache
   fi
 
   # * People who think they're smart

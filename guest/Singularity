@@ -29,7 +29,5 @@ EOF
   
   useradd -Uu 1000 -m -s /bin/bash "main-builder"
 
-  echo "main-builder ALL=(ALL) NOPASSWD: ALL" | stee -a "/etc/sudoers"
-
   install -dm755 -o"1000" -g"1000" \
     "/home/main-builder/"{pkgwork,.ccache,pkgdest,pkgsrc,makepkglogs}

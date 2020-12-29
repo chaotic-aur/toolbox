@@ -1,10 +1,14 @@
 #!/usr/bin/env bash
-export HOME="/home/$(whoami)"
+set -euo pipefail
+
+export HOME="/home/main-builder"
 export LANG='en_US.UTF-8'
-export USER="$(whoami)"
+export USER="main-builder"
 export XDG_RUNTIME_DIR='/tmp'
 export SHELL='/bin/bash'
 export TERM='dumb'
 
-cd ~/pkgwork || exit
-exec makepkg $@
+cd "${HOME}/pkgwork"
+deps="$(su main-builder internal-makepkg-depends)"
+pacman -S --asdeps $deps
+exec su main-builder makepkg $@
