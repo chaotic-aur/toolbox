@@ -1,9 +1,5 @@
 #!/usr/bin/env bash
 
-function lowerstrap-remove-lock() {
-  rm "${CAUR_LOWER_DIR}/lock" || true
-}
-
 function lowerstrap() {
   set -euo pipefail
 
@@ -14,7 +10,7 @@ function lowerstrap() {
     return 0
   fi
 
-  trap lowerstrap-remove-lock EXIT HUP INT TERM ERR
+  trap 'rm "${CAUR_LOWER_DIR}/lock"' EXIT HUP INT TERM ERR
   echo $$ >"${CAUR_LOWER_DIR}/lock" # We're building a new
 
   if [[ "${CAUR_ENGINE}" = "systemd-nspawn" ]]; then
@@ -62,8 +58,6 @@ set -euo pipefail
 locale-gen
 useradd -Uu $CAUR_GUEST_UID -m -s /bin/bash "$CAUR_GUEST_USER"
 EOF
-
-  echo "$CAUR_GUEST_USER ALL=(ALL) NOPASSWD: ALL" | stee -a "./etc/sudoers"
 
   install -dm755 -o"${CAUR_GUEST_UID}" -g"${CAUR_GUEST_GID}" \
     "./home/$CAUR_GUEST_USER/"{pkgwork,.ccache,pkgdest,pkgsrc,makepkglogs}
