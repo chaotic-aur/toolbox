@@ -57,10 +57,10 @@ done
 function main() {
   set -euo pipefail
 
-  local _CMD _PARAMS
+  local _CMD 
 
   _CMD="${1:-}"
-  _PARAMS=("${@:2}")
+  # Note: there is usage of "${@:2}" below.
 
   case "${_CMD}" in
   '--jobs' | '-j')
@@ -68,40 +68,40 @@ function main() {
     main "${@:3}"
     ;;
   'prepare' | 'pr')
-    prepare "${_PARAMS[@]+"${_PARAMS[@]}"}"
+    prepare "${@:2}"
     ;;
   'lowerstrap' | 'lw')
-    lowerstrap "${_PARAMS[@]+"${_PARAMS[@]}"}"
+    lowerstrap "${@:2}"
     ;;
   'makepkg' | 'mk')
-    makepkg "${_PARAMS[@]+"${_PARAMS[@]}"}"
+    makepkg "${@:2}"
     ;;
   'makepwd' | 'mkd')
-    makepwd "${_PARAMS[@]+"${_PARAMS[@]}"}"
+    makepwd "${@:2}"
     ;;
   'iterfere-sync' | 'si')
-    iterfere-sync "${_PARAMS[@]+"${_PARAMS[@]}"}"
+    iterfere-sync "${@:2}"
     ;;
   'deploy' | 'dp')
-    deploy "${_PARAMS[@]+"${_PARAMS[@]}"}"
+    deploy "${@:2}"
     ;;
   'db-bump' | 'dbb')
-    db-bump "${_PARAMS[@]+"${_PARAMS[@]}"}"
+    db-bump "${@:2}"
     ;;
   'remove' | 'rm')
-    remove "${_PARAMS[@]+"${_PARAMS[@]}"}"
+    remove "${@:2}"
     ;;
   'aur-download' | 'get')
-    aur-download "${_PARAMS[@]+"${_PARAMS[@]}"}"
+    aur-download "${@:2}"
     ;;
   'cleanup' | 'cl')
-    cleanup "${_PARAMS[@]+"${_PARAMS[@]}"}"
+    cleanup "${@:2}"
     ;;
   'help' | '?')
-    help-mirror "${_PARAMS[@]+"${_PARAMS[@]}"}"
+    help-mirror "${@:2}"
     ;;
   'routine')
-    routine "${_PARAMS[@]+"${_PARAMS[@]}"}"
+    routine "${@:2}"
     ;;
   'clean-logs' | 'clg')
     clean-logs

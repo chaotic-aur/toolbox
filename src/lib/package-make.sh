@@ -14,7 +14,7 @@ function makepkg() {
 }
 
 function makepkg-systemd-nspawn() {
-  local _INPUTDIR _PARAMS _PKGTAG _INTERFERE \
+  local _INPUTDIR _PKGTAG _INTERFERE \
     _LOWER _HOME _CCACHE _SRCCACHE _PKGDEST \
     _CAUR_WIZARD _MECHA_NAME _BUILD_FAILED \
     _CONTAINER_ARGS
@@ -23,7 +23,7 @@ function makepkg-systemd-nspawn() {
     cd "${1:-}"
     pwd -P
   )"
-  _PARAMS=("${@:2}")
+  # Note: there is usage of "${@:2}" below.
 
   if [[ ! -f "${_INPUTDIR}/PKGTAG" ]]; then
     echo "\"${_INPUTDIR}\" doesn't look like a valid input directory."
@@ -81,7 +81,7 @@ function makepkg-systemd-nspawn() {
     -u "root" \
     --capability=CAP_IPC_LOCK,CAP_SYS_NICE \
     -D machine/root "${_CONTAINER_ARGS[@]}" \
-    "/home/main-builder/wizard.sh" "${_PARAMS[@]+"${_PARAMS[@]}"}" || local _BUILD_FAILED="$?"
+    "/home/main-builder/wizard.sh" "${@:2}" || local _BUILD_FAILED="$?"
 
   if [[ -z "${_BUILD_FAILED}" ]]; then
     echo 'success' >'building.result'
@@ -102,7 +102,7 @@ function makepkg-systemd-nspawn() {
 }
 
 function makepkg-singularity() {
-  local _INPUTDIR _PARAMS _PKGTAG _INTERFERE \
+  local _INPUTDIR _PKGTAG _INTERFERE \
     _LOWER _HOME _CCACHE _SRCCACHE _CAUR_WIZARD \
     _BUILD_FAILED _MECHA_NAME _SANDBOX
 
@@ -110,7 +110,7 @@ function makepkg-singularity() {
     cd "${1:-}"
     pwd -P
   )"
-  _PARAMS=("${@:2}")
+  # Note: there is usage of "${@:2}" below.
 
   if [[ ! -f "${_INPUTDIR}/PKGTAG" ]]; then
     echo "\"${_INPUTDIR}\" doesn't look like a valid input directory."
@@ -164,7 +164,7 @@ function makepkg-singularity() {
     -B "${_SRCCACHE}:${_HOME}/pkgsrc" \
     -B "${CAUR_CACHE_PKG}:/var/cache/pacman/pkg" \
     "${_SANDBOX}" \
-    "/home/main-builder/wizard.sh" "${_PARAMS[@]+"${_PARAMS[@]}"}" || local _BUILD_FAILED="$?"
+    "/home/main-builder/wizard.sh" "${@:2}" || local _BUILD_FAILED="$?"
 
   if [[ -z "${_BUILD_FAILED}" ]]; then
     echo 'success' >'building.result'

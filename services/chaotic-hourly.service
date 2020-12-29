@@ -5,7 +5,7 @@ Description=Chaotic's hourly routine
 User=root
 Group=chaotic_op
 WorkingDirectory=/tmp
-ExecStart=/usr/local/bin/chaotic routine hourly
+ExecStart=/usr/local/bin/chaotic -j 0 routine hourly
 
 [Install]
 WantedBy=multi-user.target

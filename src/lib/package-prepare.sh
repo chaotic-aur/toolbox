@@ -3,13 +3,13 @@
 function prepare() {
   set -euo pipefail
 
-  local _PKGDIR _PARAMS _PKGTAG _INTERFERE _LS
+  local _PKGDIR _PKGTAG _INTERFERE _LS
 
   _PKGDIR="$(
     cd "${1:-}"
     pwd -P
   )"
-  _PARAMS=("${@:2}")
+  # Note: there is usage of "${@:2}" below.
 
   if [[ -e "${_PKGDIR}/PKGTAG" ]]; then
     echo "Package already was prepared."
@@ -34,7 +34,7 @@ function prepare() {
   interference-apply "${_INTERFERE}"
   popd # pkgwork
 
-  interference-makepkg "${_PARAMS[@]+"${_PARAMS[@]}"}"
+  interference-makepkg "${@:2}"
   interference-finish
 
   popd #_PKGDIR
