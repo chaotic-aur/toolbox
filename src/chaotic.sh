@@ -25,7 +25,6 @@ CAUR_DEST_LAST="/srv/http/chaotic-aur/lastupdate"
 CAUR_DEST_PKG="/srv/http/${CAUR_DB_NAME}/x86_64"
 CAUR_GUEST="${CAUR_PREFIX}/lib/chaotic/guest"
 CAUR_LIB="${CAUR_PREFIX}/lib/chaotic"
-CAUR_HACK_USEOVERLAYDEST=1
 CAUR_LOWER_DIR='/var/cache/chaotic/lower'
 CAUR_LOWER_PKGS=(base base-devel)
 CAUR_SANDBOX='/tmp/chaotic/sandbox'
@@ -35,7 +34,7 @@ CAUR_SIGN_USER='root' # who owns the key in gnupg's keyring.
 CAUR_TYPE='primary'   # only the primary cluster manages the database.
 CAUR_URL="http://localhost/${CAUR_DB_NAME}/x86_64"
 CAUR_GPG_PATH="/usr/bin/gpg"
-CAUR_OVERLAY_TYPE='fuse'
+CAUR_OVERLAY_TYPE='kernel'
 
 # shellcheck source=/dev/null
 [[ -f '/etc/chaotic.conf' ]] && source '/etc/chaotic.conf'
@@ -57,7 +56,7 @@ done
 function main() {
   set -euo pipefail
 
-  local _CMD 
+  local _CMD
 
   _CMD="${1:-}"
   # Note: there is usage of "${@:2}" below.

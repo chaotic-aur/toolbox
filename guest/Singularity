@@ -30,4 +30,5 @@ EOF
   useradd -Uu 1000 -m -s /bin/bash "main-builder"
 
   install -dm755 -o"1000" -g"1000" \
-    "/home/main-builder/"{pkgwork,.ccache,pkgdest,pkgsrc,makepkglogs}
+    "/home/main-builder/"{pkgwork,.ccache,pkgsrc,makepkglogs} \
+    '/var/pkgdest'

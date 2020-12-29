@@ -25,6 +25,8 @@ function lowerstrap() {
 }
 
 function lowerstrap-systemd-nspawn() {
+  set -euo pipefail
+
   local _CURRENT
 
   mkdir -p "$CAUR_LOWER_DIR"
@@ -61,7 +63,8 @@ useradd -Uu 1000 -m -s /bin/bash "main-builder"
 EOF
 
   install -dm755 -o"1000" -g"1000" \
-    "./home/main-builder/"{pkgwork,.ccache,pkgdest,pkgsrc,makepkglogs}
+    "./home/main-builder/"{pkgwork,.ccache,pkgsrc,makepkglogs} \
+    './var/pkgdest'
 
   popd # _CURRENT
   ln -sf "./$_CURRENT" "./latest"
@@ -71,6 +74,8 @@ EOF
 }
 
 function lowerstrap-singularity() {
+  set -euo pipefail
+
   local _CURRENT
 
   _CURRENT="$(date +%Y%m%d%H%M%S).sif"

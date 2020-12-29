@@ -14,7 +14,9 @@ function makepkg() {
 }
 
 function makepkg-systemd-nspawn() {
-  local _INPUTDIR _PKGTAG _INTERFERE \
+  set -euo pipefail
+
+  local _INPUTDIR _PKGTAG _INTERFERE _ROOTDIR \
     _LOWER _HOME _CCACHE _SRCCACHE _PKGDEST \
     _CAUR_WIZARD _MECHA_NAME _BUILD_FAILED \
     _CONTAINER_ARGS
@@ -52,14 +54,16 @@ function makepkg-systemd-nspawn() {
     pwd -P
   )"
 
-  _HOME="machine/root/home/main-builder"
+  _ROOTDIR='machine/root'
+  _HOME="${_ROOTDIR}/home/main-builder"
   _CCACHE="${CAUR_CACHE_CC}/${_PKGTAG}"
   _SRCCACHE="${CAUR_CACHE_SRC}/${_PKGTAG}"
-  _PKGDEST="${_HOME}/pkgdest"
+  _PKGDEST="${_ROOTDIR}/var/pkgdest"
   _CAUR_WIZARD="machine/root/home/main-builder/${CAUR_BASH_WIZARD}"
 
   mkdir -p machine/{up,work,root} dest{,.work} "${_CCACHE}" "${_SRCCACHE}" "${CAUR_CACHE_PKG}" "${CAUR_DEST_PKG}"
   mount-overlayfs -olowerdir="${_LOWER}",upperdir='machine/up',workdir='machine/work' 'machine/root'
+  chown 1000:1000 'dest'
 
   mount --bind 'pkgwork' "${_HOME}/pkgwork"
   mount --bind "${_CCACHE}" "${_HOME}/.ccache"
@@ -102,6 +106,8 @@ function makepkg-systemd-nspawn() {
 }
 
 function makepkg-singularity() {
+  set -euo pipefail
+
   local _INPUTDIR _PKGTAG _INTERFERE \
     _LOWER _HOME _CCACHE _SRCCACHE _CAUR_WIZARD \
     _BUILD_FAILED _MECHA_NAME _SANDBOX
@@ -156,7 +162,7 @@ function makepkg-singularity() {
   _BUILD_FAILED=''
   singularity exec --writable --fakeroot --no-home --containall --workdir /tmp \
     -B "./pkgwork:${_HOME}/pkgwork" \
-    -B "./dest:${_HOME}/pkgdest" \
+    -B "./dest:/var/pkgdest" \
     -B "${_CCACHE}:${_HOME}/.ccache" \
     -B "${_SRCCACHE}:${_HOME}/pkgsrc" \
     -B "${CAUR_CACHE_PKG}:/var/cache/pacman/pkg" \

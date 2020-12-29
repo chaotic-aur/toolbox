@@ -21,10 +21,10 @@ function optional-parallel() {
 
   case "$_JOBN" in
   '0' | 'host' | 'n' | 'auto')
-    export CAUR_PARALLEL="$(nproc)"
+    CAUR_PARALLEL="$(nproc)"
     ;;
   [0-9]*)
-    export CAUR_PARALLEL="$_JOBN"
+    CAUR_PARALLEL="$_JOBN"
     ;;
   *)
     echo 'Wrong number of parallel jobs.'
@@ -32,5 +32,6 @@ function optional-parallel() {
     ;;
   esac
 
+  export CAUR_PARALLEL
   return 0
 }
