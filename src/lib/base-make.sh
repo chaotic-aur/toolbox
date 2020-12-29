@@ -1,20 +1,38 @@
 #!/usr/bin/env bash
 
+function lowerstrap-remove-lock() {
+  rm "${CAUR_LOWER_DIR}/lock" || true
+}
+
 function lowerstrap() {
   set -euo pipefail
 
-  local _CURRENT
-
+  mkdir -p "$CAUR_LOWER_DIR"
   if [[ -f "$CAUR_LOWER_DIR/lock" ]]; then
     echo 'Somone is already building a lowerdir, waiting...'
     while [[ -f "$CAUR_LOWER_DIR/lock" ]]; do sleep 2; done
     return 0
   fi
 
+  trap lowerstrap-remove-lock EXIT HUP INT TERM ERR
+  echo $$ >"${CAUR_LOWER_DIR}/lock" # We're building a new
+
+  if [[ "${CAUR_ENGINE}" = "systemd-nspawn" ]]; then
+    lowerstrap-systemd-nspawn "$@"
+  elif [[ "${CAUR_ENGINE}" = "singularity" ]]; then
+    lowerstrap-singularity "$@"
+  else
+    echo "Unsupported engine '${CAUR_ENGINE}'"
+    exit 255
+  fi
+}
+
+function lowerstrap-systemd-nspawn() {
+  local _CURRENT
+
   mkdir -p "$CAUR_LOWER_DIR"
   pushd "$CAUR_LOWER_DIR"
 
-  echo $$ >"lock" # We're building a new
   _CURRENT="$(date +%Y%m%d%H%M%S)"
 
   mkdir "$_CURRENT"
@@ -22,8 +40,8 @@ function lowerstrap() {
   pushd "$_CURRENT"
 
   install -dm755 './usr/local/bin'
-  install -m644 "$CAUR_GUEST_ETC"/* './etc/'
-  install -m755 "$CAUR_GUEST_BIN"/* './usr/local/bin/'
+  install -m644 "$CAUR_GUEST"/etc/* './etc/'
+  install -m755 "$CAUR_GUEST"/bin/* './usr/local/bin/'
 
   stee -a './etc/pacman.conf' <<EOF
 
@@ -51,9 +69,24 @@ EOF
     "./home/$CAUR_GUEST_USER/"{pkgwork,.ccache,pkgdest,pkgsrc,makepkglogs}
 
   popd # _CURRENT
-  ln -s "./$_CURRENT" "./latest"
-  rm lock
+  ln -sf "./$_CURRENT" "./latest"
 
   popd # CAUR_LOWER_DIR
+  return 0
+}
+
+function lowerstrap-singularity() {
+  local _CURRENT
+
+  _CURRENT="$(date +%Y%m%d%H%M%S).sif"
+
+  pushd "$CAUR_GUEST"
+  singularity build --fakeroot --force "${CAUR_LOWER_DIR}/${_CURRENT}" Singularity
+  popd # CAUR_GUEST
+
+  pushd "$CAUR_LOWER_DIR"
+  ln -sf "./$_CURRENT" "./latest"
+  popd # CAUR_LOWER_DIR
+
   return 0
 }
