@@ -12,5 +12,5 @@ chown -R "$USER":"$USER" "${HOME}"
 
 cd "${HOME}/pkgwork"
 deps="$(su main-builder internal-makepkg-depends)"
-pacman -S --asdeps $deps
+pacman -S --asdeps --noconfirm $deps
 exec su main-builder makepkg $@
