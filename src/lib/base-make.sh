@@ -19,7 +19,7 @@ function lowerstrap() {
     lowerstrap-singularity "$@"
   else
     echo "Unsupported engine '${CAUR_ENGINE}'"
-    exit 255
+    return 26
   fi
 }
 

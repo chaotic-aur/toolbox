@@ -9,7 +9,7 @@ function makepkg() {
     makepkg-singularity "$@"
   else
     echo "Unsupported engine '${CAUR_ENGINE}'"
-    exit 255
+    return 25
   fi
 }
 
