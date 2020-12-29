@@ -103,9 +103,8 @@ function makepkg-systemd-nspawn() {
 
 function makepkg-singularity() {
   local _INPUTDIR _PARAMS _PKGTAG _INTERFERE \
-    _LOWER _HOME _CCACHE _SRCCACHE _PKGDEST \
-    _CAUR_WIZARD _BUILD_FAILED _MECHA_NAME \
-    _SANDBOX
+    _LOWER _HOME _CCACHE _SRCCACHE _CAUR_WIZARD \
+    _BUILD_FAILED _MECHA_NAME _SANDBOX
 
   _INPUTDIR="$(
     cd "${1:-}"
@@ -150,8 +149,9 @@ function makepkg-singularity() {
   _HOME="/home/main-builder"
   _CCACHE="${CAUR_CACHE_CC}/${_PKGTAG}"
   _SRCCACHE="${CAUR_CACHE_SRC}/${_PKGTAG}"
-  _PKGDEST="${_HOME}/pkgdest"
   _CAUR_WIZARD="${_SANDBOX}/home/main-builder/${CAUR_BASH_WIZARD}"
+
+  mkdir -p "${_CCACHE}" "${_SRCCACHE}" "${CAUR_CACHE_PKG}" "./dest"
 
   cp "${CAUR_BASH_WIZARD}" "${_CAUR_WIZARD}"
   chmod 755 "${_CAUR_WIZARD}"
@@ -159,6 +159,7 @@ function makepkg-singularity() {
   _BUILD_FAILED=''
   singularity exec --writable --fakeroot --no-home --containall \
     -B './pkgwork':"${_HOME}/pkgwork" \
+    -B "./dest":"${_HOME}/pkgdest" \
     -B "${_CCACHE}":"${_HOME}/.ccache" \
     -B "${_SRCCACHE}":"${_HOME}/pkgsrc" \
     -B "${CAUR_CACHE_PKG}":'/var/cache/pacman/pkg' \
