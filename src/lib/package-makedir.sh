@@ -62,7 +62,15 @@ function pipepkg() {
 function limit_build() {
   set -euo pipefail
 
-  while [[ $(jobs -rp | wc -l) -ge "${CAUR_PARALLEL:-1}" ]]; do
+  local _MAX_JOBs
+
+  if [[ -n "${FREEZE_NOTIFIER:-}" ]]; then
+    _MAX_JOBs="$(expr 1 + ${CAUR_PARALLEL:-1})"
+  else
+    _MAX_JOBs="${CAUR_PARALLEL:-1}"
+  fi
+
+  while [[ $(jobs -rp | wc -l) -ge "${_MAX_JOBs}" ]]; do
     sleep 1
   done
 }
