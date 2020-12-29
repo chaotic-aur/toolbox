@@ -158,11 +158,11 @@ function makepkg-singularity() {
 
   _BUILD_FAILED=''
   singularity exec --writable --fakeroot --no-home --containall \
-    -B './pkgwork':"${_HOME}/pkgwork" \
-    -B "./dest":"${_HOME}/pkgdest" \
-    -B "${_CCACHE}":"${_HOME}/.ccache" \
-    -B "${_SRCCACHE}":"${_HOME}/pkgsrc" \
-    -B "${CAUR_CACHE_PKG}":'/var/cache/pacman/pkg' \
+    -B "./pkgwork:${_HOME}/pkgwork" \
+    -B "./dest:${_HOME}/pkgdest" \
+    -B "${_CCACHE}:${_HOME}/.ccache" \
+    -B "${_SRCCACHE}:${_HOME}/pkgsrc" \
+    -B "${CAUR_CACHE_PKG}:/var/cache/pacman/pkg" \
     "${_SANDBOX}" \
     "/home/main-builder/wizard.sh" "${_PARAMS[@]+"${_PARAMS[@]}"}" || local _BUILD_FAILED="$?"
 
