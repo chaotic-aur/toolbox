@@ -68,7 +68,7 @@ function pipepkg() {
   return 0
 }
 
-function limit_build() {
+function pipelimit() {
   set -euo pipefail
 
   local _MAX_JOBs

@@ -11,3 +11,23 @@ function mount-overlayfs() {
 
   return 0
 }
+
+function optional-parallel() {
+  set -euo pipefail
+
+  local _JOBN
+
+  _JOBN="${1:-}"
+
+  case "$_JOBN" in
+  [0-9]*)
+    export CAUR_PARALLEL="$2"
+    ;;
+  *)
+    echo 'Wrong number of parallel jobs.'
+    return 27
+    ;;
+  esac
+
+  return 0
+}

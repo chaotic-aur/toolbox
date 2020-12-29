@@ -63,8 +63,8 @@ function main() {
   _PARAMS=("${@:2}")
 
   case "${_CMD}" in
-  '-j')
-    CAUR_PARALLEL="$2"
+  '--jobs' | '-j')
+    optional-parallel "${2:-}"
     main "${@:3}"
     ;;
   'prepare' | 'pr')
