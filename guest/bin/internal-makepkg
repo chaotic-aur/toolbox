@@ -11,6 +11,6 @@ export TERM='dumb'
 chown -R "$USER":"$USER" "${HOME}"
 
 cd "${HOME}/pkgwork"
-deps="$(su main-builder internal-makepkg-depends)"
+deps="$(su main-builder -- internal-makepkg-depends)"
 pacman -S --asdeps --noconfirm $deps
-exec su main-builder makepkg $@
+exec su main-builder -- makepkg $@
