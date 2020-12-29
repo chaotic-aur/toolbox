@@ -157,7 +157,7 @@ function makepkg-singularity() {
   chmod 755 "${_CAUR_WIZARD}"
 
   _BUILD_FAILED=''
-  singularity exec --writable --fakeroot --no-home --containall \
+  singularity exec --writable --fakeroot --no-home --containall --workdir /tmp \
     -B "./pkgwork:${_HOME}/pkgwork" \
     -B "./dest:${_HOME}/pkgdest" \
     -B "${_CCACHE}:${_HOME}/.ccache" \
