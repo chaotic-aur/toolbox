@@ -8,6 +8,8 @@ export XDG_RUNTIME_DIR='/tmp'
 export SHELL='/bin/bash'
 export TERM='dumb'
 
+chown -R "$USER":"$USER" "${HOME}"
+
 cd "${HOME}/pkgwork"
 deps="$(su main-builder internal-makepkg-depends)"
 pacman -S --asdeps $deps
