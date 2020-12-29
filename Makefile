@@ -25,7 +25,7 @@ ROUTINES = \
 	nightly \
 	midnight 
 GUEST_ETC = pacman makepkg
-GUEST_BIN = internal-makepkg x11-wrapper
+GUEST_BIN = internal-makepkg internal-makepkg-depends x11-wrapper
 
 dir_guard=@install -dm755 "$(@D)"
 

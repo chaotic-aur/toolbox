@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+if [[ -z "${CAUR_PACMAN_SYNC}" ]]; then
+    CAUR_PACMAN_SYNC="${HOME}/chaotic/pacman-sync"
+fi
+mkdir -p "${CAUR_PACMAN_SYNC}"
+
+exec singularity --silent exec --fakeroot \
+    -B "${CAUR_PACMAN_SYNC}":/var/lib/pacman/sync \
+    docker://quay.io/chaotic/toolbox-deps \
+    "$(basename "$0")" "$@"

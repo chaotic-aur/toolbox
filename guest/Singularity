@@ -1,0 +1,33 @@
+Bootstrap: docker
+From: gitlab.archlinux.org:5050/archlinux/archlinux-docker:base-master
+
+%files
+  /etc/mtab /etc/
+
+  etc/* /etc/
+  bin/* /usr/local/bin/
+
+%post
+  stee() { command tee "$@" >/dev/null; }
+
+  echo 'Server = http://mirror.ufscar.br/archlinux/$repo/os/$arch' | stee /etc/pacman.d/mirrorlist
+
+  stee -a '/etc/pacman.conf' <<EOF
+[chaotic-aur]
+SigLevel = Never
+Server = https://builds.garudalinux.org/repos/chaotic-aur/x86_64
+EOF
+
+  pacman -Syyu --noconfirm --noprogressbar --quiet
+  pacman -S --noconfirm --noprogressbar --quiet base base-devel
+
+  echo 'en_US.UTF-8 UTF-8' | stee '/etc/locale.gen'
+  echo 'LANG=en_US.UTF-8' | stee '/etc/locale.conf'
+  ln -rsf '/usr/share/zoneinfo/America/Sao_Paulo' '/etc/localtime'
+
+  locale-gen
+  
+  useradd -Uu 1000 -m -s /bin/bash "main-builder"
+
+  install -dm755 -o"1000" -g"1000" \
+    "/home/main-builder/"{pkgwork,.ccache,pkgdest,pkgsrc,makepkglogs}

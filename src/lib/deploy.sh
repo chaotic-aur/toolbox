@@ -3,7 +3,7 @@
 function deploy() {
   set -euo pipefail
 
-  local _INPUTDIR _RESULT
+  local _INPUTDIR _RESULT _NON_KISS_SUDO
 
   _INPUTDIR="$(
     cd "${1:-}"
@@ -11,6 +11,11 @@ function deploy() {
   )"
 
   _RESULT="${_INPUTDIR}/building.result"
+
+  _NON_KISS_SUDO=""
+  if [[ -n "${CAUR_SIGN_USER}" ]]; then
+    _NON_KISS_SUDO="sudo -u ${CAUR_SIGN_USER}"
+  fi
 
   if [[ -z "${CAUR_SIGN_KEY}" ]]; then
     echo 'A signing key is required for deploying.'
@@ -22,13 +27,17 @@ function deploy() {
   fi
 
   pushd "${_INPUTDIR}/dest"
-  chown "${CAUR_SIGN_USER}" .
+  if [[ "${CAUR_ENGINE}" = "singularity" ]]; then
+      singularity --silent exec --fakeroot docker://alpine chown 0:0 .
+  elif [[ -n "${CAUR_SIGN_USER}" ]]; then
+      chown "${CAUR_SIGN_USER}" .
+  fi
   for f in !(*.sig); do
     [[ "$f" == '!(*.sig)' ]] && continue
 
     if [[ ! -e "${f}.sig" ]]; then
-      sudo -u "${CAUR_SIGN_USER}" \
-        /usr/bin/gpg --detach-sign \
+      ${_NON_KISS_SUDO} \
+        "${CAUR_GPG_PATH}" --detach-sign \
         --use-agent -u "${CAUR_SIGN_KEY}" \
         --no-armor "$f"
     fi
