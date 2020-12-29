@@ -8,6 +8,10 @@ for lib in "$LIBRARY"/*.sh; do
 	source "$lib"
 done
 
+source_buildfile() {
+	source_safe "$@"
+}
+
 BUILDFILE=${BUILDFILE:-$BUILDSCRIPT}
 unset "${!makedepends_@}" "${!depends_@}"
 source_buildfile "$BUILDFILE"
