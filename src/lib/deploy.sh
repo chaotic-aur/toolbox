@@ -33,7 +33,7 @@ function deploy() {
 
     if [[ ! -e "${f}.sig" ]]; then
       ${_NON_KISS_SUDO} \
-        /usr/bin/gpg --detach-sign \
+        "${CAUR_GPG_PATH}" --detach-sign \
         --use-agent -u "${CAUR_SIGN_KEY}" \
         --no-armor "$f"
     fi
