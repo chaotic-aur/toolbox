@@ -13,14 +13,15 @@ CAUR_DB_NAME='chaotic-aur'
 CAUR_INTERFERE='/var/lib/chaotic/interfere'
 
 CAUR_ENGINE="systemd-nspawn"
-CAUR_ADD_DEST="builds.garudalinux.org:~/chaotic/queues/$(whoami)/"
+CAUR_DEPLOY_HOST='builds.garudalinux.org'
+CAUR_DEPLOY_PATH='/srv/http/repos/chaotic-aur/x86_64/'
+CAUR_SCP_STREAMS=1
 CAUR_BASH_WIZARD='wizard.sh'
 CAUR_CACHE_CC='/var/cache/chaotic/cc'
 CAUR_CACHE_PKG='/var/cache/chaotic/packages'
 CAUR_CACHE_SRC='/var/cache/chaotic/sources'
 CAUR_DB_EXT='tar.zst'
 CAUR_DB_LOCK='/var/cache/chaotic/db.lock'
-CAUR_DEPLOY_DEST='builds.garudalinux.org'
 CAUR_DEST_LAST="/srv/http/chaotic-aur/lastupdate"
 CAUR_DEST_PKG="/srv/http/${CAUR_DB_NAME}/x86_64"
 CAUR_FILL_DEST='https://builds.garudalinux.org/repos/chaotic-aur/pkgs.files.txt'

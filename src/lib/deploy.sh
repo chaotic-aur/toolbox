@@ -52,7 +52,26 @@ function deploy() {
     fi
 
     if [[ "$CAUR_TYPE" == 'cluster' ]]; then
-      scp "$f"{,.sig} "${CAUR_ADD_DEST}/"
+      local _files
+
+      if [[ "$CAUR_SCP_STREAMS" -gt 1 ]]; then
+        rm ".$f."* 2>/dev/null || true  # there may exist leftover files from a previously failed deploy
+        split -n"$CAUR_SCP_STREAMS" "$f" ".$f."
+        _files=(".$f."* "$f.sig")
+      else
+        CAUR_SCP_STREAMS=1  # safety
+        _files=("$f" "$f.sig")
+      fi
+
+      printf '%s\n' "${_files[@]}" |\
+        xargs -d'\n' -I'{}' -P"$((CAUR_SCP_STREAMS+1))" -- \
+          scp '{}' "${CAUR_DEPLOY_HOST}:${CAUR_DEPLOY_PATH}/"
+
+      if [[ "$CAUR_SCP_STREAMS" -gt 1 ]]; then
+        rm ".$f."*
+        # shellcheck disable=SC2029
+        ssh "$CAUR_DEPLOY_HOST" "cd '$CAUR_DEPLOY_PATH' && cat '.$f.'* >'$f' && rm '.$f.'*"
+      fi
     else
       cp -v "$f"{,.sig} "${CAUR_DEST_PKG}/"
     fi
