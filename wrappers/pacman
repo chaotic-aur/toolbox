@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# wrapper with --fakeroot
 if [[ -z "${CAUR_PACMAN_SYNC}" ]]; then
     CAUR_PACMAN_SYNC="${HOME}/chaotic/pacman-sync"
 fi
