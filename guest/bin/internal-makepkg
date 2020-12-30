@@ -14,6 +14,6 @@ chown "$USER":"$USER" '/var/pkgdest'
 cd "${HOME}/pkgwork"
 (su main-builder -- internal-makepkg-depends) |\
   grep -P '^.' |\
-  xargs -d'\n' -- pacman -S --needed --asdeps --noconfirm
+  xargs -d'\n' --no-run-if-empty -- pacman -S --needed --asdeps --noconfirm
 
 exec su main-builder -- makepkg "$@"
