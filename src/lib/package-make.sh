@@ -172,7 +172,7 @@ function makepkg-singularity() {
     "/home/main-builder/wizard.sh" "${@:2}" || local _BUILD_FAILED="$?"
 
   # we need to remove files inside an user namespace, otherwise we won't have permission to remove files owned by non-root
-  singularity --silent exec -B "${CAUR_SANDBOX}:/sandbox" --fakeroot docker://alpine rm -rf "/sandbox/${_MECHA_NAME}"
+  singularity --silent exec -B "${CAUR_SANDBOX}:/sandbox" --fakeroot "${CAUR_DOCKER_ALPINE}" rm -rf "/sandbox/${_MECHA_NAME}"
 
   if [[ -z "${_BUILD_FAILED}" ]]; then
     echo 'success' >'building.result'

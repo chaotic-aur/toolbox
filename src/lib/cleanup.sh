@@ -26,10 +26,7 @@ function cleanup() {
 
   popd # _INPUTDIR
 
-  if [[ "$CAUR_ENGINE" = 'singularity' ]]; then
-    singularity --silent exec --fakeroot -B "${_INPUTDIR}:/inputdir" docker://alpine chown -R 0:0 /inputdir
-  fi
-
+  reset-fakeroot-chown "${_INPUTDIR}"
   rm --one-file-system -rf "${_INPUTDIR}"
 
   return 0
