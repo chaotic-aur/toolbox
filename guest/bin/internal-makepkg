@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -euo pipefail
+set -xeuo pipefail
 
 export HOME="/home/main-builder"
 export LANG='en_US.UTF-8'
@@ -14,6 +14,7 @@ chown "$USER":"$USER" '/var/pkgdest'
 cd "${HOME}/pkgwork"
 (su main-builder -- internal-makepkg-depends) |\
   grep -P '^.' |\
-  xargs -d'\n' --no-run-if-empty -- pacman -S --needed --asdeps --noconfirm
+  xargs -d'\n' --no-run-if-empty -- \
+    pacman -S --needed --asdeps --noconfirm --noprogressbar
 
 exec su main-builder -- makepkg "$@"
