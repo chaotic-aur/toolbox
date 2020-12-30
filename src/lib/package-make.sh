@@ -61,7 +61,7 @@ function makepkg-systemd-nspawn() {
   _PKGDEST="${_ROOTDIR}/var/pkgdest"
   _CAUR_WIZARD="machine/root/home/main-builder/${CAUR_BASH_WIZARD}"
 
-  mkdir -p machine/{up,work,root} dest{,.work} "${_CCACHE}" "${_SRCCACHE}" "${CAUR_CACHE_PKG}" "${CAUR_DEST_PKG}"
+  mkdir -p machine/{up,work,root} dest "${_CCACHE}" "${_SRCCACHE}" "${CAUR_CACHE_PKG}" "${CAUR_DEST_PKG}"
   mount-overlayfs -olowerdir="${_LOWER}",upperdir='machine/up',workdir='machine/work' 'machine/root'
   chown 1000:1000 'dest'
 
@@ -69,9 +69,9 @@ function makepkg-systemd-nspawn() {
   mount --bind "${_CCACHE}" "${_HOME}/.ccache"
   mount --bind "${_SRCCACHE}" "${_HOME}/pkgsrc"
   mount --bind "${CAUR_CACHE_PKG}" 'machine/root/var/cache/pacman/pkg'
-  mount-overlayfs \
-    -olowerdir="${CAUR_DEST_PKG}",upperdir='./dest',workdir='./dest.work' \
-    "${_PKGDEST}"
+  mount --bind 'dest' "${_PKGDEST}"
+
+  (fill-dest)
 
   cp "${CAUR_BASH_WIZARD}" "${_CAUR_WIZARD}"
   chmod 755 "${_CAUR_WIZARD}"
@@ -156,6 +156,8 @@ function makepkg-singularity() {
 
   mkdir -p "${_CCACHE}" "${_SRCCACHE}" "${CAUR_CACHE_PKG}" "./dest"
 
+  (fill-dest)
+
   cp "${CAUR_BASH_WIZARD}" "${_CAUR_WIZARD}"
   chmod 755 "${_CAUR_WIZARD}"
 
@@ -184,5 +186,18 @@ function makepkg-singularity() {
   popd # "${_INPUTDIR}"
   [[ -n "${_BUILD_FAILED}" ]] \
     && return ${_BUILD_FAILED}
+  return 0
+}
+
+function fill-dest() {
+  set -euo pipefail
+
+  pushd 'dest'
+
+  curl -s 'https://builds.garudalinux.org/repos/chaotic-aur/pkgs.txt' \
+    | sed 's/\//.pkg.tar.zst/g' | xargs touch
+
+  popd # dest
+
   return 0
 }
