@@ -7,16 +7,16 @@ LIBRARY=${LIBRARY:-'/usr/share/makepkg'}
 
 # Import libmakepkg
 for lib in "$LIBRARY"/*.sh; do
-    # shellcheck source=/dev/null
-	source "$lib"
+  # shellcheck source=/dev/null
+  source "$lib"
 done
 
 source_buildfile() {
-	source_safe "$@" &>/dev/null
+  source_safe "$@" &>/dev/null
 }
 
 remove_deps() {
-    true
+  true
 }
 
 BUILDFILE=${BUILDFILE:-$BUILDSCRIPT}
