@@ -13,7 +13,7 @@ chown "$USER":"$USER" '/var/pkgdest'
 
 cd "${HOME}/pkgwork"
 (su main-builder -- internal-makepkg-depends) |\
-  sed -r '/^[[:space:]]*$/d' |\
+  sed -E '/^[[:space:]]*$/d' |\
   xargs -d'\n' --no-run-if-empty -- \
     pacman -S --needed --asdeps --noconfirm --noprogressbar
 
