@@ -19,7 +19,6 @@ BUILDFILE=${BUILDFILE:-$BUILDSCRIPT}
 unset "${!makedepends_@}" "${!depends_@}"
 source_buildfile "$BUILDFILE"
 
-printf '%s\n' "${depends[@]}"
-printf '%s\n' "${makedepends[@]}"
+printf '%s\n' "${depends[@]}" "${makedepends[@]}"
 
 trap - EXIT
