@@ -36,7 +36,8 @@ function deploy() {
   fi
 
   # delete files created with "fill-dest"
-  if [[ ! unfill-dest ]] || [[ -n "$(find . -type f -size 0 -print 2>&1)" ]]; then
+  unfill-dest
+  if [[ -n "$(find . -type f -size 0 -print 2>&1)" ]]; then
     echo 'Failure in delete package placeholders.'
     return 28
   fi
