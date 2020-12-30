@@ -9,6 +9,7 @@ export SHELL='/bin/bash'
 export TERM='dumb'
 
 chown -R "$USER":"$USER" "${HOME}"
+chown "$USER":"$USER" '/var/pkgdest'
 
 cd "${HOME}/pkgwork"
 deps="$(su main-builder -- internal-makepkg-depends)"

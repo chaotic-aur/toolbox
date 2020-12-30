@@ -27,11 +27,17 @@ function deploy() {
   fi
 
   pushd "${_INPUTDIR}/dest"
+
+  # delete files created with "fill-dest"
+  find . -type f -empty -delete
+
+  # get files back to us
   if [[ "${CAUR_ENGINE}" = "singularity" ]]; then
     singularity --silent exec --fakeroot docker://alpine chown 0:0 .
   elif [[ -n "${CAUR_SIGN_USER}" ]]; then
     chown "${CAUR_SIGN_USER}" .
   fi
+
   for f in !(*.sig); do
     [[ "$f" == '!(*.sig)' ]] && continue
 
@@ -48,6 +54,7 @@ function deploy() {
       cp -v "$f"{,.sig} "${CAUR_DEST_PKG}/"
     fi
   done
+
   popd # "${_INPUTDIR}/dest"
 
   echo 'deployed' >"${_RESULT}"
