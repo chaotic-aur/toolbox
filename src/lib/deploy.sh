@@ -28,14 +28,17 @@ function deploy() {
 
   pushd "${_INPUTDIR}/dest"
 
-  # delete files created with "fill-dest"
-  find . -type f -empty -delete
-
   # get files back to us
   if [[ "${CAUR_ENGINE}" = "singularity" ]]; then
     singularity --silent exec --fakeroot docker://alpine chown 0:0 .
   elif [[ -n "${CAUR_SIGN_USER}" ]]; then
     chown "${CAUR_SIGN_USER}" .
+  fi
+
+  # delete files created with "fill-dest"
+  if [[ ! unfill-dest ]] || [[ -n "$(find . -type f -size 0 -print 2>&1)" ]]; then
+    echo 'Failure in delete package placeholders.'
+    return 28
   fi
 
   for f in !(*.sig); do

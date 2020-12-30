@@ -201,3 +201,11 @@ function fill-dest() {
 
   return 0
 }
+
+function unfill-dest() {
+  set -euo pipefail
+
+  find . -type f -empty -delete || return 28
+
+  return 0
+}

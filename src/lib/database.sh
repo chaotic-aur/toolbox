@@ -48,6 +48,8 @@ function db-pkglist() {
     -f "${CAUR_DB_NAME}.db.${CAUR_DB_EXT}" \
     | awk '/^d/{print $6}' >../pkgs.txt); then
 
+    ls *.pkg.* > ../pkgs.files.txt
+
     echo "Database's package list dumped"
   else
     echo 'Failed to dump package list'
