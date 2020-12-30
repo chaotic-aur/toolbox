@@ -12,6 +12,10 @@ source_buildfile() {
 	source_safe "$@"
 }
 
+remove_deps() {
+    echo 'OwO'
+}
+
 BUILDFILE=${BUILDFILE:-$BUILDSCRIPT}
 unset "${!makedepends_@}" "${!depends_@}"
 source_buildfile "$BUILDFILE"
