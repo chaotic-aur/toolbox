@@ -10,7 +10,6 @@ function lowerstrap() {
     return 0
   fi
 
-  trap 'rm "${CAUR_LOWER_DIR}/lock"' EXIT HUP INT TERM ERR
   echo $$ >"${CAUR_LOWER_DIR}/lock" # We're building a new
 
   if [[ "${CAUR_ENGINE}" = "systemd-nspawn" ]]; then
@@ -21,6 +20,8 @@ function lowerstrap() {
     echo "Unsupported engine '${CAUR_ENGINE}'"
     return 26
   fi
+
+  rm "${CAUR_LOWER_DIR}/lock"
 }
 
 function lowerstrap-systemd-nspawn() {
