@@ -141,9 +141,6 @@ function makepkg-singularity() {
   _MECHA_NAME="pkg$(echo -n "$_PKGTAG" | sha256sum | cut -c1-11)"
   _SANDBOX="${CAUR_SANDBOX}/${_MECHA_NAME}"
   mkdir -p "${CAUR_SANDBOX}"
-  # we need to remove files inside an user namespace, otherwise we won't have permission to remove files owned by non-root
-  # shellcheck disable=SC2064
-  trap "singularity --silent exec -B '${CAUR_SANDBOX}':/sandbox --fakeroot docker://alpine rm -rf /sandbox/'${_MECHA_NAME}'" EXIT HUP INT TERM ERR
   singularity build --sandbox "${_SANDBOX}" "${_LOWER}"
 
   _HOME="/home/main-builder"
@@ -165,6 +162,9 @@ function makepkg-singularity() {
     -B "${CAUR_CACHE_PKG}:/var/cache/pacman/pkg" \
     "${_SANDBOX}" \
     "/home/main-builder/wizard.sh" "${@:2}" || local _BUILD_FAILED="$?"
+
+  # we need to remove files inside an user namespace, otherwise we won't have permission to remove files owned by non-root
+  singularity --silent exec -B "${CAUR_SANDBOX}:/sandbox" --fakeroot docker://alpine rm -rf "/sandbox/${_MECHA_NAME}"
 
   if [[ -z "${_BUILD_FAILED}" ]]; then
     echo 'success' >'building.result'
