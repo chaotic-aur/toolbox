@@ -1,5 +1,5 @@
 #!/bin/bash
 xvfb-run -a -n 97 \
 	-s '-extension GLX -screen 0 1280x1024x24' \
-	$@
+	"$@"
 

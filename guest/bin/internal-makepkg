@@ -13,5 +13,5 @@ chown "$USER":"$USER" '/var/pkgdest'
 
 cd "${HOME}/pkgwork"
 deps="$(su main-builder -- internal-makepkg-depends)"
-pacman -S --asdeps --noconfirm $deps
-exec su main-builder -- makepkg $@
+pacman -S --asdeps --noconfirm "$deps"
+exec su main-builder -- makepkg "$@"
