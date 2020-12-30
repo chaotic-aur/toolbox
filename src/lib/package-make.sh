@@ -194,7 +194,7 @@ function fill-dest() {
 
   pushd 'dest'
 
-  curl -s 'https://builds.garudalinux.org/repos/chaotic-aur/pkgs.txt' \
+  curl -s "$CAUR_FILL_DEST" \
     | sed 's/\//.pkg.tar.zst/g' | xargs touch
 
   popd # dest
