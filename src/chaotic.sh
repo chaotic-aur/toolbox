@@ -107,6 +107,9 @@ function main() {
   'clean-logs' | 'clg')
     clean-logs
     ;;
+  'reset-fakeroot-chown' | 'rfc')
+    reset-fakeroot-chown "${@:2}"
+    ;;
   *)
     echo 'Wrong usage, check https://github.com/chaotic-aur/toolbox/blob/main/README.md for details on how to use.'
     return 254
