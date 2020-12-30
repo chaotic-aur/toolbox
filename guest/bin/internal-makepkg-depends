@@ -15,12 +15,11 @@ source_buildfile() {
   source_safe "$@" &>/dev/null
 }
 
-remove_deps() {
-  true
-}
-
 BUILDFILE=${BUILDFILE:-$BUILDSCRIPT}
 unset "${!makedepends_@}" "${!depends_@}"
 source_buildfile "$BUILDFILE"
 
-echo "${depends[@]}" "${makedepends[@]}"
+printf '%s\n' "${depends[@]}"
+printf '%s\n' "${makedepends[@]}"
+
+trap - EXIT
