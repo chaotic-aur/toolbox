@@ -54,7 +54,6 @@ function parallel-scp() {
     split -n"$CAUR_SCP_STREAMS" --additional-suffix='~' "$f" ".$f."
     _files=(".$f."*~ "$f.sig")
   else
-    CAUR_SCP_STREAMS=1  # safety
     _files=("$f" "$f.sig")
   fi
 
