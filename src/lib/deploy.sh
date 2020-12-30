@@ -29,9 +29,8 @@ function deploy() {
   pushd "${_INPUTDIR}/dest"
 
   # get files back to us
-  if [[ "${CAUR_ENGINE}" = "singularity" ]]; then
-    singularity --silent exec --fakeroot docker://alpine chown 0:0 .
-  elif [[ -n "${CAUR_SIGN_USER}" ]]; then
+  reset-fakeroot-chown .
+  if [[ -n "${CAUR_SIGN_USER}" ]]; then
     chown "${CAUR_SIGN_USER}" .
   fi
 

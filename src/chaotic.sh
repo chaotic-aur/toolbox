@@ -36,6 +36,7 @@ CAUR_TYPE='primary'   # only the primary cluster manages the database.
 CAUR_URL="http://localhost/${CAUR_DB_NAME}/x86_64"
 CAUR_GPG_PATH="/usr/bin/gpg"
 CAUR_OVERLAY_TYPE='kernel'
+CAUR_DOCKER_ALPINE="docker://registry.gitlab.com/jitesoft/dockerfiles/alpine"
 
 # shellcheck source=/dev/null
 [[ -f '/etc/chaotic.conf' ]] && source '/etc/chaotic.conf'
