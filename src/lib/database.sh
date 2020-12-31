@@ -5,7 +5,7 @@ function db-bump() {
 
   if [[ "$CAUR_TYPE" == 'cluster' ]]; then
     # shellcheck disable=SC2029
-    ssh "$CAUR_DEPLOY_DEST" 'chaotic db-bump'
+    ssh "$CAUR_DEPLOY_HOST" 'chaotic db-bump'
 
     return 0
   fi
