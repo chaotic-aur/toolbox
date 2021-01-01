@@ -7,9 +7,26 @@ _requeue() {
 
   scontrol requeue "$SLURM_JOBID"
   scontrol update JobId="$SLURM_JOBID" StartTime="$timespec"
+
+  trap - EXIT  # avoid double-requeuing
 }
-trap '_requeue' SIGUSR1 EXIT HUP INT QUIT TERM ERR
+
+_near_timeout() {
+  _requeue
+  if [[ -n "$CHILD_PID" ]]; then
+    echo "$(date): notifying child $CHILD_PID about timeout"
+    kill -SIGUSR1 "$CHILD_PID"
+    wait "$CHILD_PID"
+  fi
+}
+
+trap '_near_timeout' SIGUSR1  # job needs to specify --signal=B:SIGUSR1@90
+trap '_requeue' EXIT  # handle requeue on normal conditions (no timeout)
 
 echo "$(date): job $SLURM_JOBID ($SLURM_JOB_NAME) starting on $SLURM_NODELIST"
 
-chaotic routine "$SLURM_JOB_NAME"
+chaotic routine "$SLURM_JOB_NAME" &
+CHILD_PID="$!"
+
+echo "$(date): child running with pid $CHILD_PID"
+wait "$CHILD_PID"
