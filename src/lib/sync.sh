@@ -9,3 +9,13 @@ function iterfere-sync() {
 
   return 0
 }
+
+function packages-sync() {
+  set -euo pipefail
+
+  pushd "${CAUR_PACKAGES}"
+  git pull --ff-only || true
+  popd #CAUR_PACKAGES
+
+  return 0
+}

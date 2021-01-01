@@ -11,6 +11,7 @@ popd || exit 2
 
 CAUR_DB_NAME='chaotic-aur'
 CAUR_INTERFERE='/var/lib/chaotic/interfere'
+CAUR_PACKAGES='/var/lib/chaotic/packages'
 
 CAUR_ENGINE="systemd-nspawn"
 CAUR_DEPLOY_HOST='builds.garudalinux.org'
@@ -83,6 +84,9 @@ function main() {
     ;;
   'iterfere-sync' | 'si')
     iterfere-sync "${@:2}"
+    ;;
+  'packages-sync' | 'sp')
+    packages-sync "${@:2}"
     ;;
   'deploy' | 'dp')
     deploy "${@:2}"
