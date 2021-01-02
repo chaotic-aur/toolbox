@@ -3,6 +3,11 @@
 function routine() {
   set -euo pipefail
 
+  if [[ -n "$XDG_RUNTIME_DIR" ]] && [[ ! -e "${XDG_RUNTIME_DIR:-}" ]]; then
+    # silence warning if $XDG_RUNTIME_DIR does not exist
+    unset XDG_RUNTIME_DIR
+  fi
+
   CAUR_CURRENT_ROUTINE="${1:-}"
 
   case "${CAUR_CURRENT_ROUTINE}" in
