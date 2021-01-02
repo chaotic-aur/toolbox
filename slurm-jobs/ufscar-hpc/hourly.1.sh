@@ -2,7 +2,7 @@
 #SBATCH --job-name=hourly.1
 #SBATCH --partition fast
 #SBATCH --nodes 1
-#SBATCH --cpus-per-task=20
+#SBATCH --exclusive
 #SBATCH --dependency=singleton
 #SBATCH --time=00:30:00
 #SBATCH --signal=B:SIGUSR1@90
