@@ -154,13 +154,10 @@ function cancel-freeze-notify() {
 }
 
 function freeze-notify() {
-  (which 'telegram-send' &>/dev/null) || return 0
-
   telegram-send \
     --config ~/.config/telegram-send-group.conf \
-    "Hey onyii-san, wast ${CAUR_CURRENT_ROUTINE} buiwd on ${CAUR_CLUSTER_NAME} stawted lwng time ago (@pedrohlc)"
-
-  return 0
+    "Hey onyii-san, wast ${CAUR_CURRENT_ROUTINE} buiwd on ${CAUR_CLUSTER_NAME} stawted lwng time ago (@pedrohlc)" \
+    || true
 }
 
 function clean-archive() {
