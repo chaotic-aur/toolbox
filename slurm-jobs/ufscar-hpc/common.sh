@@ -5,10 +5,10 @@ function _requeue() {
   now="$(date '+%s')"
   timespec="$(date --date="@$(((now/JOB_PERIOD+1)*JOB_PERIOD+JOB_OFFSET))" '+%Y-%m-%dT%H:%M:%S')"
 
-  echo "$(date): requeing job $SLURM_JOBID ($SLURM_JOB_NAME) to run at $timespec"
+  echo "$(date): requeing job $SLURM_JOB_ID ($SLURM_JOB_NAME) to run at $timespec"
 
-  scontrol requeue "$SLURM_JOBID"
-  scontrol update JobId="$SLURM_JOBID" StartTime="$timespec"
+  scontrol requeue "$SLURM_JOB_ID"
+  scontrol update JobId="$SLURM_JOB_ID" StartTime="$timespec"
 
   trap - EXIT  # avoid double-requeuing
 }
@@ -35,7 +35,7 @@ function sane-wait() {
 trap '_near_timeout' SIGUSR1  # job needs to specify --signal=B:SIGUSR1@90
 trap '_requeue' EXIT  # handle requeue on normal conditions (no timeout)
 
-echo "$(date): job $SLURM_JOBID ($SLURM_JOB_NAME) starting on $SLURM_NODELIST"
+echo "$(date): job $SLURM_JOB_ID ($SLURM_JOB_NAME) starting on $SLURM_NODELIST"
 
 chaotic routine "$SLURM_JOB_NAME" &
 CHILD_PID="$!"

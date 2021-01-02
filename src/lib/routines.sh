@@ -114,7 +114,7 @@ function push-routine-dir() {
   install -o"$(whoami)" -dDm755 "$_DIR"
   pushd "$_DIR"
 
-  if [ -z "${SLURM_JOBID:-}" ]; then
+  if [ -z "${SLURM_JOB_ID:-}" ]; then
     if [ -z "${FREEZE_NOTIFIER:-}" ]; then
       wait-freeze-and-notify "$1" &
       export FREEZE_NOTIFIER="$!"
