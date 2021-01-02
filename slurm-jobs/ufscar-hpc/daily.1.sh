@@ -8,6 +8,6 @@
 #SBATCH --signal=B:SIGUSR1@90
 
 JOB_PERIOD=$((24*3600))
-JOB_OFFSET=$(( 1*3600))
+JOB_OFFSET=$(( 4*3600))
 
 source common.sh
