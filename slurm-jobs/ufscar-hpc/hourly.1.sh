@@ -7,7 +7,10 @@
 #SBATCH --time=00:50:00
 #SBATCH --signal=B:SIGUSR1@90
 
+# shellcheck disable=SC2034
 JOB_PERIOD=3600
+# shellcheck disable=SC2034
 JOB_OFFSET=0
 
+# shellcheck source=/dev/null
 source common.sh
