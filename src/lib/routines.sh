@@ -70,7 +70,7 @@ function generic-routine() {
 
   # put in background and wait, otherwise trap does not work
   makepwd &
-  wait "$!" || true
+  sane-wait "$!" || true
 
   clean-logs
   pop-routine-dir

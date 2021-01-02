@@ -36,6 +36,17 @@ function optional-parallel() {
   return 0
 }
 
+function sane-wait() {
+  # https://stackoverflow.com/a/35755784/13649511
+  local status=0
+  while :; do
+    wait -f "$@" || local status="$?"
+    if [[ "$status" -lt 128 ]]; then
+      return "$status"
+    fi
+  done
+}
+
 function parallel-scp() {
   set -euo pipefail
 

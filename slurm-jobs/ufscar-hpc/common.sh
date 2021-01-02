@@ -1,4 +1,4 @@
-_requeue() {
+function _requeue() {
   local now timespec
   now="$(date '+%s')"
   timespec="$(date --date="@$(((now/JOB_PERIOD+1)*JOB_PERIOD+JOB_OFFSET))" '+%Y-%m-%dT%H:%M:%S')"
@@ -11,13 +11,23 @@ _requeue() {
   trap - EXIT  # avoid double-requeuing
 }
 
-_near_timeout() {
+function _near_timeout() {
   _requeue
   if [[ -n "$CHILD_PID" ]]; then
     echo "$(date): notifying child $CHILD_PID about timeout"
     kill -SIGUSR1 "$CHILD_PID"
-    wait "$CHILD_PID"
   fi
+}
+
+function sane-wait() {
+  # https://stackoverflow.com/a/35755784/13649511
+  local status=0
+  while :; do
+    wait -f "$@" || local status="$?"
+    if [[ "$status" -lt 128 ]]; then
+      return "$status"
+    fi
+  done
 }
 
 trap '_near_timeout' SIGUSR1  # job needs to specify --signal=B:SIGUSR1@90
@@ -29,4 +39,4 @@ chaotic routine "$SLURM_JOB_NAME" &
 CHILD_PID="$!"
 
 echo "$(date): child running with pid $CHILD_PID"
-wait "$CHILD_PID"
+sane-wait "$CHILD_PID"
