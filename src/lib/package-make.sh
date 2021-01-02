@@ -144,7 +144,7 @@ function makepkg-singularity() {
     readlink -f latest
   )"
 
-  install -o"$(whoami)" -dDm755 "${CAUR_SANDBOX}"
+  install -o"$(whoami)" -dDm755 "${CAUR_SANDBOX}" || return 32
 
   _MECHA_NAME="pkg$(echo -n "$_PKGTAG" | sha256sum | cut -c1-11)"
   _SANDBOX="${CAUR_SANDBOX}/${_MECHA_NAME}"
@@ -160,7 +160,8 @@ function makepkg-singularity() {
   _SRCCACHE="${CAUR_CACHE_SRC}/${_PKGTAG}"
   _CAUR_WIZARD="${_SANDBOX}/home/main-builder/${CAUR_BASH_WIZARD}"
 
-  install -o"$(whoami)" -dDm755 "${_CCACHE}" "${_SRCCACHE}" "${CAUR_CACHE_PKG}" "./dest"
+  install -o"$(whoami)" -dDm755 "${CAUR_CACHE}" || return 32
+  mkdir -p "${_CCACHE}" "${_SRCCACHE}" "${CAUR_CACHE_PKG}" "./dest"
 
   (fill-dest)
 
