@@ -149,7 +149,7 @@ function makepkg-singularity() {
   _MECHA_NAME="pkg$(echo -n "$_PKGTAG" | sha256sum | cut -c1-11)"
   _SANDBOX="${CAUR_SANDBOX}/${_MECHA_NAME}"
   if [[ -e "${_SANDBOX}" ]]; then
-    echo "Sandbox '${_SANDBOX}' already exists"
+    echo "Sandbox ${_SANDBOX} already exists"
     return 30
   fi
 
