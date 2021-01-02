@@ -1,3 +1,5 @@
+#!/bin/bash
+
 function _requeue() {
   local now timespec
   now="$(date '+%s')"

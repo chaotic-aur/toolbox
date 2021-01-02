@@ -33,6 +33,8 @@ function generic-routine() {
     return 13
   fi
 
+  (package-lists-sync)
+
   local _LIST
   _LIST="${CAUR_PACKAGE_LISTS}/${CAUR_CLUSTER_NAME}/${CAUR_CURRENT_ROUTINE}.txt"
 
@@ -41,7 +43,6 @@ function generic-routine() {
     return 22
   fi
 
-  (package-lists-sync)
   (iterfere-sync)
   (repoctl-sync-db)
 
