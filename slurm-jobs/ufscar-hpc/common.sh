@@ -17,6 +17,7 @@ function _near_timeout() {
   if [[ -n "$CHILD_PID" ]]; then
     echo "$(date): notifying child $CHILD_PID about timeout"
     kill -SIGUSR1 "$CHILD_PID" || true
+    sleep 5
   fi
   _requeue
 }
