@@ -58,6 +58,10 @@ $(DESTDIR)/var/lib/chaotic/interfere:
 	$(dir_guard)
 	cd "$(@D)" && git clone 'https://github.com/chaotic-aur/interfere.git' interfere
 
+$(DESTDIR)/var/lib/chaotic/packages:
+	$(dir_guard)
+	cd "$(@D)" && git clone 'https://github.com/chaotic-aur/packages.git' packages
+
 $(DESTDIR)/var/cache/chaotic:
 	@install -dm755 $@
 
@@ -73,6 +77,7 @@ install: \
 	$(DESTDIR)$(PREFIX)/bin/chaotic.sh \
 	$(DESTDIR)$(PREFIX)/bin/chaotic \
 	$(DESTDIR)/var/lib/chaotic/interfere \
+	$(DESTDIR)/var/lib/chaotic/packages \
 	$(DESTDIR)/var/cache/chaotic
 
 install-services: \

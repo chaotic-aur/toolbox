@@ -33,6 +33,10 @@ If at some point you see something that could be better, then please open a PR. 
 
   Sync packages' interference repo.
 
+- `chaotic {sp,package-lists-sync}`
+
+  Sync package list repo.
+
 - `chaotic {dp,deploy} ${INPUTDIR}`
 
   Sign the package and send to primary node.

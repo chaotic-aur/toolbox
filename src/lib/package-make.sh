@@ -61,7 +61,7 @@ function makepkg-systemd-nspawn() {
   _PKGDEST="${_ROOTDIR}/var/pkgdest"
   _CAUR_WIZARD="machine/root/home/main-builder/${CAUR_BASH_WIZARD}"
 
-  mkdir -p machine/{up,work,root} dest "${_CCACHE}" "${_SRCCACHE}" "${CAUR_CACHE_PKG}" "${CAUR_DEST_PKG}"
+  install -o"$(whoami)" -dDm755 machine/{up,work,root} dest "${_CCACHE}" "${_SRCCACHE}" "${CAUR_CACHE_PKG}" "${CAUR_DEST_PKG}"
   mount-overlayfs -olowerdir="${_LOWER}",upperdir='machine/up',workdir='machine/work' 'machine/root'
   chown 1000:1000 'dest'
 
@@ -144,9 +144,15 @@ function makepkg-singularity() {
     readlink -f latest
   )"
 
+  install -o"$(whoami)" -dDm755 "${CAUR_SANDBOX}" || return 32
+
   _MECHA_NAME="pkg$(echo -n "$_PKGTAG" | sha256sum | cut -c1-11)"
   _SANDBOX="${CAUR_SANDBOX}/${_MECHA_NAME}"
-  mkdir -p "${CAUR_SANDBOX}"
+  if [[ -e "${_SANDBOX}" ]]; then
+    echo "Sandbox ${_SANDBOX} already exists"
+    return 30
+  fi
+
   singularity build --sandbox "${_SANDBOX}" "${_LOWER}"
 
   _HOME="/home/main-builder"
@@ -154,6 +160,7 @@ function makepkg-singularity() {
   _SRCCACHE="${CAUR_CACHE_SRC}/${_PKGTAG}"
   _CAUR_WIZARD="${_SANDBOX}/home/main-builder/${CAUR_BASH_WIZARD}"
 
+  install -o"$(whoami)" -dDm755 "${CAUR_CACHE}" || return 32
   mkdir -p "${_CCACHE}" "${_SRCCACHE}" "${CAUR_CACHE_PKG}" "./dest"
 
   (fill-dest)
