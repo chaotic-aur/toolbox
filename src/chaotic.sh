@@ -10,8 +10,9 @@ CAUR_PREFIX="$(pwd -P)"
 popd || exit 2
 
 CAUR_DB_NAME='chaotic-aur'
+CAUR_CLUSTER_NAME=''
 CAUR_INTERFERE='/var/lib/chaotic/interfere'
-CAUR_PACKAGES='/var/lib/chaotic/packages'
+CAUR_PACKAGE_LISTS='/var/lib/chaotic/packages'
 
 CAUR_ENGINE="systemd-nspawn"
 CAUR_DEPLOY_HOST='builds.garudalinux.org'

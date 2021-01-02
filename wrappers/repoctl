@@ -3,7 +3,7 @@
 if [[ -z "${CAUR_PACMAN_SYNC}" ]]; then
     CAUR_PACMAN_SYNC="${HOME}/chaotic/pacman-sync"
 fi
-mkdir -p "${CAUR_PACMAN_SYNC}"
+install -o"$(whoami)" -dDm755 "${CAUR_PACMAN_SYNC}"
 
 exec singularity --silent exec \
     -B "${CAUR_PACMAN_SYNC}":/var/lib/pacman/sync \

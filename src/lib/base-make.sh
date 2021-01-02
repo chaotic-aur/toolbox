@@ -3,7 +3,7 @@
 function lowerstrap() {
   set -euo pipefail
 
-  mkdir -p "$CAUR_LOWER_DIR"
+  install -o"$(whoami)" -dDm755 "$CAUR_LOWER_DIR"
   if [[ -f "$CAUR_LOWER_DIR/lock" ]]; then
     echo 'Somone is already building a lowerdir, waiting...'
     while [[ -f "$CAUR_LOWER_DIR/lock" ]]; do sleep 2; done
@@ -29,12 +29,12 @@ function lowerstrap-systemd-nspawn() {
 
   local _CURRENT
 
-  mkdir -p "$CAUR_LOWER_DIR"
+  install -o"$(whoami)" -dDm755 "$CAUR_LOWER_DIR"
   pushd "$CAUR_LOWER_DIR"
 
   _CURRENT="$(date +%Y%m%d%H%M%S)"
 
-  mkdir "$_CURRENT"
+  install -o"$(whoami)" -dm755 "$_CURRENT"
   pacstrap -c "./$_CURRENT" "${CAUR_LOWER_PKGS[@]}"
   pushd "$_CURRENT"
 

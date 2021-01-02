@@ -24,7 +24,7 @@ function prepare() {
   _INTERFERE="${CAUR_INTERFERE}/${_PKGTAG}"
 
   _LS=(*)
-  mkdir 'pkgwork'
+  install -o"$(whoami)" -dm755 'pkgwork'
   mv "${_LS[@]}" 'pkgwork/'
 
   echo -n "${_PKGTAG}" >'PKGTAG'

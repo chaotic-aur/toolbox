@@ -13,9 +13,9 @@ function iterfere-sync() {
 function packages-sync() {
   set -euo pipefail
 
-  pushd "${CAUR_PACKAGES}"
+  pushd "${CAUR_PACKAGE_LISTS}"
   git pull --ff-only || true
-  popd #CAUR_PACKAGES
+  popd #CAUR_PACKAGE_LISTS
 
   return 0
 }
