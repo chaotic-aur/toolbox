@@ -154,7 +154,7 @@ function cancel-freeze-notify() {
 }
 
 function freeze-notify() {
-  (which 'telegram-send' 2>&3 >/dev/null) || return 0
+  (which 'telegram-send' &>/dev/null) || return 0
 
   telegram-send \
     --config ~/.config/telegram-send-group.conf \
