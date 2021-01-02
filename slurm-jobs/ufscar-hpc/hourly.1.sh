@@ -4,7 +4,7 @@
 #SBATCH --nodes 1
 #SBATCH --exclusive
 #SBATCH --dependency=singleton
-#SBATCH --time=00:30:00
+#SBATCH --time=00:50:00
 #SBATCH --signal=B:SIGUSR1@90
 
 JOB_PERIOD=3600
