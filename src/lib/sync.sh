@@ -32,7 +32,7 @@ function repoctl-sync-db() {
   repoctl_config="${HOME}/.config/repoctl/config.toml"
 
   if [[ -e "${repoctl_config}" ]]; then
-    if [[ "$(cat "${repoctl_config}" | wc -l)" -gt 2 ]]; then
+    if [[ "$(wc -l <"$repoctl_config")" -gt 2 ]]; then
       echo "sanity check: we are not going to overwrite existing repoctl config"
       return 31
     fi

@@ -23,36 +23,50 @@ function routine() {
 function generic-routine() {
   set -euo pipefail
 
-  local listfile
-
   if [[ -z "${CAUR_CURRENT_ROUTINE}" ]]; then
     echo 'Invalid routine'
     return 13
   fi
 
-  (package-lists-sync)
+  local _LIST
+  _LIST="${CAUR_PACKAGE_LISTS}/${CAUR_CLUSTER_NAME}/${CAUR_CURRENT_ROUTINE}.txt"
 
-  listfile="${CAUR_PACKAGE_LISTS}/${CAUR_CLUSTER_NAME}/${CAUR_CURRENT_ROUTINE}.txt"
-  if [[ ! -f "${listfile}" ]]; then
+  if [[ ! -f "${_LIST}" ]]; then
     echo 'Unrecognized routine'
     return 22
   fi
 
+  (package-lists-sync)
   (iterfere-sync)
-  push-routine-dir "${CAUR_CURRENT_ROUTINE}" || return 12
-
   (repoctl-sync-db)
 
-  aur-download libpdfium-nojs | tee _repoctl_down.log || true
-  aur-download -ru | tee -a _repoctl_down.log || true
-  xargs rm -rf <"${CAUR_INTERFERE}/ignore-hourly.txt" || true
+  push-routine-dir "${CAUR_CURRENT_ROUTINE}" || return 12
 
-  repoctl list \
-    | grep '\-\(git\|svn\|bzr\|hg\|nightly\)$' \
-    | sort | comm -13 "${CAUR_INTERFERE}/ignore-hourly.txt" - \
-    | xargs -L 200 repoctl down 2>&1 \
+  # non-VCS packages from AUR (download if updated)
+  parse-package-list "${_LIST}" \
+    | sed -E '/:/d' \
+    | sed -E '/-(git|svn|bzr|hg|nightly)$/d' \
+    | xargs --no-run-if-empty -L 200 repoctl down -u 2>&1 \
     | tee -a _repoctl_down.log \
     || true
+
+  # VCS packages from AUR (always download)
+  parse-package-list "${_LIST}" \
+    | sed -E '/:/d' \
+    | sed -En '/-(git|svn|bzr|hg|nightly)$/p' \
+    | xargs --no-run-if-empty -L 200 repoctl down 2>&1 \
+    | tee -a _repoctl_down.log \
+    || true
+
+  # PKGBUILDs hosted on git repos (always download)
+  local _dir _url
+  parse-package-list "${_LIST}" \
+    | sed -En '/:/p' \
+    | while IFS=':' read -r _dir _url; do
+        git clone "${_url}" "${_dir}" \
+          | tee -a _repoctl_down.log \
+          || true
+      done
 
   # put in background and wait, otherwise trap does not work
   makepwd &
@@ -61,6 +75,17 @@ function generic-routine() {
   clean-logs
   pop-routine-dir
   return 0
+}
+
+function parse-package-list() {
+  set -euo pipefail
+
+  if [[ ! -f "${1:-}" ]]; then
+    echo 'Unrecognized routine'
+    return 22
+  fi
+
+  sed -E 's/#.*//' "$1" | xargs -L 1 echo
 }
 
 function push-routine-dir() {
