@@ -10,7 +10,7 @@ function iterfere-sync() {
   return 0
 }
 
-function packages-sync() {
+function package-lists-sync() {
   set -euo pipefail
 
   pushd "${CAUR_PACKAGE_LISTS}"
@@ -19,3 +19,8 @@ function packages-sync() {
 
   return 0
 }
+
+function repoctl-sync-db() {
+  set -euo pipefail
+}
+

@@ -3,26 +3,9 @@
 function routine() {
   set -euo pipefail
 
-  local _CMD
+  CAUR_CURRENT_ROUTINE="${1:-}"
 
-  _CMD="${1:-}"
-
-  case "${_CMD}" in
-  'hourly')
-    hourly
-    ;;
-  'morning')
-    daily-morning
-    ;;
-  'afternoon')
-    daily-afternoon
-    ;;
-  'nightly')
-    daily-night
-    ;;
-  'midnight')
-    daily-midnight
-    ;;
+  case "${CAUR_CURRENT_ROUTINE}" in
   'tkg-kernels')
     routine-tkg-kernels
     ;;
@@ -30,18 +13,35 @@ function routine() {
     clean-archive
     ;;
   *)
-    echo 'Unrecognized routine'
-    return 22
+    generic-routine
     ;;
   esac
 
   return 0
 }
 
-function hourly() {
+function generic-routine() {
   set -euo pipefail
+
+  local listfile
+
+  if [[ -z "${CAUR_CURRENT_ROUTINE}" ]]; then
+    echo 'Invalid routine'
+    return 13
+  fi
+
+  (package-lists-sync)
+
+  listfile="${CAUR_PACKAGE_LISTS}/${CAUR_CLUSTER_NAME}/${CAUR_CURRENT_ROUTINE}.txt"
+  if [[ ! -f "${listfile}" ]]; then
+    echo 'Unrecognized routine'
+    return 22
+  fi
+
   (iterfere-sync)
-  push-routine-dir 'hourly' || return 12
+  push-routine-dir "${CAUR_CURRENT_ROUTINE}" || return 12
+
+  (repoctl-sync-db)
 
   aur-download libpdfium-nojs | tee _repoctl_down.log || true
   aur-download -ru | tee -a _repoctl_down.log || true
@@ -54,89 +54,10 @@ function hourly() {
     | tee -a _repoctl_down.log \
     || true
 
-  (makepwd) || true
-  clean-logs
-  pop-routine-dir
-  return 0
-}
+  # put in background and wait, otherwise trap does not work
+  makepwd &
+  wait "$!" || true
 
-function daily-morning() {
-  set -euo pipefail
-  (iterfere-sync)
-
-  (clean-archive) || true
-
-  push-routine-dir 'morning' || return 12
-
-  repoctl down vlc-git rpcs3-git wireguard-dkms-git ffmpeg-full ffmpeg-amd-full-git \
-    retdec-git ungoogled-chromium{,-git} {chromium,electron}-ozone brave \
-    jellyfin-git godot-git zapcc-git visual-studio-code-insiders cling-git \
-    blender-git nginx-zest-git onivim2-git \
-    \
-    firefox-wayland-hg waterfox-current-git firefox-kde-opensuse \
-    || true
-
-  git clone 'https://github.com/torvic9/plasmafox.git' 'plasmafox' || true
-  git clone 'https://github.com/torvic9/kplasmafoxhelper.git' 'kplasmafoxhelper' || true
-
-  (makepwd) || true
-  clean-logs
-  pop-routine-dir
-  return 0
-}
-
-function daily-afternoon() {
-  set -euo pipefail
-  (iterfere-sync)
-  push-routine-dir 'afternoon' || return 12
-
-  git clone 'https://gitlab.com/garuda-linux/packages/pkgbuilds/garuda-pkgbuilds.git' 'garuda-pkgbuilds' || true
-  git clone 'https://github.com/excalibur1234/pacui.git' 'pacui-repo' || true
-  git clone 'https://github.com/librewish/wishbuilds.git' 'wishbuilds' || true
-  git clone 'https://github.com/chaotic-aur/nvidia-tkg.git' 'chaotic-nvidia-tkg' || true
-  git clone 'https://github.com/chaotic-aur/nvidia-tkg.git' 'chaotic-nvidia-dev-tkg' || true
-  #git clone 'https://github.com/flightlessmango/PKGBUILDS.git' 'mangos' || true
-
-  touch 'chaotic-nvidia-dev-tkg/tkg.dev' || true
-  mv 'garuda-pkgbuilds/pkgbuilds'/* ./ || true
-  mv 'wishbuilds/manjarowish'/* ./ || true
-  #mv 'mangos'/* ./ || true
-
-  mkdir 'pacui' 'pacui-git'
-  mv 'pacui-repo/PKGBUILD' 'pacui/'
-  mv 'pacui-repo/PKGBUILD-git' 'pacui-git/PKGBUILD'
-
-  rm -rf --one-file-system 'garuda-pkgbuilds' 'pacui-repo' 'wishbuilds' 'calamares-netinstall-settings' # 'mangos'
-
-  (makepwd) || true
-  clean-logs
-  pop-routine-dir
-  return 0
-}
-
-function daily-night() {
-  set -euo pipefail
-
-  routine-tkg
-
-  return 0
-}
-
-function daily-midnight() {
-  set -euo pipefail
-
-  ([[ -e "$CAUR_LOWER_DIR/latest" ]] && rm "$CAUR_LOWER_DIR/latest") || true
-
-  (iterfere-sync)
-  push-routine-dir 'midnight' || return 12
-
-  git clone 'https://github.com/SolarAquarion/PKGBUILD-CHAOTIC.git' 'schoina' || true
-
-  mv 'schoina'/* ./ || true
-
-  rm -rf --one-file-system 'schoina'
-
-  (makepwd 'mesa-git' 'llvm-git') || true
   clean-logs
   pop-routine-dir
   return 0
@@ -154,12 +75,16 @@ function push-routine-dir() {
 
   _DIR="${CAUR_ROUTINES}/$1.$(date '+%Y%m%d%H%M%S')"
 
-  mkdir -p "$_DIR"
+  install -o"$(whoami)" -dDm755 "$_DIR"
   pushd "$_DIR"
 
-  if [ -z "${FREEZE_NOTIFIER:-}" ]; then
-    freeze-notify &
-    export FREEZE_NOTIFIER=$!
+  if [ -z "${SLURM_JOBID:-}" ]; then
+    if [ -z "${FREEZE_NOTIFIER:-}" ]; then
+      wait-freeze-and-notify &
+      export FREEZE_NOTIFIER="$!"
+    fi
+  else
+    trap freeze-notify SIGUSR1 
   fi
 
   return 0
@@ -174,7 +99,7 @@ function pop-routine-dir() {
 
   cd ..
 
-  kill-freeze-notify
+  cancel-freeze-notify
   #rm -rf --one-file-system "$_DIR"
 
   popd
@@ -182,20 +107,16 @@ function pop-routine-dir() {
   return 0
 }
 
-function freeze-notify() {
+function wait-freeze-and-notify() {
   set -euo pipefail
 
   sleep 10800 # 3 hours
-  (which 'telegram-send' 2>&3 >/dev/null) || return 0
-
-  telegram-send \
-    --config ~/.config/telegram-send-group.conf \
-    'Hey onyii-san, wast houwwy buiwd stawted thwee houws ago (@pedrohlc)'
+  freeze-notify
 
   return 0
 }
 
-function kill-freeze-notify() {
+function cancel-freeze-notify() {
   set -euo pipefail
 
   [[ -z "${FREEZE_NOTIFIER:-}" ]] && return 0
@@ -203,6 +124,16 @@ function kill-freeze-notify() {
   kill "$FREEZE_NOTIFIER" || true
 
   unset FREEZE_NOTIFIER
+
+  return 0
+}
+
+function freeze-notify() {
+  (which 'telegram-send' 2>&3 >/dev/null) || return 0
+
+  telegram-send \
+    --config ~/.config/telegram-send-group.conf \
+    "Hey onyii-san, wast ${CAUR_CURRENT_ROUTINE} buiwd on ${CAUR_CLUSTER_NAME} stawted lwng time ago (@pedrohlc)"
 
   return 0
 }

@@ -86,8 +86,8 @@ function main() {
   'iterfere-sync' | 'si')
     iterfere-sync "${@:2}"
     ;;
-  'packages-sync' | 'sp')
-    packages-sync "${@:2}"
+  'package-lists-sync' | 'sp')
+    package-lists-sync "${@:2}"
     ;;
   'deploy' | 'dp')
     deploy "${@:2}"

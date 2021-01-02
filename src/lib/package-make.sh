@@ -144,9 +144,15 @@ function makepkg-singularity() {
     readlink -f latest
   )"
 
+  install -o"$(whoami)" -dDm755 "${CAUR_SANDBOX}"
+
   _MECHA_NAME="pkg$(echo -n "$_PKGTAG" | sha256sum | cut -c1-11)"
   _SANDBOX="${CAUR_SANDBOX}/${_MECHA_NAME}"
-  install -o"$(whoami)" -dDm755 "${CAUR_SANDBOX}"
+  if [[ -e "${_SANDBOX}" ]]; then
+    echo "Sandbox '${_SANDBOX}' already exists"
+    return 30
+  fi
+
   singularity build --sandbox "${_SANDBOX}" "${_LOWER}"
 
   _HOME="/home/main-builder"
