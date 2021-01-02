@@ -23,7 +23,7 @@ function sane-wait() {
   # https://stackoverflow.com/a/35755784/13649511
   local status=0
   while :; do
-    wait -f "$@" || local status="$?"
+    wait "$@" || local status="$?"
     if [[ "$status" -lt 128 ]]; then
       return "$status"
     fi
