@@ -8,9 +8,11 @@ function routine() {
     unset XDG_RUNTIME_DIR
   fi
 
-  CAUR_CURRENT_ROUTINE="${1:-}"
+  local _CMD
 
-  case "${CAUR_CURRENT_ROUTINE}" in
+  _CMD="${1:-}"
+
+  case "${_CMD}" in
   'tkg-kernels')
     routine-tkg-kernels
     ;;
@@ -18,7 +20,7 @@ function routine() {
     clean-archive
     ;;
   *)
-    generic-routine
+    generic-routine "${_CMD}"
     ;;
   esac
 
@@ -28,15 +30,18 @@ function routine() {
 function generic-routine() {
   set -euo pipefail
 
-  if [[ -z "${CAUR_CURRENT_ROUTINE}" ]]; then
+  if [[ -z "${1:-}" ]]; then
     echo 'Invalid routine'
     return 13
   fi
 
+  local _ROUTINE
+  _ROUTINE="$1"
+
   (package-lists-sync)
 
   local _LIST
-  _LIST="${CAUR_PACKAGE_LISTS}/${CAUR_CLUSTER_NAME}/${CAUR_CURRENT_ROUTINE}.txt"
+  _LIST="${CAUR_PACKAGE_LISTS}/${CAUR_CLUSTER_NAME}/${_ROUTINE}.txt"
 
   if [[ ! -f "${_LIST}" ]]; then
     echo 'Unrecognized routine'
@@ -46,7 +51,7 @@ function generic-routine() {
   (iterfere-sync)
   (repoctl-sync-db)
 
-  push-routine-dir "${CAUR_CURRENT_ROUTINE}" || return 12
+  push-routine-dir "${_ROUTINE}" || return 12
 
   # non-VCS packages from AUR (download if updated)
   parse-package-list "${_LIST}" \
@@ -111,11 +116,11 @@ function push-routine-dir() {
 
   if [ -z "${SLURM_JOBID:-}" ]; then
     if [ -z "${FREEZE_NOTIFIER:-}" ]; then
-      wait-freeze-and-notify &
+      wait-freeze-and-notify "$1" &
       export FREEZE_NOTIFIER="$!"
     fi
   else
-    trap freeze-notify SIGUSR1 
+    trap "freeze-notify '$1'" SIGUSR1
   fi
 
   return 0
@@ -142,7 +147,7 @@ function wait-freeze-and-notify() {
   set -euo pipefail
 
   sleep 10800 # 3 hours
-  freeze-notify
+  freeze-notify "$1"
 
   return 0
 }
@@ -162,7 +167,7 @@ function cancel-freeze-notify() {
 function freeze-notify() {
   telegram-send \
     --config ~/.config/telegram-send-group.conf \
-    "Hey onyii-san, wast ${CAUR_CURRENT_ROUTINE} buiwd on ${CAUR_CLUSTER_NAME} stawted lwng time ago (@pedrohlc)" \
+    "Hey onyii-san, wast $1 buiwd on ${CAUR_CLUSTER_NAME} stawted lwng time ago (@pedrohlc)" \
     || true
 }
 
