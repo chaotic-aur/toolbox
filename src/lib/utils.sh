@@ -59,6 +59,7 @@ function parallel-scp() {
   f="$(basename "$f")"
 
   if [[ ! -f "./${f}.sig" ]]; then
+    popd  # "$(dirname "$f")"
     echo "Files without signatures? That's a crime for us!"
     return 29
   fi
@@ -80,6 +81,8 @@ function parallel-scp() {
     # shellcheck disable=SC2029
     ssh "${host}" "cd '$path' && cat -- ./'.$f.'*~ >'$f' && rm -- ./'.$f.'*~"
   fi
+
+  popd  # "$(dirname "$f")"
 }
 
 function reset-fakeroot-chown() {
