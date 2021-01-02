@@ -14,11 +14,11 @@ function _requeue() {
 }
 
 function _near_timeout() {
-  _requeue
   if [[ -n "$CHILD_PID" ]]; then
     echo "$(date): notifying child $CHILD_PID about timeout"
-    kill -SIGUSR1 "$CHILD_PID"
+    kill -SIGUSR1 "$CHILD_PID" || true
   fi
+  _requeue
 }
 
 function sane-wait() {
