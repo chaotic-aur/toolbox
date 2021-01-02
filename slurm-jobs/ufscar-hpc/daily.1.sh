@@ -9,4 +9,4 @@
 JOB_PERIOD=$((24*3600))
 JOB_OFFSET=$(( 1*3600))
 
-source "$(dirname "$0")"/common.sh
+source common.sh

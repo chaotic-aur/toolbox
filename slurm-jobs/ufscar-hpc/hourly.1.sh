@@ -9,4 +9,4 @@
 JOB_PERIOD=3600
 JOB_OFFSET=0
 
-source "$(dirname "$0")"/common.sh
+source common.sh
