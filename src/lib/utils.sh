@@ -44,27 +44,30 @@ function parallel-scp() {
   host="$2"
   path="$3"
 
-  if [[ ! -f "${f}.sig" ]]; then
+  pushd "$(dirname "$f")"
+  f="$(basename "$f")"
+
+  if [[ ! -f "./${f}.sig" ]]; then
     echo "Files without signatures? That's a crime for us!"
     return 29
   fi
 
   if [[ "$CAUR_SCP_STREAMS" -gt 1 ]]; then
-    rm ".$f."*~ 2>/dev/null || true  # there may exist leftover files from a previously failed scp
-    split -n"$CAUR_SCP_STREAMS" --additional-suffix='~' "$f" ".$f."
-    _files=(".$f."*~ "$f.sig")
+    rm -- ./".$f."*~ 2>/dev/null || true  # there may exist leftover files from a previously failed scp
+    split -n"$CAUR_SCP_STREAMS" --additional-suffix='~' -- ./"$f" ./".$f."
+    _files=(./".$f."*~ ./"$f.sig")
   else
-    _files=("$f" "$f.sig")
+    _files=(./"$f" ./"$f.sig")
   fi
 
   printf '%s\n' "${_files[@]}" |\
     xargs -d'\n' -I'{}' -P"$((CAUR_SCP_STREAMS+1))" -- \
-      scp '{}' "${host}:${path}/"
+      scp -- '{}' "${host}:${path}/"
 
   if [[ "$CAUR_SCP_STREAMS" -gt 1 ]]; then
-    rm ".$f."*~
+    rm -- ./".$f."*~
     # shellcheck disable=SC2029
-    ssh "${host}" "cd '$path' && cat '.$f.'*~ >'$f' && rm '.$f.'*~"
+    ssh "${host}" "cd '$path' && cat -- ./'.$f.'*~ >'$f' && rm -- ./'.$f.'*~"
   fi
 }
 
