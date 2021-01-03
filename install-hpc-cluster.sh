@@ -40,7 +40,7 @@ EOF
 
 mkdir -p "${HOME}/chaotic"
 for repo in toolbox interfere packages; do
-  [[ -d "${HOME}/chaotic/${repo}" ]] || git clone "git@github.com:chaotic-aur/${repo}.git" "${HOME}/chaotic/${repo}"
+  [[ -d "${HOME}/chaotic/${repo}" ]] || git clone "https://github.com/chaotic-aur/${repo}.git" "${HOME}/chaotic/${repo}"
 done
 
 pushd "${HOME}/chaotic/toolbox/src"
