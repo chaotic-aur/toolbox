@@ -16,6 +16,9 @@ function routine() {
   'tkg-kernels')
     routine-tkg-kernels
     ;;
+  'tkg-wine')
+    routine-tkg-wine
+    ;;
   'clean-archive')
     clean-archive
     ;;

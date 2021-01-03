@@ -1,0 +1,9 @@
+[Unit]
+Description=Chaotic+TkG's wine routine
+
+[Timer]
+OnCalendar=*-*-* 15:20:00
+Persistent=false
+
+[Install]
+WantedBy=timers.target

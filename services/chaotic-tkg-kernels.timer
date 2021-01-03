@@ -1,0 +1,9 @@
+[Unit]
+Description=Chaotic+TkG's kernels routine
+
+[Timer]
+OnCalendar=*-*-* 10:20:00
+Persistent=false
+
+[Install]
+WantedBy=timers.target

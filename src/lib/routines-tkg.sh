@@ -1,29 +1,5 @@
 #!/usr/bin/env bash
 
-function routine-tkg() {
-  set -euo pipefail
-  local _ORG
-  iterfere-sync
-  push-routine-dir 'tkg' || return 12
-
-  _ORG='https://github.com/Frogging-Family'
-  git clone "$_ORG/vulkan-headers-git.git" 'vulkan-headers-tkg-git' || true
-  git clone "$_ORG/llvm-git.git" 'llvm-tkg-git' || true
-  git clone "$_ORG/mesa-git.git" 'mesa-tkg-git' || true
-  git clone "$_ORG/spirv-tools-git.git" 'spirv-tools-tkg-git' || true
-  git clone "$_ORG/gamescope-git.git" 'gamescope-tkg-git' || true
-  git clone "$_ORG/vulkan-icd-loader-git.git" 'vulkan-icd-loader-tkg-git' || true
-  git clone "$_ORG/amdvlk-opt.git" 'amdvlk-tkg' || true
-  git clone "$_ORG/vkd3d-git.git" 'vkd3d-tkg-git' || true
-  git clone "$_ORG/faudio-git.git" 'faudio-tkg-git' || true
-  git clone "$_ORG/neofrog-git.git" 'neofrog-git' || true
-
-  makepwd
-  clean-logs
-  pop-routine-dir
-  return 0
-}
-
 function tkg-kernel-variate() {
   set -euo pipefail
 
@@ -150,7 +126,7 @@ function routine-tkg-kernels() {
   _i=0
   for _VARIATION in "${_VARIATIONS[@]}"; do
     _i=$((_i + 1))
-    _DEST="linut-tkg.$(printf '%04d' $_i)"
+    _DEST="linux-tkg.$(printf '%04d' $_i)"
 
     mkdir "$_DEST"
     cp -r 'linux-tkg'/* "$_DEST/"

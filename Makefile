@@ -17,6 +17,7 @@ LIBS = \
 	package-prepare \
 	routines \
 	routines-tkg \
+	routines-tkg-wine \
 	sync \
 	utils	
 ROUTINES = \
@@ -24,7 +25,10 @@ ROUTINES = \
 	morning \
 	afternoon \
 	nightly \
-	midnight 
+	midnight \
+	tkg-kernels \
+	tkg-wine
+
 GUEST_ETC = pacman makepkg
 GUEST_BIN = internal-makepkg internal-makepkg-depends x11-wrapper
 
