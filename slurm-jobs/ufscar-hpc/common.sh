@@ -9,8 +9,6 @@ function _requeue() {
 
   scontrol requeue "$SLURM_JOB_ID"
   scontrol update JobId="$SLURM_JOB_ID" StartTime="$timespec"
-
-  trap - EXIT  # avoid double-requeuing
 }
 
 function _near_timeout() {
@@ -34,7 +32,7 @@ function sane-wait() {
 }
 
 trap '_near_timeout' SIGUSR1  # job needs to specify --signal=B:SIGUSR1@90
-trap '_requeue' EXIT  # handle requeue on normal conditions (no timeout)
+trap '_requeue' EXIT HUP INT TERM ERR  # handle requeue on other conditions
 
 echo "$(date): job $SLURM_JOB_ID ($SLURM_JOB_NAME) starting on $SLURM_NODELIST"
 
