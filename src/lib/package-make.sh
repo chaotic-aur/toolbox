@@ -61,7 +61,7 @@ function makepkg-systemd-nspawn() {
   _PKGDEST="${_ROOTDIR}/var/pkgdest"
   _CAUR_WIZARD="machine/root/home/main-builder/${CAUR_BASH_WIZARD}"
 
-  install -o"$(whoami)" -dDm755 machine/{up,work,root} dest "${_CCACHE}" "${_SRCCACHE}" "${CAUR_CACHE_PKG}" "${CAUR_DEST_PKG}"
+  install -o"$(whoami)" -dDm755 machine/{up,work,root} dest "${_CCACHE}" "${_SRCCACHE}" "${CAUR_CACHE_PKG}"
   mount-overlayfs -olowerdir="${_LOWER}",upperdir='machine/up',workdir='machine/work' 'machine/root'
   chown 1000:1000 'dest'
 
