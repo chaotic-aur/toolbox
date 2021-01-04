@@ -36,6 +36,15 @@ function optional-parallel() {
   return 0
 }
 
+function optional-nuke-only-success() {
+  set -euo pipefail
+
+  CAUR_CLEAN_ONLY_SUCCESS=1
+  export CAUR_CLEAN_ONLY_SUCCESS
+
+  return 0
+}
+
 function sane-wait() {
   # https://stackoverflow.com/a/35755784/13649511
   local status=0
@@ -59,21 +68,21 @@ function parallel-scp() {
   f="$(basename "$f")"
 
   if [[ ! -f "./${f}.sig" ]]; then
-    popd  # "$(dirname "$f")"
+    popd # "$(dirname "$f")"
     echo "Files without signatures? That's a crime for us!"
     return 29
   fi
 
   if [[ "$CAUR_SCP_STREAMS" -gt 1 ]]; then
-    rm -- ./".$f."*~ 2>/dev/null || true  # there may exist leftover files from a previously failed scp
+    rm -- ./".$f."*~ 2>/dev/null || true # there may exist leftover files from a previously failed scp
     split -n"$CAUR_SCP_STREAMS" --additional-suffix='~' -- ./"$f" ./".$f."
     _files=(./".$f."*~ ./"$f.sig")
   else
     _files=(./"$f" ./"$f.sig")
   fi
 
-  printf '%s\n' "${_files[@]}" |\
-    xargs -d'\n' -I'{}' -P"$((CAUR_SCP_STREAMS+1))" -- \
+  printf '%s\n' "${_files[@]}" \
+    | xargs -d'\n' -I'{}' -P"$((CAUR_SCP_STREAMS + 1))" -- \
       scp -- '{}' "${host}:${path}/"
 
   if [[ "$CAUR_SCP_STREAMS" -gt 1 ]]; then
@@ -82,7 +91,7 @@ function parallel-scp() {
     ssh "${host}" "cd '$path' && cat -- ./'.$f.'*~ >'$f' && rm -- ./'.$f.'*~"
   fi
 
-  popd  # "$(dirname "$f")"
+  popd # "$(dirname "$f")"
 }
 
 function reset-fakeroot-chown() {
@@ -90,9 +99,9 @@ function reset-fakeroot-chown() {
 
   # https://podman.io/blogs/2018/10/03/podman-remove-content-homedir.html
   if [[ "${CAUR_ENGINE}" = 'singularity' ]]; then
-      singularity --silent exec --fakeroot \
-        -B "${1}:/what-is-mine" \
-        "${CAUR_DOCKER_ALPINE}" \
-        chown -R 0:0 /what-is-mine  # give me back
+    singularity --silent exec --fakeroot \
+      -B "${1}:/what-is-mine" \
+      "${CAUR_DOCKER_ALPINE}" \
+      chown -R 0:0 /what-is-mine # give me back
   fi
 }

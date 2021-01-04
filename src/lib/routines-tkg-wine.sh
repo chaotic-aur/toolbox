@@ -4,7 +4,7 @@ function tkg-wine-variate() {
   set -euo pipefail
 
   local _use_staging _use_vkd3dlib
-  
+
   _use_staging='false'
   _use_vkd3dlib='false'
 
@@ -27,9 +27,9 @@ function tkg-wine-variate() {
   s/_community_patches=\"[^\"]*\"/_community_patches=\"amdags.mypatch\"/g
   s/_user_patches_no_confirm=\"[^\"]*\"/_user_patches_no_confirm=\"true\"/g
   s/_hotfixes_no_confirm=\"[^\"]*\"/_hotfixes_no_confirm=\"true\"/g
-  " wine-tkg-profiles/sample-external-config.cfg > customization.cfg
+  " wine-tkg-profiles/sample-external-config.cfg >customization.cfg
 
-  echo '' > wine-tkg-profiles/advanced-customization.cfg
+  echo '' >wine-tkg-profiles/advanced-customization.cfg
 
   if [ 'lol' == "$1" ]; then
     sed -i'' "
@@ -37,7 +37,7 @@ function tkg-wine-variate() {
     s/_PKGNAME_OVERRIDE=\"[^\"]*\"/_PKGNAME_OVERRIDE=\"leagueoflegends\"/g
     " customization.cfg
 
-    echo '_staging_version="80498dd4"' >> customization.cfg
+    echo '_staging_version="80498dd4"' >>customization.cfg
   fi
 
   return 0
@@ -61,7 +61,7 @@ function routine-tkg-wine() {
   push-routine-dir 'tkg.wine' || return 12
 
   git clone 'https://github.com/Frogging-Family/wine-tkg-git.git' '_repo'
-  
+
   local _VARIATIONS _VARIATION _i _DEST
 
   mapfile -t _VARIATIONS < <(tkg-wine-variations)

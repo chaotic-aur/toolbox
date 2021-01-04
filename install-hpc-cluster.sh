@@ -50,7 +50,7 @@ popd
 FILE="${HOME}/.bashrc"
 # shellcheck disable=SC2016
 LINE='export PATH="$PATH:$HOME/chaotic/toolbox/src:$HOME/chaotic/toolbox/wrappers"'
-grep -qF -- "$LINE" "$FILE" || echo "$LINE" >> "$FILE"
+grep -qF -- "$LINE" "$FILE" || echo "$LINE" >>"$FILE"
 
 "${HOME}/chaotic/toolbox/wrappers/pacman" -Syu
 

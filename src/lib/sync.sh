@@ -46,4 +46,3 @@ function repoctl-sync-db() {
 repo = "${CAUR_REPOCTL_DB_FILE}"
 EOF
 }
-

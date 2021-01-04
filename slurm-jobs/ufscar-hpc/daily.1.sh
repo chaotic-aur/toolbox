@@ -8,9 +8,9 @@
 #SBATCH --signal=B:SIGUSR1@90
 
 # shellcheck disable=SC2034
-JOB_PERIOD=$((24*3600))
+JOB_PERIOD=$((24 * 3600))
 # shellcheck disable=SC2034
-JOB_OFFSET=$(( 4*3600))
+JOB_OFFSET=$((4 * 3600))
 
 # shellcheck source=/dev/null
 source common.sh

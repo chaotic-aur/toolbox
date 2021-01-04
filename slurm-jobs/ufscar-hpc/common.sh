@@ -3,7 +3,7 @@
 function _requeue() {
   local now timespec
   now="$(date '+%s')"
-  timespec="$(date --date="@$(((now/JOB_PERIOD+1)*JOB_PERIOD+JOB_OFFSET))" '+%Y-%m-%dT%H:%M:%S')"
+  timespec="$(date --date="@$(((now / JOB_PERIOD + 1) * JOB_PERIOD + JOB_OFFSET))" '+%Y-%m-%dT%H:%M:%S')"
 
   echo "$(date): requeing job $SLURM_JOB_ID ($SLURM_JOB_NAME) to run at $timespec"
 
@@ -31,8 +31,8 @@ function sane-wait() {
   done
 }
 
-trap '_near_timeout' SIGUSR1  # job needs to specify --signal=B:SIGUSR1@90
-trap '_requeue' EXIT HUP INT TERM ERR  # handle requeue on other conditions
+trap '_near_timeout' SIGUSR1          # job needs to specify --signal=B:SIGUSR1@90
+trap '_requeue' EXIT HUP INT TERM ERR # handle requeue on other conditions
 
 echo "$(date): job $SLURM_JOB_ID ($SLURM_JOB_NAME) starting on $SLURM_NODELIST"
 

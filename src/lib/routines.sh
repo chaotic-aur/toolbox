@@ -77,10 +77,10 @@ function generic-routine() {
   parse-package-list "${_LIST}" \
     | sed -En '/:/p' \
     | while IFS=':' read -r _dir _url; do
-        git clone "${_url}" "${_dir}" \
-          | tee -a _repoctl_down.log \
-          || true
-      done
+      git clone "${_url}" "${_dir}" \
+        | tee -a _repoctl_down.log \
+        || true
+    done
 
   # put in background and wait, otherwise trap does not work
   makepwd &
@@ -123,6 +123,7 @@ function push-routine-dir() {
       export FREEZE_NOTIFIER="$!"
     fi
   else
+    # shellcheck disable=SC2064
     trap "freeze-notify '$1'" SIGUSR1
   fi
 

@@ -24,6 +24,11 @@ function cleanup() {
     umount -Rv 'machine/root'
   fi
 
+  if [[ "$CAUR_CLEAN_ONLY_SUCCESS" == '1' ]]; then
+    [[ -f 'building.result' ]] || return 0
+    [[ "$(cat building.result)" == 'success' ]] || return 0
+  fi
+
   popd # _INPUTDIR
 
   reset-fakeroot-chown "${_INPUTDIR}"
