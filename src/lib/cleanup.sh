@@ -14,9 +14,11 @@ function cleanup() {
 
   if [[ -e 'building.pid' ]]; then
     echo "Package is still building in PID: $(cat building.pid)."
+    popd # _INPUTDIR
     return 11
   elif [[ ! -e 'PKGTAG' ]] && [[ ! -e 'PKGBUILD' ]]; then
     echo 'Invalid package directory.'
+    popd # _INPUTDIR
     return 12
   fi
 
@@ -24,9 +26,11 @@ function cleanup() {
     umount -Rv 'machine/root'
   fi
 
-  if [[ "$CAUR_CLEAN_ONLY_DEPLOYED" == '1' ]]; then
-    [[ -f 'building.result' ]] || return 0
-    [[ "$(cat building.result)" == 'deployed' ]] || return 0
+  if [[ "$CAUR_CLEAN_ONLY_DEPLOYED" == '1' ]] \
+    && ([[ ! -f 'building.result' ]] \
+      || [[ "$(cat building.result)" != 'deployed' ]]); then
+    popd # _INPUTDIR
+    return 0
   fi
 
   popd # _INPUTDIR
