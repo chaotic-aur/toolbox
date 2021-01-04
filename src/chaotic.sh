@@ -41,7 +41,7 @@ CAUR_URL="http://localhost/${CAUR_DB_NAME}/x86_64"
 CAUR_GPG_PATH="/usr/bin/gpg"
 CAUR_OVERLAY_TYPE='kernel'
 CAUR_DOCKER_ALPINE="docker://registry.gitlab.com/jitesoft/dockerfiles/alpine"
-CAUR_CLEAN_ONLY_SUCCESS=0
+CAUR_CLEAN_ONLY_DEPLOYED=0
 
 # shellcheck source=/dev/null
 [[ -f '/etc/chaotic.conf' ]] && source '/etc/chaotic.conf'
@@ -73,8 +73,8 @@ function main() {
     optional-parallel "${2:-}"
     main "${@:3}"
     ;;
-  '--only-nuke-success' | '-s')
-    optional-nuke-only-success
+  '--only-nuke-deployed' | '-D')
+    optional-nuke-only-deployed
     main "${@:2}"
     ;;
   'prepare' | 'pr')

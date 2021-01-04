@@ -36,11 +36,11 @@ function optional-parallel() {
   return 0
 }
 
-function optional-nuke-only-success() {
+function optional-nuke-only-deployed() {
   set -euo pipefail
 
-  CAUR_CLEAN_ONLY_SUCCESS=1
-  export CAUR_CLEAN_ONLY_SUCCESS
+  CAUR_CLEAN_ONLY_DEPLOYED=1
+  export CAUR_CLEAN_ONLY_DEPLOYED
 
   return 0
 }
