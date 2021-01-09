@@ -83,7 +83,7 @@ function parallel-scp() {
 
   printf '%s\n' "${_files[@]}" \
     | xargs -d'\n' -I'{}' -P"$((CAUR_SCP_STREAMS + 1))" -- \
-      scp -- '{}' "${host}:${path}/"
+      rsync --partial -- '{}' "${host}:${path}/"
 
   if [[ "$CAUR_SCP_STREAMS" -gt 1 ]]; then
     rm -- ./".$f."*~
