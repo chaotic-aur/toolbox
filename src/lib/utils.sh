@@ -88,7 +88,7 @@ function parallel-scp() {
   if [[ "$CAUR_SCP_STREAMS" -gt 1 ]]; then
     rm -- ./".$f."*~
     # shellcheck disable=SC2029
-    ssh "${host}" "cd '$path' && cat -- ./'.$f.'*~ >'$f' && rm -- ./'.$f.'*~"
+    ssh "${host}" "cd '$path' && cat -- ./'.$f.'*~ >'$f~' && mv '$f~' '$f' && rm -- ./'.$f.'*~"
   fi
 
   popd # "$(dirname "$f")"
