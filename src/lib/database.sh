@@ -3,6 +3,8 @@
 function db-bump() {
   set -euo pipefail
 
+  local _LOCK_FD
+
   if [[ "$CAUR_TYPE" == 'cluster' ]]; then
     # shellcheck disable=SC2029
     ssh "$CAUR_DEPLOY_HOST" 'chaotic db-bump'
@@ -11,13 +13,11 @@ function db-bump() {
   fi
 
   # Lock bump operations
-  if [[ -f "${CAUR_DB_LOCK}" ]]; then
-    echo 'Lock found, waiting for the other process to finish...'
-    while [[ -f "${CAUR_DB_LOCK}" ]]; do
-      sleep 2
-    done
-  fi
-  echo -n $$ >"${CAUR_DB_LOCK}"
+  touch "${CAUR_DB_LOCK}"
+  exec {_LOCK_FD}<>"${CAUR_DB_LOCK}"
+
+  echo 'Lock work: Waiting for the other process to finish...'
+  flock -x "$_LOCK_FD"
 
   # Add them all
   if repoctl update && db-last-bump; then
