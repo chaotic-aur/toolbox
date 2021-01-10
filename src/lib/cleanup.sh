@@ -27,8 +27,8 @@ function cleanup() {
   fi
 
   if [[ "$CAUR_CLEAN_ONLY_DEPLOYED" == '1' ]] \
-    && ([[ ! -f 'building.result' ]] \
-      || [[ "$(cat building.result)" != 'deployed' ]]); then
+    && { [[ ! -f 'building.result' ]] \
+      || [[ "$(cat building.result)" != 'deployed' ]]; }; then
     popd # _INPUTDIR
     return 0
   fi
