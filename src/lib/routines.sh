@@ -170,7 +170,7 @@ function cancel-freeze-notify() {
 
 function freeze-notify() {
   telegram-send \
-    --config ~/.config/telegram-send-group.conf \
+    --config "$CAUR_TELEGRAM" \
     "Hey onyii-san, wast $1 buiwd on ${CAUR_CLUSTER_NAME} stawted lwng time ago (@pedrohlc)" \
     || true
 }

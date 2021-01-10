@@ -17,7 +17,11 @@ function db-bump() {
   exec {_LOCK_FD}<>"${CAUR_DB_LOCK}"
 
   echo 'Lock work: Waiting for the other process to finish...'
-  flock -x "$_LOCK_FD"
+  if ! flock -x -w 360 "$_LOCK_FD"; then
+    db-lock-notify
+    return 33
+  fi
+  echo "Lock acquired."
 
   # Add them all
   if repoctl update && db-last-bump; then
@@ -92,4 +96,11 @@ function remove() {
 
   db-unlock
   return 0
+}
+
+function db-lock-notify() {
+  telegram-send \
+    --config "$CAUR_TELEGRAM" \
+    "Hey onyii-san, wast $1 database-lock has timedout (@pedrohlc)" \
+    || true
 }
