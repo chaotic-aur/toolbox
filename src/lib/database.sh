@@ -101,6 +101,6 @@ function remove() {
 function db-lock-notify() {
   telegram-send \
     --config "$CAUR_TELEGRAM" \
-    "Hey onyii-san, wast $1 database-lock has timedout (@pedrohlc)" \
+    "OwO database wock has timed-out (@pedrohlc)" \
     || true
 }
