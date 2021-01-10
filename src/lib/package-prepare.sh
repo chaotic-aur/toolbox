@@ -20,7 +20,11 @@ function prepare() {
   fi
 
   pushd "${_PKGDIR}"
-  _PKGTAG="$(basename "$PWD")"
+  if [[ -f 'PKGBASE' ]]; then
+    _PKGTAG="$(<PKGBASE)"
+  else
+    _PKGTAG="$(basename "$PWD")"
+  fi
   _INTERFERE="${CAUR_INTERFERE}/${_PKGTAG}"
 
   _LS=(*)

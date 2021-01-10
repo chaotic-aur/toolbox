@@ -73,6 +73,7 @@ function routine-tkg-wine() {
 
     mkdir "$_DEST"
     cp -r '_repo/wine-tkg-git'/* "$_DEST/"
+    echo 'wine-tkg' >"$_DEST/PKGBASE"
 
     pushd "$_DEST"
     # shellcheck disable=SC2086

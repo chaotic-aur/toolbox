@@ -130,6 +130,7 @@ function routine-tkg-kernels() {
 
     mkdir "$_DEST"
     cp -r 'linux-tkg'/* "$_DEST/"
+    echo 'linux-tkg' >"$_DEST/PKGBASE"
 
     pushd "$_DEST"
     # shellcheck disable=SC2086

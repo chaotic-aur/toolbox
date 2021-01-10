@@ -41,7 +41,7 @@ CAUR_SCP_STREAMS=0
 CAUR_SIGN_KEY=''
 CAUR_SIGN_USER='root' # who owns the key in gnupg's keyring.
 CAUR_TELEGRAM="$HOME/.config/telegram-send-group.conf"
-CAUR_TYPE='primary'   # only the primary cluster manages the database.
+CAUR_TYPE='primary' # only the primary cluster manages the database.
 CAUR_URL="http://localhost/${CAUR_DB_NAME}/x86_64"
 
 # shellcheck source=/dev/null
