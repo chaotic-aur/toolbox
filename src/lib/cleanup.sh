@@ -40,3 +40,39 @@ function cleanup() {
 
   return 0
 }
+
+function clean-srccache() {
+  set -euo pipefail
+
+  local _PKG_CACHE_DIR
+
+  if [[ -z "${1:-}" ]]; then
+    echo 'Invalid parameters'
+    return 34
+  fi
+
+  _PKG_CACHE_DIR="${CAUR_CACHE_SRC}/${1}"
+
+  if [[ ! -d "$_PKG_CACHE_DIR" ]]; then
+    echo 'Invalid parameters or empty cache directory.'
+    echo "$_PKG_CACHE_DIR"
+    return 0
+  fi
+
+  _PKG_CACHE_DIR="$(
+    cd "${_PKG_CACHE_DIR}"
+    pwd -P
+  )"
+
+  if [[ "$_PKG_CACHE_DIR" != "$CAUR_CACHE_SRC/"* ]]; then
+    echo 'Stop trying to destroy my machine!'
+    return 35
+  fi
+
+  if [[ ! -e "$_PKG_CACHE_DIR"/* ]]; then
+    echo 'Empty cache directory.'
+    return 0
+  fi
+
+  rm -rf --one-file-system "$_PKG_CACHE_DIR"/*
+}

@@ -73,9 +73,13 @@ If at some point you see something that could be better, then please open a PR. 
 
   When on a primary node, clean up the archive folder.
 
-- `chaotic clean-logs`
+- `chaotic {clg,clean-logs}`
 
   After a `chaotic makepwd`, remove successfull and "already built" logs.
+
+- `chaotic {cls,clean-srccache} ${PACKAGE}`
+
+  Removes cached sources from a specific package.
 
 ## Involved directories
 

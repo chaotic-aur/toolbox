@@ -118,7 +118,10 @@ function main() {
     routine "${@:2}"
     ;;
   'clean-logs' | 'clg')
-    clean-logs
+    clean-logs "${@:2}"
+    ;;
+  'clean-srccache' | 'cls')
+    clean-srccache "${@:2}"
     ;;
   'reset-fakeroot-chown' | 'rfc')
     reset-fakeroot-chown "${@:2}"
