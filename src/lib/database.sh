@@ -3,8 +3,6 @@
 function db-bump() {
   set -euo pipefail
 
-  local _LOCK_FD
-
   if [[ "$CAUR_TYPE" == 'cluster' ]]; then
     # shellcheck disable=SC2029
     ssh "$CAUR_DEPLOY_HOST" 'chaotic db-bump'
@@ -13,15 +11,7 @@ function db-bump() {
   fi
 
   # Lock bump operations
-  touch "${CAUR_DB_LOCK}"
-  exec {_LOCK_FD}<>"${CAUR_DB_LOCK}"
-
-  echo 'Lock work: Waiting for the other process to finish...'
-  if ! flock -x -w 360 "$_LOCK_FD"; then
-    db-lock-notify
-    return 33
-  fi
-  echo "Lock acquired."
+  db-lock
 
   # Add them all
   if repoctl update && db-last-bump; then
@@ -63,8 +53,28 @@ function db-pkglist() {
   return 0
 }
 
+function db-lock() {
+  set -euo pipefail
+
+  touch "${CAUR_DB_LOCK}"
+  exec {CAUR_LOCK_FD}<>"${CAUR_DB_LOCK}"
+
+  echo 'Lock work: Waiting for the other process to finish...'
+  if ! flock -x -w 360 "$CAUR_LOCK_FD"; then
+    db-lock-notify
+    return 33
+  fi
+  echo "Lock acquired."
+
+  export CAUR_LOCK_FD
+
+  return 0
+}
+
 function db-unlock() {
-  rm "${CAUR_DB_LOCK}"
+  exec {CAUR_LOCK_FD}>&-
+
+  unset CAUR_LOCK_FD
 
   return 0
 }
@@ -78,13 +88,7 @@ function remove() {
   fi
 
   # Lock bump operations
-  if [[ -f "${CAUR_DB_LOCK}" ]]; then
-    echo 'Lock found, waiting for the other process to finish...'
-    while [[ -f "${CAUR_DB_LOCK}" ]]; do
-      sleep 2
-    done
-  fi
-  echo -n $$ >"${CAUR_DB_LOCK}"
+  db-lock
 
   # Remove them all
   if repoctl remove "$@"; then
