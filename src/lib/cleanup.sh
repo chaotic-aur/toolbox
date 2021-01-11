@@ -69,10 +69,13 @@ function clean-srccache() {
     return 35
   fi
 
-  if [[ ! -e "$_PKG_CACHE_DIR"/* ]]; then
-    echo 'Empty cache directory.'
-    return 0
-  fi
+  for entry in "$_PKG_CACHE_DIR"/*; do
+    if [[ ! -e "$entry" ]]; then
+      echo 'Empty cache directory.'
+      return 0
+    fi
+    rm -rf --one-file-system "$entry"
+  done
 
-  rm -rf --one-file-system "$_PKG_CACHE_DIR"/*
+  return 0
 }

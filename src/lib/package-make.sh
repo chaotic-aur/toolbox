@@ -22,7 +22,7 @@ function makepkg-systemd-nspawn() {
     _CONTAINER_ARGS
 
   _INPUTDIR="$(
-    cd "${1}"
+    cd "${1:-}"
     pwd -P
   )"
   # Note: there is usage of "${@:2}" below.
