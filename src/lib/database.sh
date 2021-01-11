@@ -75,6 +75,7 @@ function db-unlock() {
   exec {CAUR_LOCK_FD}>&-
 
   unset CAUR_LOCK_FD
+  echo 'Lock released.'
 
   return 0
 }

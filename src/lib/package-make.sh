@@ -76,15 +76,15 @@ function makepkg-systemd-nspawn() {
   cp "${CAUR_BASH_WIZARD}" "${_CAUR_WIZARD}"
   chmod 755 "${_CAUR_WIZARD}"
 
-  _CONTAINER_ARGS=()
-  [[ -f 'CONTAINER_ARGS' ]] && mapfile -t _CONTAINER_ARGS <CONTAINER_ARGS
+  [[ -f 'CONTAINER_ARGS' ]] && _CONTAINER_ARGS="$(<CONTAINER_ARGS)"
 
   _MECHA_NAME="pkg$(echo -n "$_PKGTAG" | sha256sum | cut -c1-11)"
   _BUILD_FAILED=''
+  #shellcheck disable=SC2086
   systemd-nspawn -M "${_MECHA_NAME}" \
     -u "root" \
     --capability=CAP_IPC_LOCK,CAP_SYS_NICE \
-    -D machine/root "${_CONTAINER_ARGS[@]}" \
+    -D machine/root ${_CONTAINER_ARGS:-} \
     "/home/main-builder/wizard.sh" "${@:2}" || local _BUILD_FAILED="$?"
 
   if [[ -z "${_BUILD_FAILED}" ]]; then
