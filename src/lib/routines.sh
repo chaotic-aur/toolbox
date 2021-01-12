@@ -124,7 +124,7 @@ function push-routine-dir() {
     fi
   else
     # shellcheck disable=SC2064
-    trap "freeze-notify '$1'" SIGUSR1
+    trap "freeze-notify '$1' '${SLURM_NODELIST:-}'" SIGUSR1
   fi
 
   return 0
@@ -151,7 +151,7 @@ function wait-freeze-and-notify() {
   set -euo pipefail
 
   sleep 10800 # 3 hours
-  freeze-notify "$1"
+  freeze-notify "$@"
 
   return 0
 }
@@ -171,7 +171,7 @@ function cancel-freeze-notify() {
 function freeze-notify() {
   telegram-send \
     --config "$CAUR_TELEGRAM" \
-    "Hey onyii-san, wast $1 buiwd on ${CAUR_CLUSTER_NAME} stawted lwng time ago (@pedrohlc)" \
+    "Hey onyii-san, wast ${1:-} buiwd on ${CAUR_CLUSTER_NAME}'s ${2:-} stawted lwng time ago (@pedrohlc)" \
     || true
 }
 
