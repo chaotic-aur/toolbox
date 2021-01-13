@@ -12,5 +12,7 @@ JOB_PERIOD=3600
 # shellcheck disable=SC2034
 JOB_OFFSET=0
 
+export CAUR_PARALLEL=10
+
 # shellcheck source=/dev/null
 source common.sh
