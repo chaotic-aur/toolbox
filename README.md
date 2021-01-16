@@ -131,3 +131,11 @@ sudo usermod -aG chaotic_op $(whoami)
 
 make build && sudo make install
 ```
+
+## Lint
+
+```sh
+pacman -S --needed yarn shellcheck
+yarn install
+yarn run lint
+```

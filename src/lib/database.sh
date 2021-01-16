@@ -42,7 +42,19 @@ function db-pkglist() {
     -f "${CAUR_DB_NAME}.db.${CAUR_DB_EXT}" \
     | awk '/^d/{print $6}' >../pkgs.txt); then
 
+    if [[ -e ../pkgs.files.txt ]]; then
+      mv ../pkgs.files.txt ../pkgs.files.old.txt
+    fi
+
     ls -- *.pkg.* >../pkgs.files.txt
+
+    if [[ -e ../pkgs.files.old.txt ]]; then
+      {
+        diff ../pkgs.files.old.txt ../pkgs.files.old.txt \
+          | grep '^[\<\>]' \
+          | telegram-send --config "$CAUR_TELEGRAM" --stdin --silent --pre
+      } || true
+    fi
 
     echo "Database's package list dumped"
   else
