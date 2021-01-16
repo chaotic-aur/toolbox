@@ -12,6 +12,9 @@ function routine() {
 
   _CMD="${1:-}"
 
+  CAUR_IN_ROUTINE=1
+  export CAUR_IN_ROUTINE
+
   case "${_CMD}" in
   'tkg-kernels')
     routine-tkg-kernels
