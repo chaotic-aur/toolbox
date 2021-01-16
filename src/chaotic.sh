@@ -98,6 +98,9 @@ function main() {
   'package-lists-sync' | 'sp')
     package-lists-sync "${@:2}"
     ;;
+  'repoctl-sync-db' | 'sd')
+    repoctl-sync-db
+    ;;
   'deploy' | 'dp')
     deploy "${@:2}"
     ;;

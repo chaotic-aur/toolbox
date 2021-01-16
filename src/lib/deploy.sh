@@ -98,7 +98,7 @@ function deploy-notify() {
   _INPUTDIR="${1:-}"
 
   _REASON='manual'
-  [[ "$CAUR_IN_ROUTINE" == '1' ]] && _REASON='routine'
+  [[ "${CAUR_IN_ROUTINE:-0}" == '1' ]] && _REASON='routine'
 
   _PKGTAG="$(cat "${_INPUTDIR}/PKGTAG")"
   [[ -z "$_PKGTAG" ]] && return 36
@@ -107,7 +107,7 @@ function deploy-notify() {
   [[ -n "$CAUR_DEPLOY_LABEL" ]] && _AUTHOR="$CAUR_DEPLOY_LABEL"
 
   telegram-send \
-    --config "$CAUR_TELEGRAM_LOG" --silent \
+    --config "$CAUR_TELEGRAM_LOG" --silent --format markdown \
     "${_AUTHOR} (${_REASON}) just deployed \`${_PKGTAG}\` successfully!" \
     || true
 
