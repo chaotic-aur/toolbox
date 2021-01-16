@@ -52,7 +52,7 @@ function db-pkglist() {
       {
         diff ../pkgs.files.old.txt ../pkgs.files.txt \
           | grep '^[\<\>]' \
-          | telegram-send --config "$CAUR_TELEGRAM" --stdin --silent --pre
+          | telegram-send --config "$CAUR_TELEGRAM_LOG" --stdin --silent --pre
       } || true
     fi
 

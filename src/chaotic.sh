@@ -7,6 +7,7 @@ stee() { command tee "$@" >/dev/null; }
 
 pushd "$(dirname "$0")/.." || exit 2
 CAUR_PREFIX="$(pwd -P)"
+[[ -z "${HOME:-}" ]] && HOME="$(getent passwd $(whoami) | cut -d: -f6)"
 popd || exit 2
 
 CAUR_CACHE='/var/cache/chaotic'
