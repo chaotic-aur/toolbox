@@ -50,7 +50,7 @@ function db-pkglist() {
 
     if [[ -e ../pkgs.files.old.txt ]]; then
       {
-        diff ../pkgs.files.old.txt ../pkgs.files.old.txt \
+        diff ../pkgs.files.old.txt ../pkgs.files.txt \
           | grep '^[\<\>]' \
           | telegram-send --config "$CAUR_TELEGRAM" --stdin --silent --pre
       } || true
