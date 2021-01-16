@@ -10,7 +10,6 @@ LIBS = \
 	database \
 	deploy \
 	interfere \
-	keyring \
 	mirror \
 	package-make \
 	package-makedir \
