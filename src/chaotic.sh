@@ -42,6 +42,7 @@ CAUR_SANDBOX='/tmp/chaotic/sandbox'
 CAUR_SCP_STREAMS=0
 CAUR_SIGN_KEY=''
 CAUR_SIGN_USER='root' # who owns the key in gnupg's keyring.
+CAUR_SILENT=0
 CAUR_TELEGRAM="$HOME/.config/telegram-send-group.conf"
 CAUR_TELEGRAM_LOG="$HOME/.config/telegram-send-log.conf"
 CAUR_TYPE='primary' # only the primary cluster manages the database.
@@ -81,6 +82,11 @@ function main() {
     ;;
   '--only-nuke-deployed' | '-D')
     optional-nuke-only-deployed
+    main "${@:2}"
+    ;;
+  '--silent' | '-s')
+    CAUR_SILENT=1
+    export CAUR_SILENT
     main "${@:2}"
     ;;
   'prepare' | 'pr')
@@ -135,10 +141,10 @@ function main() {
     reset-fakeroot-chown "${@:2}"
     ;;
   'send-group' | 'ag')
-    telegram-send --config "$CAUR_TELEGRAM" "${@:2}"
+    send-group "${@:2}"
     ;;
   'send-log' | 'al')
-    telegram-send --config "$CAUR_TELEGRAM_LOG" "${@:2}"
+    send-log "${@:2}"
     ;;
   'whoami')
     echo "#$UID or ${USER:-$(whoami)}, identified as ${CAUR_MAINTAINER} at \"$CAUR_DEPLOY_LABEL\"."

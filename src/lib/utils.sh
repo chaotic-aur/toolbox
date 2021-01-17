@@ -92,6 +92,8 @@ function parallel-scp() {
   fi
 
   popd # "$(dirname "$f")"
+
+  return 0
 }
 
 function reset-fakeroot-chown() {
@@ -104,4 +106,22 @@ function reset-fakeroot-chown() {
       "${CAUR_DOCKER_ALPINE}" \
       chown -R 0:0 /what-is-mine # give me back
   fi
+
+  return 0
+}
+
+function send-group() {
+  # group messages cannot be silenced
+
+  telegram-send --config "$CAUR_TELEGRAM" "$@" || true
+
+  return 0
+}
+
+function send-log() {
+  [[ "$CAUR_SILENT" == '1' ]] && return 0
+
+  telegram-send --config "$CAUR_TELEGRAM_LOG" --silent "$@" || true
+
+  return 0
 }

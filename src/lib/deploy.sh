@@ -103,8 +103,7 @@ function deploy-notify() {
   _AUTHOR="$CAUR_DEPLOY_LABEL"
   [[ "${CAUR_IN_ROUTINE:-0}" != '1' ]] && _AUTHOR="${CAUR_MAINTAINER}@$CAUR_DEPLOY_LABEL"
 
-  telegram-send \
-    --config "$CAUR_TELEGRAM_LOG" --silent --format markdown \
+  send-log --format markdown \
     "${_AUTHOR} just deployed \`${_PKGTAG}\` successfully!" \
     || true
 

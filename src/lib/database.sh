@@ -49,11 +49,9 @@ function db-pkglist() {
     ls -- *.pkg.* >../pkgs.files.txt
 
     if [[ -e ../pkgs.files.old.txt ]]; then
-      {
-        diff ../pkgs.files.old.txt ../pkgs.files.txt \
-          | grep '^[\<\>]' \
-          | telegram-send --config "$CAUR_TELEGRAM_LOG" --stdin --silent --pre
-      } || true
+      diff ../pkgs.files.old.txt ../pkgs.files.txt \
+        | grep '^[\<\>]' \
+        | send-log --stdin --pre
     fi
 
     echo "Database's package list dumped"
@@ -97,7 +95,9 @@ function remove() {
 
   if [[ "${CAUR_TYPE}" == 'cluster' ]]; then
     # shellcheck disable=SC2029
-    ssh "$CAUR_DEPLOY_HOST" "chaotic rm $*"
+    ssh "$CAUR_DEPLOY_HOST" "chaotic -s rm $*"
+
+    remove-notify "$@"
 
     return 0
   fi
@@ -114,25 +114,26 @@ function remove() {
   fi
 
   db-unlock
+
+  remove-notify "$@"
+
   return 0
 }
 
 function db-lock-notify() {
-  telegram-send \
-    --config "$CAUR_TELEGRAM" \
-    "OwO database wock has timed-out (@pedrohlc)" \
-    || true
+  send-group "OwO database wock has timed-out (@pedrohlc)"
 }
 
 function remove-notify() {
   set -euo pipefail
 
+  [[ -z "$*" ]] && return 0
+
   local _AUTHOR
 
   _AUTHOR="${CAUR_MAINTAINER}@$CAUR_DEPLOY_LABEL"
 
-  telegram-send \
-    --config "$CAUR_TELEGRAM_LOG" --silent --format markdown \
+  send-log --format markdown \
     "${_AUTHOR} just removed \`$*\`" \
     || true
 

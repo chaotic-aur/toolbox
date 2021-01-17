@@ -172,10 +172,7 @@ function cancel-freeze-notify() {
 }
 
 function freeze-notify() {
-  telegram-send \
-    --config "$CAUR_TELEGRAM" \
-    "Hey onyii-san, wast ${1:-} buiwd on ${CAUR_CLUSTER_NAME}'s ${2:-} stawted lwng time ago (@pedrohlc)" \
-    || true
+  send-group "Hey onyii-san, wast ${1:-} buiwd on ${CAUR_CLUSTER_NAME}'s ${2:-} stawted lwng time ago (@pedrohlc)"
 }
 
 function clean-archive() {
