@@ -131,6 +131,12 @@ function main() {
   'reset-fakeroot-chown' | 'rfc')
     reset-fakeroot-chown "${@:2}"
     ;;
+  'send-group' | 'ag')
+    telegram-send --config "$CAUR_TELEGRAM" "${@:2}"
+    ;;
+  'send-log' | 'al')
+    telegram-send --config "$CAUR_TELEGRAM_LOG" "${@:2}"
+    ;;
   *)
     echo 'Wrong usage, check https://github.com/chaotic-aur/toolbox/blob/main/README.md for details on how to use.'
     return 254
