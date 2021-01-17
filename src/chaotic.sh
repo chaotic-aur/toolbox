@@ -8,6 +8,7 @@ stee() { command tee "$@" >/dev/null; }
 pushd "$(dirname "$0")/.." || exit 2
 CAUR_PREFIX="$(pwd -P)"
 [[ -z "${HOME:-}" ]] && HOME="$(getent passwd $(whoami) | cut -d: -f6)"
+CAUR_MAINTAINER="${CAUR_REAL_USER:-${CAUR_REAL_UID:-${USER:-$UID}}}"
 popd || exit 2
 
 CAUR_CACHE='/var/cache/chaotic'
@@ -51,6 +52,8 @@ CAUR_URL="http://localhost/${CAUR_DB_NAME}/x86_64"
 
 # shellcheck source=/dev/null
 [[ -f "$HOME/.chaotic/chaotic.conf" ]] && source "$HOME/.chaotic/chaotic.conf"
+
+[[ -z "$CAUR_DEPLOY_LABEL" ]] && CAUR_DEPLOY_LABEL="${CAUR_CLUSTER_NAME:-Unknown Machine}"
 
 if [ "$EUID" -ne 0 ] && [ "$CAUR_ENGINE" != "singularity" ]; then
   echo 'This script must be run as root.'
@@ -136,6 +139,9 @@ function main() {
     ;;
   'send-log' | 'al')
     telegram-send --config "$CAUR_TELEGRAM_LOG" "${@:2}"
+    ;;
+  'whoami')
+    echo "#$UID or ${USER:-$(whoami)}, identified as ${CAUR_MAINTAINER} at \"$CAUR_DEPLOY_LABEL\"."
     ;;
   *)
     echo 'Wrong usage, check https://github.com/chaotic-aur/toolbox/blob/main/README.md for details on how to use.'

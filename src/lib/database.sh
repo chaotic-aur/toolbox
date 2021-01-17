@@ -123,3 +123,18 @@ function db-lock-notify() {
     "OwO database wock has timed-out (@pedrohlc)" \
     || true
 }
+
+function remove-notify() {
+  set -euo pipefail
+
+  local _AUTHOR
+
+  _AUTHOR="${CAUR_MAINTAINER}@$CAUR_DEPLOY_LABEL"
+
+  telegram-send \
+    --config "$CAUR_TELEGRAM_LOG" --silent --format markdown \
+    "${_AUTHOR} just removed \`$*\`" \
+    || true
+
+  return 0
+}

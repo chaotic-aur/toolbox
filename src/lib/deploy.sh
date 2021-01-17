@@ -93,22 +93,19 @@ function deploypwd() {
 function deploy-notify() {
   set -euo pipefail
 
-  local _INPUTDIR _REASON _PKGTAG _AUTHOR
+  local _INPUTDIR _PKGTAG _AUTHOR
 
   _INPUTDIR="${1:-}"
-
-  _REASON='manual'
-  [[ "${CAUR_IN_ROUTINE:-0}" == '1' ]] && _REASON='routine'
 
   _PKGTAG="$(cat "${_INPUTDIR}/PKGTAG")"
   [[ -z "$_PKGTAG" ]] && return 36
 
-  _AUTHOR="${CAUR_CLUSTER_NAME:-System}"
-  [[ -n "$CAUR_DEPLOY_LABEL" ]] && _AUTHOR="$CAUR_DEPLOY_LABEL"
+  _AUTHOR="$CAUR_DEPLOY_LABEL"
+  [[ "${CAUR_IN_ROUTINE:-0}" != '1' ]] && _AUTHOR="${CAUR_MAINTAINER}@$CAUR_DEPLOY_LABEL"
 
   telegram-send \
     --config "$CAUR_TELEGRAM_LOG" --silent --format markdown \
-    "${_AUTHOR} (${_REASON}) just deployed \`${_PKGTAG}\` successfully!" \
+    "${_AUTHOR} just deployed \`${_PKGTAG}\` successfully!" \
     || true
 
   return 0
