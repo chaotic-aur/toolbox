@@ -95,8 +95,10 @@ function db-unlock() {
 function remove() {
   set -euo pipefail
 
-  if [[ "${CAUR_TYPE}" != 'primary' ]] && [[ "${CAUR_TYPE}" != 'dev' ]]; then
-    echo 'Secondary and mirrors should not manage database'
+  if [[ "${CAUR_TYPE}" == 'cluster' ]]; then
+    # shellcheck disable=SC2029
+    ssh "$CAUR_DEPLOY_HOST" "chaotic rm $*"
+
     return 0
   fi
 
