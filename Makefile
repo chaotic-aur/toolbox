@@ -28,7 +28,7 @@ ROUTINES = \
 	tkg-kernels \
 	tkg-wine
 
-GUEST_ETC = pacman makepkg
+GUEST_ETC = pacman.conf makepkg.conf.append
 GUEST_BIN = internal-makepkg internal-makepkg-depends x11-wrapper
 
 dir_guard=@install -dm755 "$(@D)"
@@ -49,7 +49,7 @@ $(DESTDIR)$(PREFIX)/lib/chaotic/%.sh: src/lib/%.sh
 	$(dir_guard)
 	install -m755 $< $@
 
-$(DESTDIR)$(PREFIX)/lib/chaotic/guest/etc/%.conf: guest/etc/%.conf
+$(DESTDIR)$(PREFIX)/lib/chaotic/guest/etc/%: guest/etc/%
 	$(dir_guard)
 	install -m644 $< $@
 
@@ -75,7 +75,7 @@ build: build/chaotic.elf
 
 install: \
 	$(foreach f, $(LIBS), $(DESTDIR)$(PREFIX)/lib/chaotic/${f}.sh) \
-	$(foreach l, $(GUEST_ETC), $(DESTDIR)$(PREFIX)/lib/chaotic/guest/etc/${l}.conf) \
+	$(foreach l, $(GUEST_ETC), $(DESTDIR)$(PREFIX)/lib/chaotic/guest/etc/${l}) \
 	$(foreach l, $(GUEST_BIN), $(DESTDIR)$(PREFIX)/lib/chaotic/guest/bin/${l}) \
 	$(DESTDIR)$(PREFIX)/bin/chaotic.sh \
 	$(DESTDIR)$(PREFIX)/bin/chaotic \
