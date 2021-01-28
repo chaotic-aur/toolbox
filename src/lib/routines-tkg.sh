@@ -94,7 +94,7 @@ function tkg-kernels-variations() {
     'k10' 'k8' 'k8sse3' 'mpsc' 'nehalem'
     'piledriver' 'sandybridge' 'silvermont'
     'skylake' 'skylakex' 'steamroller'
-    'westmere' 'zen' 'zen2'
+    'tigerlake' 'westmere' 'zen' 'zen2'
   )
 
   # lts
