@@ -40,7 +40,7 @@ function lowerstrap-systemd-nspawn() {
 
   install -dm755 './usr/local/bin'
   install -m644 "$CAUR_GUEST"/etc/pacman.conf './etc/pacman.conf'
-  cat "$CAUR_GUEST"/etc/makepkg.conf.append | tee -a './etc/makepkg.conf'
+  tee -a './etc/makepkg.conf' <"${CAUR_GUEST}/etc/makepkg.conf.append"
   install -m755 "$CAUR_GUEST"/bin/* './usr/local/bin/'
 
   stee -a './etc/pacman.conf' <<EOF
