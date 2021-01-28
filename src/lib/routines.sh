@@ -91,6 +91,10 @@ function generic-routine() {
 
   clean-logs
   pop-routine-dir
+
+  # good time to maybe clean the archive
+  (clean-archive) || true
+
   return 0
 }
 

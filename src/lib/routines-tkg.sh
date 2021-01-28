@@ -80,10 +80,10 @@ function tkg-kernels-variations() {
   _LINUX_STABLE='5.10'
 
   _LINUX_SCHED=(
+    'muqss 0'
     'bmq 1'
     'pds 0'
     'cfs 0'
-    'muqss 0'
   )
 
   readonly _LINUX_MARCH=('generic'
