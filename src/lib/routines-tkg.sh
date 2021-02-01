@@ -86,7 +86,12 @@ function tkg-kernels-variations() {
     'cfs 0'
   )
 
-  readonly _LINUX_MARCH=('generic'
+  readonly _LINUX_MARCH_HP=(
+    'generic'
+    'zen' 'zen2'
+  )
+
+  readonly _LINUX_MARCH=(
     'atom' 'barcelona' 'bobcat' 'broadwell'
     'bulldozer' {cannon,cascade,cooper}'lake'
     'core2' 'excavator' 'goldmont'{,plus}
@@ -94,8 +99,15 @@ function tkg-kernels-variations() {
     'k10' 'k8' 'k8sse3' 'mpsc' 'nehalem'
     'piledriver' 'sandybridge' 'silvermont'
     'skylake' 'skylakex' 'steamroller'
-    'tigerlake' 'westmere' 'zen' 'zen2'
+    'tigerlake' 'westmere'
   )
+
+  # stable (High Priority)
+  for _VAR_SCHED in "${_LINUX_SCHED[@]}"; do
+    for _VAR_MARCH in "${_LINUX_MARCH_HP[@]}"; do
+      echo "$_LINUX_STABLE" "$_VAR_SCHED" "$_VAR_MARCH"
+    done
+  done
 
   # lts
   for _VAR_SCHED in "${_LINUX_SCHED[@]}" 'muqss 0'; do
