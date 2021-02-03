@@ -55,7 +55,11 @@ function makepkg-gen-bash-init() {
   local _DEST="${1:-}"
 
   export CAUR_WIZARD="${_DEST}/${CAUR_BASH_WIZARD}"
-  echo '#!/usr/bin/env bash' | tee "${CAUR_WIZARD}" >/dev/null
+  stee "${CAUR_WIZARD}" <<EOF
+#!/usr/bin/env bash
+source /etc/profile
+
+EOF
   export CAUR_PUSH="makepkg-gen-bash-append"
 
   return 0
