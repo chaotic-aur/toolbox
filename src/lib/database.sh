@@ -1,7 +1,41 @@
 #!/usr/bin/env bash
 
+function db-add() {
+  set -euo pipefail
+
+  if [ ${#@} -gt 0 ]; then
+    echo 'Invalid db-add parameters'
+    return 23
+  fi
+
+  if [[ "$CAUR_TYPE" == 'cluster' ]]; then
+    # shellcheck disable=SC2029
+    ssh "$CAUR_DEPLOY_HOST" "chaotic db-add $*"
+
+    return 0
+  fi
+
+  # Lock bump operations
+  db-lock
+
+  # Add them all
+  if repo-add "${CAUR_DB_NAME}.db.${CAUR_DB_EXT}" "$@" && db-last-bump; then
+    (db-pkglist) || true # we want to unlock even if it fails
+  else
+    db-unlock
+    return 20
+  fi
+
+  db-unlock
+  return 0
+}
+
 function db-bump() {
   set -euo pipefail
+
+  local _RUN_TIME _NEW_SIGS _DB_FILE
+
+  _DB_FILE="${CAUR_DB_NAME}.db.${CAUR_DB_EXT}"
 
   if [[ "$CAUR_TYPE" == 'cluster' ]]; then
     # shellcheck disable=SC2029
@@ -13,13 +47,24 @@ function db-bump() {
   # Lock bump operations
   db-lock
 
-  # Add them all
-  if repoctl update && db-last-bump; then
-    (db-pkglist) || true # we want to unlock even if it fails
-  else
-    db-unlock
-    return 20
+  if [[ ! -f "$CAUR_CHECKPOINT" ]]; then
+    touch -d "$(date -R -r "$_DB_FILE")" "$CAUR_CHECKPOINT"
   fi
+  _RUN_TIME="$(date -R)"
+
+  pushd "$CAUR_DEPLOY_PATH"
+  _NEW_SIGS="$(find ./*.sig -newer "$CAUR_CHECKPOINT")" || true
+
+  if [[ -n "${_NEW_SIGS:-}" ]]; then
+    {
+      echo "$_NEW_SIGS" \
+        | grep -Po '.*(?:-(?:[^-]*)){3}\.pkg\.tar(?:\.xz|\.zst)?(?=\.sig)' \
+        | xargs repo-add "$_DB_FILE" \
+        && db-last-bump && db-pkglist && touch -d "$_RUN_TIME" "$CAUR_CHECKPOINT"
+    } || true
+  fi
+
+  popd # CAUR_DEPLOY_PATH
 
   db-unlock
   return 0

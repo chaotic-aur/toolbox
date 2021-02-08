@@ -24,6 +24,7 @@ CAUR_CACHE_SRC="${CAUR_CACHE}/sources"
 CAUR_CLEAN_ONLY_DEPLOYED=0
 CAUR_DB_EXT='tar.zst'
 CAUR_DB_LOCK="${CAUR_CACHE}/db.lock"
+CAUR_CHECKPOINT="${CAUR_CACHE}/checkpoint"
 CAUR_DEPLOY_HOST='builds.garudalinux.org'
 CAUR_DEPLOY_PATH='/srv/http/repos/chaotic-aur/x86_64/'
 CAUR_DEST_LAST="/srv/http/chaotic-aur/lastupdate"
@@ -112,6 +113,9 @@ function main() {
     ;;
   'deploy' | 'dp')
     deploy "${@:2}"
+    ;;
+  'db-add' | 'dba')
+    db-add "${@:2}"
     ;;
   'db-bump' | 'dbb')
     db-bump "${@:2}"

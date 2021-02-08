@@ -113,7 +113,7 @@ function reset-fakeroot-chown() {
 function send-group() {
   # group messages cannot be silenced
 
-  telegram-send --config "$CAUR_TELEGRAM" "$@" &> /dev/null || true
+  telegram-send --config "$CAUR_TELEGRAM" "$@" &>/dev/null || true
 
   return 0
 }
@@ -121,7 +121,7 @@ function send-group() {
 function send-log() {
   [[ "$CAUR_SILENT" == '1' ]] && return 0
 
-  telegram-send --config "$CAUR_TELEGRAM_LOG" --silent "$@" &> /dev/null || true
+  telegram-send --config "$CAUR_TELEGRAM_LOG" --silent "$@" &>/dev/null || true
 
   return 0
 }
