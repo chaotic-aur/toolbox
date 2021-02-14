@@ -11,13 +11,30 @@ for lib in "$LIBRARY"/*.sh; do
   source "$lib"
 done
 
+load_makepkg_config
+
 source_buildfile() {
   source_safe "$@" &>/dev/null
+}
+
+merge_arch_attrs() {
+  local attr supported_attrs=(
+    provides conflicts depends replaces optdepends
+    makedepends checkdepends)
+
+  for attr in "${supported_attrs[@]}"; do
+    eval "$attr+=(\"\${${attr}_$CARCH[@]}\")"
+  done
+
+  # ensure that calling this function is idempotent.
+  unset -v "${supported_attrs[@]/%/_$CARCH}"
 }
 
 BUILDFILE=${BUILDFILE:-$BUILDSCRIPT}
 unset "${!makedepends_@}" "${!depends_@}" "${!checkdepends_@}"
 source_buildfile "$BUILDFILE"
+
+merge_arch_attrs
 
 printf '%s\n' "${depends[@]}" "${makedepends[@]}" "${checkdepends[@]}"
 
