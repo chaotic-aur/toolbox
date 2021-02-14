@@ -113,6 +113,9 @@ function main() {
   'deploy' | 'dp')
     deploy "${@:2}"
     ;;
+  'deploy-recv')
+    deploy-recv "${@:2}"
+    ;;
   'db-add' | 'dba')
     db-add "${@:2}"
     ;;
