@@ -3,7 +3,7 @@
 function deploy() {
   set -euo pipefail
 
-  local _INPUTDIR _RESULT _NON_KISS_SUDO
+  local _INPUTDIR _RESULT _NON_KISS_SUDO _FILES
 
   _INPUTDIR="$(
     cd "${1:-}"
@@ -41,6 +41,7 @@ function deploy() {
     return 28
   fi
 
+  _FILES=()
   for f in !(*.sig); do
     [[ "$f" == '!(*.sig)' ]] && continue
 
@@ -51,12 +52,12 @@ function deploy() {
         --no-armor "$f"
     fi
 
-    if [[ "$CAUR_TYPE" == 'cluster' ]]; then
-      (parallel-scp "$f" "$CAUR_DEPLOY_HOST" "$CAUR_DEPLOY_PATH")
-    else
-      cp -v "$f"{,.sig} "${CAUR_DEST_PKG}/"
-    fi
+    _FILES+=("$f")
   done
+
+  if [[ ${#_FILES[@]} -gt 0 ]]; then
+    tar -c "${_FILES[@]}" "${_FILES[@]/%/.sig}" | (deploy-recv)
+  fi
 
   popd # "${_INPUTDIR}/dest"
 
@@ -106,6 +107,45 @@ function deploy-notify() {
   send-log --format markdown \
     "${_AUTHOR} just deployed \`${_PKGTAG}\` successfully!" \
     || true
+
+  return 0
+}
+
+function deploy-recv() {
+  set -euo pipefail
+  local _TEMPTAR _TEMPDIR
+
+  if [ ${#@} -lt 1 ]; then
+    echo 'Invalid deploy-recv parameters'
+    return 23
+  fi
+
+  _TEMPTAR="$(mktemp)"
+  _TEMPDIR="$(mktemp -d)"
+
+  cat - | tee "$_TEMPTAR"
+
+  # Test received file
+  if ! tar tf "$_TEMPTAR" &>/dev/null; then
+    echo 'Corrupt tar received.'
+    return 37
+  fi
+
+  pushd "$_TEMPDIR"
+  # Extract files
+  tar -xf "$_TEMPTAR"
+
+  for f in ./*; do if [[ "$f" == './*' ]]; then
+    echo 'Invalid (empty) directory'
+    return 38
+  fi; done
+
+  repoctl add ./*
+  popd # _TEMPDIR
+
+  # Delete uploaded remains
+  rm -r "$_TEMPDIR"
+  rm "$_TEMPTAR"
 
   return 0
 }

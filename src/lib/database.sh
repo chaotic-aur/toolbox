@@ -1,11 +1,16 @@
 #!/usr/bin/env bash
 
-function db-bump() {
+function db-add() {
   set -euo pipefail
+
+  if [ ${#@} -lt 1 ]; then
+    echo 'Invalid db-add parameters'
+    return 23
+  fi
 
   if [[ "$CAUR_TYPE" == 'cluster' ]]; then
     # shellcheck disable=SC2029
-    ssh "$CAUR_DEPLOY_HOST" 'chaotic db-bump'
+    ssh "$CAUR_DEPLOY_HOST" "chaotic db-add $*"
 
     return 0
   fi
@@ -14,7 +19,7 @@ function db-bump() {
   db-lock
 
   # Add them all
-  if repoctl update && db-last-bump; then
+  if repoctl add "$@" && db-last-bump; then
     (db-pkglist) || true # we want to unlock even if it fails
   else
     db-unlock
@@ -22,6 +27,12 @@ function db-bump() {
   fi
 
   db-unlock
+  return 0
+}
+
+function db-bump() {
+  echo '"chaotic db-bump" has been deprecated.'
+
   return 0
 }
 

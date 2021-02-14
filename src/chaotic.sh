@@ -113,8 +113,11 @@ function main() {
   'deploy' | 'dp')
     deploy "${@:2}"
     ;;
+  'db-add' | 'dba')
+    db-add "${@:2}"
+    ;;
   'db-bump' | 'dbb')
-    db-bump "${@:2}"
+    db-bump
     ;;
   'remove' | 'rm')
     remove "${@:2}"
