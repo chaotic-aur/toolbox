@@ -55,6 +55,7 @@ function tkg-kernel-variate() {
   s/_bfqmq=\"[^\"]*\"/_bfqmq=\"true\"/g
   s/_zfsfix=\"[^\"]*\"/_zfsfix=\"true\"/g
   s/_fsync=\"[^\"]*\"/_fsync=\"true\"/g
+  s/_futex2=\"[^\"]*\"/_futex2=\"true\"/g
   s/_anbox=\"[^\"]*\"/_anbox=\"true\"/g
   s/_processor_opt=\"[^\"]*\"/_processor_opt=\"${_MARCH}\"/g
   s/_smt_nice=\"[^\"]*\"/_smt_nice=\"true\"/g
@@ -77,7 +78,7 @@ function tkg-kernels-variations() {
   local _LINUX_LTS _LINUX_STABLE _LINUX_MARCH _VAR_SCHED _VAR_SCHED
 
   _LINUX_LTS='5.4'
-  _LINUX_STABLE='5.10'
+  _LINUX_STABLE='5.11'
 
   _LINUX_SCHED=(
     'muqss 0'

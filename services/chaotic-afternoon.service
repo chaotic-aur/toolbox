@@ -5,7 +5,7 @@ Description=Chaotic's afternoon routine
 User=root
 Group=chaotic_op
 WorkingDirectory=/tmp
-ExecStart=/usr/local/bin/chaotic routine afternoon
+ExecStart=/usr/local/bin/chaotic -j 4 routine afternoon
 
 [Install]
 WantedBy=multi-user.target

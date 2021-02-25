@@ -55,7 +55,7 @@ CAUR_URL="http://localhost/${CAUR_DB_NAME}/x86_64"
 # shellcheck source=/dev/null
 [[ -f "$HOME/.chaotic/chaotic.conf" ]] && source "$HOME/.chaotic/chaotic.conf"
 
-[[ -z "$CAUR_DEPLOY_LABEL" ]] && CAUR_DEPLOY_LABEL="${CAUR_CLUSTER_NAME:-Unknown Machine}"
+[[ -z "${CAUR_DEPLOY_LABEL:-}" ]] && CAUR_DEPLOY_LABEL="${CAUR_CLUSTER_NAME:-Unknown Machine}"
 
 if [ "$EUID" -ne 0 ] && [ "$CAUR_ENGINE" != "singularity" ]; then
   echo 'This script must be run as root.'
