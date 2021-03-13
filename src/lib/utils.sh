@@ -1,5 +1,24 @@
 #!/usr/bin/env bash
 
+function load-config() {
+  set -euo pipefail
+
+  if [[ -z "${1:-}" ]]; then
+    echo 'Trying to load an invalid config'
+    return 37
+  elif [[ -f "/etc/chaotic/${1}.conf" ]]; then
+    # shellcheck source=/dev/null
+    source "/etc/chaotic/${1}.conf"
+  elif [[ -f "$HOME/.chaotic/${1}.conf" ]]; then
+    # shellcheck source=/dev/null
+    source "$HOME/.chaotic/${1}.conf"
+  else
+    echo 'Skipping config file that was not found'
+  fi
+
+  return 0
+}
+
 function mount-overlayfs() {
   set -euo pipefail
 

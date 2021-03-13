@@ -17,9 +17,11 @@ function routine() {
 
   case "${_CMD}" in
   'tkg-kernels')
+    load-config 'routines/tkg-kernels'
     routine-tkg-kernels
     ;;
   'tkg-wine')
+    load-config 'routines/tkg-wine'
     routine-tkg-wine
     ;;
   'clean-archive')
@@ -56,6 +58,8 @@ function generic-routine() {
 
   (iterfere-sync)
   (repoctl-sync-db)
+
+  load-config "routines/$1"
 
   push-routine-dir "${_ROUTINE}" || return 12
 
