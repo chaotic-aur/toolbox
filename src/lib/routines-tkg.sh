@@ -104,8 +104,8 @@ function tkg-kernels-variations() {
   )
 
   # stable (High Priority)
-  for _VAR_SCHED in "${_LINUX_SCHED[@]}"; do
-    for _VAR_MARCH in "${_LINUX_MARCH_HP[@]}"; do
+  for _VAR_MARCH in "${_LINUX_MARCH_HP[@]}"; do
+    for _VAR_SCHED in "${_LINUX_SCHED[@]}"; do
       echo "$_LINUX_STABLE" "$_VAR_SCHED" "$_VAR_MARCH"
     done
   done
@@ -116,8 +116,8 @@ function tkg-kernels-variations() {
   done
 
   # stable
-  for _VAR_SCHED in "${_LINUX_SCHED[@]}"; do
-    for _VAR_MARCH in "${_LINUX_MARCH[@]}"; do
+  for _VAR_MARCH in "${_LINUX_MARCH[@]}"; do
+    for _VAR_SCHED in "${_LINUX_SCHED[@]}"; do
       echo "$_LINUX_STABLE" "$_VAR_SCHED" "$_VAR_MARCH"
     done
   done
