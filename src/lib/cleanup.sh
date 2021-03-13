@@ -3,33 +3,50 @@
 function cleanup() {
   set -euo pipefail
 
-  local _INPUTDIR
+  local _INPUTDIR _LOCK_FN _LOCK_FD
 
   _INPUTDIR="$(
     cd "${1:-}"
     pwd -P
   )"
 
+  _LOCK_FN="${_INPUTDIR}.lock"
+  touch "${_LOCK_FN}"
+  exec {_LOCK_FD}<>"${_LOCK_FN}" # Lock
+
+  if ! flock -x -n "$_LOCK_FD"; then
+    if [[ -e "${_INPUTDIR}/building.pid" ]]; then
+      echo "Package is still building in PID: $(cat "${_INPUTDIR}/building.pid")."
+    else
+      echo 'Package is still in use by another chaotic script.'
+    fi
+
+    return 11
+  fi
+
   pushd "${_INPUTDIR}"
 
-  if [[ -e 'building.pid' ]]; then
-    echo "Package is still building in PID: $(cat building.pid)."
-    popd # _INPUTDIR
-    return 11
-  elif [[ ! -e 'PKGTAG' ]] && [[ ! -e 'PKGBUILD' ]]; then
+  if [[ ! -e 'PKGTAG' ]] && [[ ! -e 'PKGBUILD' ]]; then
     echo 'Invalid package directory.'
-    popd # _INPUTDIR
+    popd               # _INPUTDIR
+    exec {_LOCK_FD}>&- # Unlock
     return 12
   fi
 
   if [[ -d 'machine/root' ]]; then
-    umount -Rv 'machine/root'
+    if ! (umount -Rv 'machine/root' || rmdir 'machine/root'); then
+      echo 'Package rootfs is still busy.'
+      popd               # _INPUTDIR
+      exec {_LOCK_FD}>&- # Unlock
+      return 11
+    fi
   fi
 
   if [[ "$CAUR_CLEAN_ONLY_DEPLOYED" == '1' ]] \
     && { [[ ! -f 'building.result' ]] \
       || [[ "$(cat building.result)" != 'deployed' ]]; }; then
-    popd # _INPUTDIR
+    popd               # _INPUTDIR
+    exec {_LOCK_FD}>&- # Unlock
     return 0
   fi
 
@@ -37,6 +54,8 @@ function cleanup() {
 
   reset-fakeroot-chown "${_INPUTDIR}"
   rm --one-file-system -rf "${_INPUTDIR}"
+
+  exec {_LOCK_FD}>&- # Unlock
 
   return 0
 }

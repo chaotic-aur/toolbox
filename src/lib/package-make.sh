@@ -19,7 +19,7 @@ function makepkg-systemd-nspawn() {
   local _INPUTDIR _PKGTAG _INTERFERE _ROOTDIR \
     _LOWER _HOME _CCACHE _SRCCACHE _PKGDEST \
     _CAUR_WIZARD _MECHA_NAME _BUILD_FAILED \
-    _CONTAINER_ARGS
+    _CONTAINER_ARGS _LOCK_FD _LOCK_FN
 
   _INPUTDIR="$(
     cd "${1:-}"
@@ -27,15 +27,19 @@ function makepkg-systemd-nspawn() {
   )"
   # Note: there is usage of "${@:2}" below.
 
-  if [[ ! -f "${_INPUTDIR}/PKGTAG" ]]; then
+  _LOCK_FN="${_INPUTDIR}.lock"
+  touch "${_LOCK_FN}"
+  exec {_LOCK_FD}<>"${_LOCK_FN}" # Lock
+
+  if ! flock -x -n "$_LOCK_FD"; then
+    echo 'This package is already building.'
+    return 16
+  elif [[ ! -f "${_INPUTDIR}/PKGTAG" ]]; then
     echo "\"${_INPUTDIR}\" doesn't look like a valid input directory."
     return 14
   elif [[ -f "${_INPUTDIR}/PKGBUILD" ]]; then
     echo "\"${_INPUTDIR}\" was not prepared yet."
     return 15
-  elif [[ -f "${_INPUTDIR}/building.pid" ]]; then
-    echo 'This package is already building.'
-    return 16
   fi
 
   echo -n $$ >"${_INPUTDIR}/building.pid"
@@ -99,6 +103,8 @@ function makepkg-systemd-nspawn() {
     && rm --one-file-system -rf machine
 
   rm 'building.pid'
+  exec {_LOCK_FD}>&- # Unlock
+
   popd # "${_INPUTDIR}"
   [[ -n "${_BUILD_FAILED}" ]] \
     && return ${_BUILD_FAILED}
