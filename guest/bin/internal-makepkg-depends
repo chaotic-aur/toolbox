@@ -23,11 +23,11 @@ merge_arch_attrs() {
     makedepends checkdepends)
 
   for attr in "${supported_attrs[@]}"; do
-    eval "$attr+=(\"\${${attr}_$CARCH[@]}\")"
+    eval "$attr+=(\"\${${attr}_\$CARCH[@]}\")"
   done
 
   # ensure that calling this function is idempotent.
-  unset -v "${supported_attrs[@]/%/_$CARCH}"
+  unset -v "${supported_attrs[@]/%/_\$CARCH}"
 }
 
 BUILDFILE=${BUILDFILE:-$BUILDSCRIPT}
