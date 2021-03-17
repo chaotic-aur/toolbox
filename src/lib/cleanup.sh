@@ -131,7 +131,7 @@ function clean-duplicates() {
     echo "[!] Moving:"
     echo "${_TO_MV[*]}"
 
-    echo "[!] Total: $(echo -n "${_TO_MV[*]}" | wc -l)"
+    echo "[!] Total: $(echo -n "${_TO_MV[@]}" | wc -l)"
     if [[ "${1:-}" == '-q' ]]; then
       _U_SURE='Y'
     else
@@ -140,7 +140,7 @@ function clean-duplicates() {
 
     case "${_U_SURE}" in
     [yY])
-      mv -v -f -t ../archive/ "${_TO_MV[*]}"
+      mv -v -f -t ../archive/ "${_TO_MV[@]}"
       ;;
     esac
   fi
