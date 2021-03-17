@@ -100,3 +100,18 @@ function clean-logs() {
 
   return 0
 }
+
+function cleanpwd() {
+  set -euo pipefail
+
+  for f in ./*/; do
+    [[ "$f" == './*/' ]] && continue
+    cleanup "$f" || true
+  done
+
+  clean-logs
+
+  rm *.lock || true
+
+  return 0
+}

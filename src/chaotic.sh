@@ -129,6 +129,9 @@ function main() {
   'cleanup' | 'cl')
     cleanup "${@:2}"
     ;;
+  'cleanpwd' | 'cld')
+    cleanpwd "${@:2}"
+    ;;
   'help' | '?')
     help-mirror "${@:2}"
     ;;

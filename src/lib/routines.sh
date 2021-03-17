@@ -93,7 +93,7 @@ function generic-routine() {
   makepwd &
   sane-wait "$!" || true
 
-  clean-logs
+  cleanpwd
   pop-routine-dir
 
   # good time to maybe clean the archive
