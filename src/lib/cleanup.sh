@@ -98,3 +98,54 @@ function clean-srccache() {
 
   return 0
 }
+
+function clean-duplicates() {
+  set -euo pipefail
+
+  if [[ "$CAUR_TYPE" != 'primary' ]]; then
+    echo 'Only primary node needs to de-dup.'
+    return 0
+  fi
+
+  pushd "${CAUR_DEST_PKG}"
+
+  local _DUPLICATED _TO_MV _U_SURE
+
+  _DUPLICATED=$(
+    # shellcheck disable=SC2010
+    ls \
+      | grep -Po "^(.*)(?=(?:(?:-[^-]*){3}\.pkg\.tar(?>\.xz|\.zst)?)$)" \
+      | uniq -d
+  )
+
+  if [[ -z "${_DUPLICATED}" ]]; then
+    echo "No duplicate packages were found!"
+  else
+    _TO_MV=$(
+      echo "${_DUPLICATED[@]}" \
+        | awk '{print "find -name \""$1"*\" -printf \"%T@ %p\\n\" | sort -n | grep -Po \"\\.\\/"$1"(((-[^-]*){3}\\.pkg\\.tar(?>\\.xz|\\.zst)?))$\" | head -n -1;"}' \
+        | bash \
+        | awk '{print $1"\n"$1".sig"}'
+    )
+
+    echo "[!] Moving:"
+    echo "${_TO_MV[*]}"
+
+    echo "[!] Total: $(echo -n "${_TO_MV[*]}" | wc -l)"
+    if [[ "${1:-}" == '-q' ]]; then
+      _U_SURE='Y'
+    else
+      read -r -p "[?] Are you sure? [y/N] " _U_SURE
+    fi
+
+    case "${_U_SURE}" in
+    [yY])
+      mv -v -f -t ../archive/ "${_TO_MV[*]}"
+      ;;
+    esac
+  fi
+
+  popd # CAUR_DEST_PKG
+
+  return 0
+}

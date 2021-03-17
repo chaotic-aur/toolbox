@@ -111,7 +111,7 @@ function cleanpwd() {
 
   clean-logs
 
-  rm *.lock || true
+  rm ./*.lock || true
 
   return 0
 }

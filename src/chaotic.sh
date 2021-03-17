@@ -111,6 +111,9 @@ function main() {
   'repoctl-sync-db' | 'sd')
     repoctl-sync-db
     ;;
+  'clean-duplicates' | 'dedup')
+    clean-duplicates "${@:2}"
+    ;;
   'deploy' | 'dp')
     deploy "${@:2}"
     ;;
