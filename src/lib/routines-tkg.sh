@@ -56,6 +56,7 @@ function tkg-kernel-variate() {
   s/_zfsfix=\"[^\"]*\"/_zfsfix=\"true\"/g
   s/_fsync=\"[^\"]*\"/_fsync=\"true\"/g
   s/_futex2=\"[^\"]*\"/_futex2=\"true\"/g
+  s/_winesync=\"[^\"]*\"/_winesync=\"true\"/g
   s/_anbox=\"[^\"]*\"/_anbox=\"true\"/g
   s/_processor_opt=\"[^\"]*\"/_processor_opt=\"${_MARCH}\"/g
   s/_smt_nice=\"[^\"]*\"/_smt_nice=\"true\"/g
@@ -83,8 +84,6 @@ function tkg-kernels-variations() {
   _LINUX_SCHED=(
     'muqss 0'
     'bmq 1'
-    'pds 0'
-    'cfs 0'
   )
 
   readonly _LINUX_MARCH_HP=(
@@ -111,7 +110,7 @@ function tkg-kernels-variations() {
   done
 
   # lts
-  for _VAR_SCHED in "${_LINUX_SCHED[@]}" 'muqss 0'; do
+  for _VAR_SCHED in "${_LINUX_SCHED[@]}" 'pds 0'; do
     echo "$_LINUX_LTS" "$_VAR_SCHED" 'lts'
   done
 
