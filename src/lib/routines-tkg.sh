@@ -56,7 +56,7 @@ function tkg-kernel-variate() {
   s/_zfsfix=\"[^\"]*\"/_zfsfix=\"true\"/g
   s/_fsync=\"[^\"]*\"/_fsync=\"true\"/g
   s/_futex2=\"[^\"]*\"/_futex2=\"true\"/g
-  s/_winesync=\"[^\"]*\"/_winesync=\"true\"/g
+  s/_winesync=\"[^\"]*\"/_winesync=\"false\"/g
   s/_anbox=\"[^\"]*\"/_anbox=\"true\"/g
   s/_processor_opt=\"[^\"]*\"/_processor_opt=\"${_MARCH}\"/g
   s/_smt_nice=\"[^\"]*\"/_smt_nice=\"true\"/g
