@@ -124,6 +124,7 @@ export CAUR_DEST_PKG="/var/www/chaotic-aur/x86_64"
 export CAUR_URL="http://localhost:8080/chaotic-aur/x86_64"
 export CAUR_SIGN_KEY='8A9E14A07010F7E3'
 export CAUR_TYPE='cluster'
+export CAUR_FILL_DEST='https://builds.garudalinux.org/repos/chaotic-aur/pkgs.files.txt'
 export REPOCTL_CONFIG='/etc/chaotic/repoctl.toml'
 ```
 
