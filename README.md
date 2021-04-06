@@ -108,7 +108,8 @@ If at some point you see something that could be better, then please open a PR. 
 `pacman -S --needed base-devel git arch-install-scripts repoctl fuse-overlayfs rsync python-telegram-send`
 
 One must have an active mirror of Chaotic-AUR running locally or a valid mirror configured in /etc/chaotic.conf and some signing key. 
-To create a gpg key for the root user refer to this [ArchWiki article](https://wiki.archlinux.org/index.php/GnuPG#Create_a_key_pair) for more information. Then generate a ssh keypair for the root user.
+To create a gpg key for the root user refer to this [ArchWiki article](https://wiki.archlinux.org/index.php/GnuPG#Create_a_key_pair) for more information. Also have a look at [this](https://wiki.archlinux.org/index.php/GnuPG#su) one.
+Then generate a ssh keypair for the root user.
 
 ```sh
 sudo ssh-keygen
