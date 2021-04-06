@@ -107,26 +107,15 @@ If at some point you see something that could be better, then please open a PR. 
 
 `pacman -S --needed base-devel git arch-install-scripts repoctl fuse-overlayfs rsync python-telegram-send`
 
-One must have an active mirror of chaotic-aur running locally and some signing key. 
-To create a gpg key & ssh keypair for root user do the following (chowning tty is needed as the process fails otherwise):
+One must have an active mirror of Chaotic-AUR running locally or a valid mirror configured in /etc/chaotic.conf and some signing key. 
+To create a gpg key for the root user refer to this [ArchWiki article](https://wiki.archlinux.org/index.php/GnuPG#Create_a_key_pair) for more information. Then generate a ssh keypair for the root user.
 
 ```sh
-sudo su -l root
-chown root $(tty)
-gpg --full-generate-key
-ssh-keygen
-cat /root/.ssh/id_rsa.pub
+sudo ssh-keygen
 ```
 
-The ssh public key (output of cat /root/.ssh/id_rsa.pub) then needs to be added to the primary servers root authorized keys (/root/.ssh/authorized_keys)
-Get the gpg key signature & armored public key by running:
-
-```sh
-sudo gpg --list-signatures
-sudo gpg --armor --export > key.gpg
-```
-
-The content of key.gpg will have to be uploaded to keyserver.ubuntu.com in order for the key to be verified. 
+The ssh public key (cat /root/.ssh/id_rsa.pub) then needs to be added to the primary servers root authorized keys (/root/.ssh/authorized_keys). After that follow these [instructions](https://wiki.archlinux.org/index.php/GnuPG#Export_your_public_key) to export the gpg public key.
+This key will have to be uploaded to [a keyserver](keyserver.ubuntu.com) in order for the key to be verified. 
 Then, configure it as follows in `/etc/chaotic.conf`, like this:
 
 ```sh
