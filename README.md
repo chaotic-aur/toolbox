@@ -107,7 +107,25 @@ If at some point you see something that could be better, then please open a PR. 
 
 `pacman -S --needed base-devel git arch-install-scripts repoctl fuse-overlayfs rsync python-telegram-send`
 
-One must have an active mirror of chaotic-aur running locally and some signing key. Configure them in `/etc/chaotic.conf`, like this:
+
+One needs an active mirror or a setting (in /etc/chaotic.conf) like this:
+
+```sh
+export CAUR_URL='https://builds.garudalinux.org/repos/chaotic-aur/x86_64'
+export REPOCTL_CONFIG='/etc/chaotic/repoctl.conf'
+export CAUR_REPOCTL_DB_URL="${CAUR_URL}/chaotic-aur.db.tar.zst"
+export CAUR_REPOCTL_DB_FILE="/tmp/chaotic/db.tar.zst"
+```
+
+To create a gpg key for the root user refer to this [ArchWiki article](https://wiki.archlinux.org/index.php/GnuPG#Create_a_key_pair) for more information. If you find problems when using "sudo", read the "[su](https://wiki.archlinux.org/index.php/GnuPG#su)" subsection.
+Then generate a ssh keypair for the root user.
+
+```sh
+sudo ssh-keygen
+```
+
+The ssh public key (cat /root/.ssh/id_rsa.pub) then needs to be added to the primary servers root authorized keys (/root/.ssh/authorized_keys). After that follow these [instructions](https://wiki.archlinux.org/index.php/GnuPG#Export_your_public_key) to export the gpg public key. This key will have to be [uploaded](https://wiki.archlinux.org/index.php/GnuPG#Sending_keys) to [keyserver.ubuntu.com](keyserver.ubuntu.com) in order for the key to be verified. 
+Then, configure it as follows in `/etc/chaotic.conf`, like this:
 
 ```sh
 export CAUR_DEST_PKG="/var/www/chaotic-aur/x86_64"
