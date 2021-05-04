@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name=hourly.1
-#SBATCH --partition fast
+#SBATCH --cpus-per-task 40
 #SBATCH --nodes 1
 #SBATCH --exclusive
 #SBATCH --dependency=singleton
