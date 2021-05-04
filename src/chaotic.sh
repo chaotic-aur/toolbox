@@ -48,6 +48,7 @@ CAUR_TELEGRAM="$HOME/.config/telegram-send-group.conf"
 CAUR_TELEGRAM_LOG="$HOME/.config/telegram-send-log.conf"
 CAUR_TYPE='primary' # only the primary cluster manages the database.
 CAUR_URL="http://localhost/${CAUR_DB_NAME}/x86_64"
+CAUR_TELEGRAM_TAG="@pedrohlc"
 
 # shellcheck source=/dev/null
 [[ -f '/etc/chaotic.conf' ]] && source '/etc/chaotic.conf'

@@ -180,7 +180,7 @@ function cancel-freeze-notify() {
 }
 
 function freeze-notify() {
-  send-group "Hey onyii-san, wast ${1:-} buiwd on ${CAUR_CLUSTER_NAME}'s ${2:-} stawted lwng time ago (@pedrohlc)"
+  send-group "Hey onyii-san, wast ${1:-} buiwd on ${CAUR_CLUSTER_NAME}'s ${2:-} stawted lwng time ago (${CAUR_TELEGRAM_TAG})"
 }
 
 function clean-archive() {

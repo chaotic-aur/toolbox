@@ -107,7 +107,6 @@ If at some point you see something that could be better, then please open a PR. 
 
 `pacman -S --needed base-devel git arch-install-scripts repoctl fuse-overlayfs rsync python-telegram-send`
 
-
 One needs an active mirror or a setting (in /etc/chaotic.conf) like this:
 
 ```sh
@@ -124,7 +123,7 @@ Then generate a ssh keypair for the root user.
 sudo ssh-keygen
 ```
 
-The ssh public key (cat /root/.ssh/id_rsa.pub) then needs to be added to the primary servers root authorized keys (/root/.ssh/authorized_keys). After that follow these [instructions](https://wiki.archlinux.org/index.php/GnuPG#Export_your_public_key) to export the gpg public key. This key will have to be [uploaded](https://wiki.archlinux.org/index.php/GnuPG#Sending_keys) to [keyserver.ubuntu.com](keyserver.ubuntu.com) in order for the key to be verified. 
+The ssh public key (cat /root/.ssh/id_rsa.pub) then needs to be added to the primary servers root authorized keys (/root/.ssh/authorized_keys). After that follow these [instructions](https://wiki.archlinux.org/index.php/GnuPG#Export_your_public_key) to export the gpg public key. This key will have to be [uploaded](https://wiki.archlinux.org/index.php/GnuPG#Sending_keys) to [keyserver.ubuntu.com](keyserver.ubuntu.com) in order for the key to be verified.
 Then, configure it as follows in `/etc/chaotic.conf`, like this:
 
 ```sh
