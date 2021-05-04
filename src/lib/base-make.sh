@@ -27,6 +27,8 @@ function lowerstrap() {
 function lowerstrap-systemd-nspawn() {
   set -euo pipefail
 
+  echo 'Building a systemd-nspawn lowerdir'
+
   local _CURRENT
 
   install -o"$(whoami)" -dDm755 "$CAUR_LOWER_DIR"
@@ -76,6 +78,8 @@ EOF
 
 function lowerstrap-singularity() {
   set -euo pipefail
+
+  echo 'Building a singularity base image'
 
   local _CURRENT
 

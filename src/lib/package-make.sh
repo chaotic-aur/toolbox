@@ -58,6 +58,8 @@ function makepkg-systemd-nspawn() {
     pwd -P
   )"
 
+  echo "Building package \"${_PKGTAG}\""
+
   _ROOTDIR='machine/root'
   _HOME="${_ROOTDIR}/home/main-builder"
   _CCACHE="${CAUR_CACHE_CC}/${_PKGTAG}"
@@ -153,6 +155,8 @@ function makepkg-singularity() {
     cd "${CAUR_LOWER_DIR}"
     readlink -f latest
   )"
+
+  echo "Building package \"${_PKGTAG}\""
 
   install -o"$(whoami)" -dDm755 "${CAUR_SANDBOX}" || return 32
 
