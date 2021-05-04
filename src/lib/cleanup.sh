@@ -52,6 +52,7 @@ function cleanup() {
 
   popd # _INPUTDIR
 
+  echo "Cleaning \"${1:-}\"..."
   reset-fakeroot-chown "${_INPUTDIR}"
   rm --one-file-system -rf "${_INPUTDIR}"
 
@@ -93,7 +94,7 @@ function clean-srccache() {
       echo 'Empty cache directory.'
       return 0
     fi
-    rm -rf --one-file-system "$entry"
+    rm -vrf --one-file-system "$entry"
   done
 
   return 0

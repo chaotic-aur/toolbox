@@ -92,6 +92,8 @@ function parallel-scp() {
     return 29
   fi
 
+  echo "Uploading package \"${f}\""
+
   if [[ "$CAUR_SCP_STREAMS" -gt 1 ]]; then
     rm -- ./".$f."*~ 2>/dev/null || true # there may exist leftover files from a previously failed scp
     split -n"$CAUR_SCP_STREAMS" --additional-suffix='~' -- ./"$f" ./".$f."
@@ -102,7 +104,7 @@ function parallel-scp() {
 
   printf '%s\n' "${_files[@]}" \
     | xargs -d'\n' -I'{}' -P"$((CAUR_SCP_STREAMS + 1))" -- \
-      rsync --partial -e 'ssh -T -o Compression=no -x' --protect-args -- '{}' "${host}:${path}/"
+      rsync --verbose --partial -e 'ssh -T -o Compression=no -x' --protect-args -- '{}' "${host}:${path}/"
 
   if [[ "$CAUR_SCP_STREAMS" -gt 1 ]]; then
     rm -- ./".$f."*~

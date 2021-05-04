@@ -3,6 +3,7 @@
 function iterfere-sync() {
   set -euo pipefail
 
+  echo 'Syncing interfere...'
   pushd "${CAUR_INTERFERE}"
   git pull --ff-only || true
   popd #CAUR_INTERFERE
@@ -13,6 +14,7 @@ function iterfere-sync() {
 function package-lists-sync() {
   set -euo pipefail
 
+  echo 'Syncing packages...'
   pushd "${CAUR_PACKAGE_LISTS}"
   git pull --ff-only || true
   popd #CAUR_PACKAGE_LISTS
@@ -25,6 +27,8 @@ function repoctl-sync-db() {
 
   [[ -z "${CAUR_REPOCTL_DB_URL:-}" ]] && return 0
   [[ -z "${CAUR_REPOCTL_DB_FILE:-}" ]] && return 0
+
+  echo 'Syncing database...'
 
   install -o"$(whoami)" -dDm755 "${HOME}/.config/repoctl"
   [[ -z "${REPOCTL_CONFIG:-}" ]] && REPOCTL_CONFIG="${HOME}/.config/repoctl/config.toml"
