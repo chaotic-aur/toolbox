@@ -162,10 +162,10 @@ function clean-sandbox() {
   for dir in */; do
     [[ "$dir" == '*/' ]] && continue
 
-    rm -rf --one-file-system "$dir"
+    rm -rf --one-file-system "$dir" || true
     if [[ -d "$dir" ]]; then
-      reset-fakeroot-chown "$dir"
-      rm -rf --one-file-system "$dir"
+      reset-fakeroot-chown "$dir" || true
+      rm -rf --one-file-system "$dir" || true
     fi
   done
 

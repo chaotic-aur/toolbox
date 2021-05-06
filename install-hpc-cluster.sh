@@ -37,6 +37,7 @@ CAUR_GPG_PATH="${HOME}/chaotic/toolbox/wrappers/gpg"
 CAUR_REPOCTL_DB_URL='https://builds.garudalinux.org/repos/chaotic-aur/x86_64/chaotic-aur.db.tar.zst'
 CAUR_REPOCTL_DB_FILE="${CAUR_CACHE}/chaotic-aur.db.tar.zst"
 CAUR_TELEGRAM_TAG='@thotypous'
+CAUR_STAMPROUTINES=0
 EOF
 
 mkdir -p "${HOME}/chaotic"
