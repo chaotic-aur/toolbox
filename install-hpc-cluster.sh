@@ -26,7 +26,7 @@ CAUR_GUEST="${HOME}/chaotic/toolbox/guest"
 CAUR_LIB="${HOME}/chaotic/toolbox/src/lib"
 CAUR_LOWER_DIR="${HOME}/chaotic/cache/lower"
 CAUR_LOWER_PKGS=(base base-devel)                          # hardcoded in Singularity engine
-CAUR_SANDBOX='/scratch/chaotic/sandbox'
+CAUR_SANDBOX='/tmp/chaotic/sandbox'
 CAUR_ROUTINES="${CAUR_CACHE}/routines"
 CAUR_SIGN_KEY='EF925EA60F33D0CB85C44AD13056513887B78AEB'
 CAUR_SIGN_USER=''     # leave empty to run as current user
@@ -36,6 +36,7 @@ CAUR_GPG_PATH="${HOME}/chaotic/toolbox/wrappers/gpg"
 
 CAUR_REPOCTL_DB_URL='https://builds.garudalinux.org/repos/chaotic-aur/x86_64/chaotic-aur.db.tar.zst'
 CAUR_REPOCTL_DB_FILE="${CAUR_CACHE}/chaotic-aur.db.tar.zst"
+CAUR_TELEGRAM_TAG='@thotypous'
 EOF
 
 mkdir -p "${HOME}/chaotic"

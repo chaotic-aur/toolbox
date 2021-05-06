@@ -123,10 +123,19 @@ function push-routine-dir() {
 
   local _DIR
 
-  _DIR="${CAUR_ROUTINES}/$1.$(date '+%Y%m%d%H%M%S')"
+  if [[ "${CAUR_STAMPROUTINES:-1}" == '1' ]]; then
+    _DIR="${CAUR_ROUTINES}/$1.$(date '+%Y%m%d%H%M%S')"
+  else
+    _DIR="${CAUR_ROUTINES}/$1"
+  fi
 
-  install -o"$(whoami)" -dDm755 "$_DIR"
-  pushd "$_DIR"
+  if [[ -d "$_DIR" ]]; then
+    pushd "$_DIR"
+    cleanpwd
+  else
+    install -o"$(whoami)" -dDm755 "$_DIR"
+    pushd "$_DIR"
+  fi
 
   if [ -z "${SLURM_JOB_ID:-}" ]; then
     if [ -z "${FREEZE_NOTIFIER:-}" ]; then

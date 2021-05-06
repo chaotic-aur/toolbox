@@ -39,7 +39,7 @@ CAUR_LOWER_DIR="${CAUR_CACHE}/lower"
 CAUR_LOWER_PKGS=(base base-devel)
 CAUR_OVERLAY_TYPE='kernel'
 CAUR_ROUTINES='/tmp/chaotic/routines'
-CAUR_SANDBOX='/tmp/chaotic/sandbox'
+CAUR_SANDBOX=''
 CAUR_SCP_STREAMS=0
 CAUR_SIGN_KEY=''
 CAUR_SIGN_USER='root' # who owns the key in gnupg's keyring.
@@ -49,6 +49,7 @@ CAUR_TELEGRAM_LOG="$HOME/.config/telegram-send-log.conf"
 CAUR_TYPE='primary' # only the primary cluster manages the database.
 CAUR_URL="http://localhost/${CAUR_DB_NAME}/x86_64"
 CAUR_TELEGRAM_TAG="@pedrohlc"
+CAUR_STAMPROUTINES=1
 
 # shellcheck source=/dev/null
 [[ -f '/etc/chaotic.conf' ]] && source '/etc/chaotic.conf'
@@ -131,7 +132,7 @@ function main() {
     aur-download "${@:2}"
     ;;
   'cleanup' | 'cl')
-    cleanup "${@:2}"
+    for f in "${@:2}"; do cleanup "$f"; done
     ;;
   'cleanpwd' | 'cld')
     cleanpwd "${@:2}"
@@ -140,7 +141,7 @@ function main() {
     help-mirror "${@:2}"
     ;;
   'routine')
-    routine "${@:2}"
+    for f in "${@:2}"; do routine "$f"; done
     ;;
   'clean-logs' | 'clg')
     clean-logs "${@:2}"
@@ -148,8 +149,11 @@ function main() {
   'clean-srccache' | 'cls')
     clean-srccache "${@:2}"
     ;;
+  'clean-sandbox' | 'csd')
+    clean-sandbox "${@:2}"
+    ;;
   'reset-fakeroot-chown' | 'rfc')
-    reset-fakeroot-chown "${@:2}"
+    for f in "${@:2}"; do reset-fakeroot-chown "$f"; done
     ;;
   'send-group' | 'ag')
     send-group "${@:2}"
