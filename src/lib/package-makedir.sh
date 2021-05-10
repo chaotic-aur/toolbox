@@ -5,6 +5,8 @@ function makepwd() {
 
   local _LS _pkg
 
+  echo 'Trying to make directory...'
+
   if [ ${#@} -eq 0 ]; then
     _LS=(./*/)
   else

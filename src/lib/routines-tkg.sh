@@ -32,6 +32,11 @@ function tkg-kernel-variate() {
     _RQ='mc-llc'
   fi
 
+  _BCACHEFS='true'
+  if [ "${_VER}" == '5.12' ]; then
+    _BCACHEFS='false'
+  fi
+
   sed -i'' "
   s/_distro=\"[^\"]*\"/_distro=\"Arch\"/g
   s/_version=\"[^\"]*\"/_version=\"${_VER}\"/g
@@ -51,7 +56,7 @@ function tkg-kernel-variate() {
   s/_voluntary_preempt=\"[^\"]*\"/_voluntary_preempt=\"false\"/g
   s/_acs_override=\"[^\"]*\"/_acs_override=\"true\"/g
   s/_ksm_uksm=\"[^\"]*\"/_ksm_uksm=\"true\"/g
-  s/_bcachefs=\"[^\"]*\"/_bcachefs=\"true\"/g
+  s/_bcachefs=\"[^\"]*\"/_bcachefs=\"${_BCACHEFS}\"/g
   s/_bfqmq=\"[^\"]*\"/_bfqmq=\"true\"/g
   s/_zfsfix=\"[^\"]*\"/_zfsfix=\"true\"/g
   s/_fsync=\"[^\"]*\"/_fsync=\"true\"/g
@@ -79,7 +84,7 @@ function tkg-kernels-variations() {
   local _LINUX_LTS _LINUX_STABLE _LINUX_MARCH _VAR_SCHED _VAR_SCHED
 
   _LINUX_LTS='5.4'
-  _LINUX_STABLE='5.11'
+  _LINUX_STABLE='5.12'
 
   _LINUX_SCHED=(
     'muqss 0'

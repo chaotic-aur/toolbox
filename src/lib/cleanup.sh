@@ -155,6 +155,8 @@ function clean-duplicates() {
 function clean-sandbox() {
   set -euo pipefail
 
+  echo 'Cleaning sandbox...'
+
   [[ -z "$CAUR_SANDBOX" ]] && return 0
 
   pushd "$CAUR_SANDBOX"
