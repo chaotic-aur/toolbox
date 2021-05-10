@@ -170,7 +170,7 @@ function pop-routine-dir() {
 function wait-freeze-and-notify() {
   set -euo pipefail
 
-  sleep 10800 # 3 hours
+  sleep $((4 * 3600)) # 4 hours
   freeze-notify "$@"
 
   return 0
