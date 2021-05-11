@@ -19,7 +19,7 @@ function makepkg-systemd-nspawn() {
   local _INPUTDIR _PKGTAG _INTERFERE _ROOTDIR \
     _LOWER _HOME _CCACHE _SRCCACHE _PKGDEST \
     _CAUR_WIZARD _MECHA_NAME _BUILD_FAILED \
-    _CONTAINER_ARGS _LOCK_FD _LOCK_FN
+    _CONTAINER_ARGS _LOCK_FD _LOCK_FN _FAILURE
 
   _INPUTDIR="$(
     cd "${1:-}"
@@ -33,19 +33,24 @@ function makepkg-systemd-nspawn() {
 
   if ! flock -x -n "$_LOCK_FD"; then
     echo 'This package is already building.'
+    exec {_LOCK_FD}>&- # Unlock
     return 16
   elif [[ ! -f "${_INPUTDIR}/PKGTAG" ]]; then
     echo "\"${_INPUTDIR}\" doesn't look like a valid input directory."
+    exec {_LOCK_FD}>&- # Unlock
     return 14
   elif [[ -f "${_INPUTDIR}/PKGBUILD" ]]; then
     echo "\"${_INPUTDIR}\" was not prepared yet."
+    exec {_LOCK_FD}>&- # Unlock
     return 15
   fi
 
   echo -n $$ >"${_INPUTDIR}/building.pid"
 
-  if [[ ! -e "${CAUR_LOWER_DIR}/latest" ]]; then
-    (lowerstrap) || return $?
+  if [[ ! -e "${CAUR_LOWER_DIR}/latest" ]] && ! lowerstrap; then
+    _FAILURE=$?
+    exec {_LOCK_FD}>&- # Unlock
+    return ${_FAILURE}
   fi
 
   pushd "${_INPUTDIR}"
@@ -116,7 +121,7 @@ function makepkg-systemd-nspawn() {
 function makepkg-singularity() {
   set -euo pipefail
 
-  local _INPUTDIR _PKGTAG _INTERFERE \
+  local _INPUTDIR _PKGTAG _INTERFERE _FAILURE \
     _LOWER _HOME _CCACHE _SRCCACHE _CAUR_WIZARD \
     _BUILD_FAILED _MECHA_NAME _SANDBOX _LOCK_FD _LOCK_FN
 
@@ -132,19 +137,24 @@ function makepkg-singularity() {
 
   if ! flock -x -n "$_LOCK_FD"; then
     echo 'This package is already building.'
+    exec {_LOCK_FD}>&- # Unlock
     return 16
   elif [[ ! -f "${_INPUTDIR}/PKGTAG" ]]; then
     echo "\"${_INPUTDIR}\" doesn't look like a valid input directory."
+    exec {_LOCK_FD}>&- # Unlock
     return 14
   elif [[ -f "${_INPUTDIR}/PKGBUILD" ]]; then
     echo "\"${_INPUTDIR}\" was not prepared yet."
+    exec {_LOCK_FD}>&- # Unlock
     return 15
   fi
 
   echo -n $$ >"${_INPUTDIR}/building.pid"
 
-  if [[ ! -e "${CAUR_LOWER_DIR}/latest" ]]; then
-    (lowerstrap) || return $?
+  if [[ ! -e "${CAUR_LOWER_DIR}/latest" ]] && ! lowerstrap; then
+    _FAILURE=$?
+    exec {_LOCK_FD}>&- # Unlock
+    return ${_FAILURE}
   fi
 
   pushd "${_INPUTDIR}"
@@ -158,12 +168,16 @@ function makepkg-singularity() {
 
   echo "Building package \"${_PKGTAG}\""
 
-  install -o"$(whoami)" -dDm755 "${CAUR_SANDBOX}" || return 32
+  if ! install -o"$(whoami)" -dDm755 "${CAUR_SANDBOX}"; then
+    exec {_LOCK_FD}>&- # Unlock
+    return 32
+  fi
 
   _MECHA_NAME="pkg$(echo -n "$_PKGTAG" | sha256sum | cut -c1-11)"
   _SANDBOX="${CAUR_SANDBOX}/${_MECHA_NAME}"
   if [[ -e "${_SANDBOX}" ]]; then
     echo "Sandbox ${_SANDBOX} already exists"
+    exec {_LOCK_FD}>&- # Unlock
     return 30
   fi
 

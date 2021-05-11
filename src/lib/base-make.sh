@@ -3,14 +3,20 @@
 function lowerstrap() {
   set -euo pipefail
 
+  local _LOCK_FN _LOCK_FD
+
   install -o"$(whoami)" -dDm755 "$CAUR_LOWER_DIR"
-  if [[ -f "$CAUR_LOWER_DIR/lock" ]]; then
+
+  _LOCK_FN="${CAUR_LOWER_DIR}/lock"
+  touch "${_LOCK_FN}"
+  exec {_LOCK_FD}<>"${_LOCK_FN}" # Lock
+
+  if ! flock -x -n "$_LOCK_FD"; then
     echo 'Somone is already building a lowerdir, waiting...'
-    while [[ -f "$CAUR_LOWER_DIR/lock" ]]; do sleep 2; done
+    flock -x "$_LOCK_FD" -c echo 'Finished'
+    exec {_LOCK_FD}>&- # Unlock
     return 0
   fi
-
-  echo $$ >"${CAUR_LOWER_DIR}/lock" # We're building a new
 
   if [[ "${CAUR_ENGINE}" = "systemd-nspawn" ]]; then
     lowerstrap-systemd-nspawn "$@"
@@ -18,10 +24,12 @@ function lowerstrap() {
     lowerstrap-singularity "$@"
   else
     echo "Unsupported engine '${CAUR_ENGINE}'"
+    exec {_LOCK_FD}>&- # Unlock
     return 26
   fi
 
-  rm "${CAUR_LOWER_DIR}/lock"
+  exec {_LOCK_FD}>&- # Unlock
+  return 0
 }
 
 function lowerstrap-systemd-nspawn() {
