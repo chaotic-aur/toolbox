@@ -166,7 +166,7 @@ function remove() {
 }
 
 function db-lock-notify() {
-  send-group "OwO database wock has timed-out (${CAUR_TELEGRAM_TAG})"
+  send-log "OwO database wock has timed-out (${CAUR_TELEGRAM_TAG})"
 }
 
 function remove-notify() {
