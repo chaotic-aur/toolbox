@@ -7,7 +7,7 @@ stee() { command tee "$@" >/dev/null; }
 
 pushd "$(dirname "$0")/.." || exit 2
 CAUR_PREFIX="$(pwd -P)"
-[[ -z "${HOME:-}" ]] && HOME="$(getent passwd $(whoami) | cut -d: -f6)"
+[[ -z "${HOME:-}" ]] && HOME="$(getent passwd "$(whoami)" | cut -d: -f6)"
 CAUR_MAINTAINER="${CAUR_REAL_USER:-${CAUR_REAL_UID:-${USER:-$UID}}}"
 popd || exit 2
 

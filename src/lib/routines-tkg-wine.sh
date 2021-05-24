@@ -29,7 +29,8 @@ function routine-tkg-wine() {
 
     pushd "$_DEST"
     echo '' >'wine-tkg-profiles/advanced-customization.cfg'
-    cp "wine-tkg-profiles/$_VARIATION" ./customization.cfg
+    cat 'wine-tkg-profiles/sample-external-config.cfg' >./customization.cfg
+    cat "wine-tkg-profiles/$_VARIATION" >>./customization.cfg
     popd
   done
 

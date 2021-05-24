@@ -89,26 +89,16 @@ function tkg-kernels-variations() {
   _LINUX_SCHED=(
     'muqss 0'
     'bmq 1'
-  )
-
-  readonly _LINUX_MARCH_HP=(
-    'generic'
-    'zen' 'zen2'
+    'pds 0'
+    'cfs 0'
   )
 
   readonly _LINUX_MARCH=(
-    'atom' 'barcelona' 'bobcat' 'broadwell'
-    'bulldozer' {cannon,cascade,cooper}'lake'
-    'core2' 'excavator' 'goldmont'{,plus}
-    'haswell' 'icelake' 'ivybridge' 'jaguar'
-    'k10' 'k8' 'k8sse3' 'mpsc' 'nehalem'
-    'piledriver' 'sandybridge' 'silvermont'
-    'skylake' 'skylakex' 'steamroller'
-    'tigerlake' 'westmere'
+    'generic' 'generic_v3'
   )
 
-  # stable (High Priority)
-  for _VAR_MARCH in "${_LINUX_MARCH_HP[@]}"; do
+  # stable
+  for _VAR_MARCH in "${_LINUX_MARCH[@]}"; do
     for _VAR_SCHED in "${_LINUX_SCHED[@]}"; do
       echo "$_LINUX_STABLE" "$_VAR_SCHED" "$_VAR_MARCH"
     done
@@ -118,13 +108,7 @@ function tkg-kernels-variations() {
   for _VAR_SCHED in "${_LINUX_SCHED[@]}" 'pds 0'; do
     echo "$_LINUX_LTS" "$_VAR_SCHED" 'lts'
   done
-
-  # stable
-  for _VAR_MARCH in "${_LINUX_MARCH[@]}"; do
-    for _VAR_SCHED in "${_LINUX_SCHED[@]}"; do
-      echo "$_LINUX_STABLE" "$_VAR_SCHED" "$_VAR_MARCH"
-    done
-  done
+  
 
   return 0
 }
