@@ -116,6 +116,9 @@ function main() {
   'clean-duplicates' | 'dedup')
     clean-duplicates "${@:2}"
     ;;
+  'clean-pkgcache' | 'clp')
+    clean-pkgcache "${@:2}"
+    ;;
   'deploy' | 'dp')
     deploy "${@:2}"
     ;;
