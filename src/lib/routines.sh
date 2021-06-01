@@ -65,8 +65,7 @@ function generic-routine() {
 
   # non-VCS packages from AUR (download if updated)
   parse-package-list "${_LIST}" \
-    | sed -E '/:/d' \
-    | sed -E '/-(git|svn|bzr|hg|nightly)$/d' \
+    | sed -E '/:/d;/-(git|svn|bzr|hg|nightly)$/d' \
     | xargs --no-run-if-empty -L 200 repoctl down -u 2>&1 \
     | tee -a _repoctl_down.log \
     || true
@@ -110,7 +109,7 @@ function parse-package-list() {
     return 22
   fi
 
-  sed -E 's/#.*//' "$1" | xargs -L 1 echo
+  sed -E 's/#.*//;/^\s*$/d' "$1"
 }
 
 function push-routine-dir() {
