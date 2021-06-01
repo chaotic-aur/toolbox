@@ -149,9 +149,6 @@ function main() {
   'clean-srccache' | 'cls')
     clean-srccache "${@:2}"
     ;;
-  'clean-sandbox' | 'csd')
-    clean-sandbox "${@:2}"
-    ;;
   'reset-fakeroot-chown' | 'rfc')
     for f in "${@:2}"; do reset-fakeroot-chown "$f"; done
     ;;

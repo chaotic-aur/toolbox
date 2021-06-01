@@ -36,7 +36,6 @@ trap '_requeue' EXIT HUP INT TERM ERR # handle requeue on other conditions
 
 echo "$(date): job $SLURM_JOB_ID ($SLURM_JOB_NAME) starting on $SLURM_NODELIST"
 
-chaotic clean-sandbox
 chaotic routine "$SLURM_JOB_NAME" &
 CHILD_PID="$!"
 

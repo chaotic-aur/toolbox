@@ -151,28 +151,3 @@ function clean-duplicates() {
 
   return 0
 }
-
-function clean-sandbox() {
-  set -euo pipefail
-
-  return 0 # removed by now!
-
-  echo 'Cleaning sandbox...'
-
-  [[ -z "$CAUR_SANDBOX" ]] && return 0
-
-  pushd "$CAUR_SANDBOX"
-
-  for dir in */; do
-    [[ "$dir" == '*/' ]] && continue
-
-    rm -rf --one-file-system "$dir" || true
-    if [[ -d "$dir" ]]; then
-      reset-fakeroot-chown "$dir" || true
-      rm -rf --one-file-system "$dir" || true
-    fi
-  done
-
-  popd
-  return 0
-}
