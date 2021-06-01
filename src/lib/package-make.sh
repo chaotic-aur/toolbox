@@ -177,7 +177,7 @@ function makepkg-singularity() {
   _SANDBOX="${CAUR_SANDBOX}/${_MECHA_NAME}"
   if [[ -e "${_SANDBOX}" ]]; then
     echo "Sandbox ${_SANDBOX} already exists. Trying to clean it up..."
-    singularity --silent exec -B "${CAUR_SANDBOX}:/sandbox" --fakeroot "${CAUR_DOCKER_ALPINE}" rm -rf "${_SANDBOX}"
+    singularity --silent exec -B "${CAUR_SANDBOX}:/sandbox" --fakeroot "${CAUR_DOCKER_ALPINE}" rm -rf "/sandbox/${_MECHA_NAME}"
 
     if [[ -e "${_SANDBOX}" ]]; then
       echo "It was not possible to clean ${_SANDBOX}"
@@ -212,7 +212,7 @@ function makepkg-singularity() {
     "/home/main-builder/wizard.sh" "${@:2}" || local _BUILD_FAILED="$?"
 
   # we need to remove files inside an user namespace, otherwise we won't have permission to remove files owned by non-root
-  singularity --silent exec -B "${CAUR_SANDBOX}:/sandbox" --fakeroot "${CAUR_DOCKER_ALPINE}" rm -rf "${_SANDBOX}"
+  singularity --silent exec -B "${CAUR_SANDBOX}:/sandbox" --fakeroot "${CAUR_DOCKER_ALPINE}" rm -rf "/sandbox/${_MECHA_NAME}"
 
   if [[ -z "${_BUILD_FAILED}" ]]; then
     echo 'success' >'building.result'
