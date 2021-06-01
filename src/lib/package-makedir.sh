@@ -62,7 +62,7 @@ function pipepkg() {
     return 24
   fi
 
-  (makepkg "${_pkg}" --noconfirm | tee "${_pkg}.log") \
+  (makepkg "${_pkg}" --noconfirm 2>&1 | tee "${_pkg}.log") \
     || true # we want to cleanup even if it failed
   (deploy "${_pkg}" && db-bump) || true
   (cleanup "${_pkg}") || true

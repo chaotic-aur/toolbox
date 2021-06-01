@@ -108,7 +108,6 @@ function tkg-kernels-variations() {
   for _VAR_SCHED in "${_LINUX_SCHED[@]}" 'pds 0'; do
     echo "$_LINUX_LTS" "$_VAR_SCHED" 'lts'
   done
-  
 
   return 0
 }
