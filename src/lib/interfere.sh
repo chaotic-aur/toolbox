@@ -12,6 +12,14 @@ function interference-apply() {
   [[ -f "${_INTERFERE}/prepare" ]] \
     && source "${_INTERFERE}/prepare"
 
+  if [[ -f "${_INTERFERE}/interfere.patch" ]]; then
+    if patch -Np1 <"${_INTERFERE}/interfere.patch"; then
+      echo 'Patches applied with success'
+    else
+      echo 'Ignoring patch failure...'
+    fi
+  fi
+
   if [[ -f "${_INTERFERE}/PKGBUILD.prepend" ]]; then
     # The worst one, but KISS and easier to maintain
     _PREPEND="$(cat "${_INTERFERE}/PKGBUILD.prepend")"
