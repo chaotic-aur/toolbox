@@ -4,7 +4,7 @@
 #SBATCH --nodes 1
 #SBATCH --exclusive
 #SBATCH --dependency=singleton
-#SBATCH --time=03:50:00
+#SBATCH --time=01:50:00
 #SBATCH --signal=B:SIGUSR1@90
 
 # shellcheck disable=SC2034
