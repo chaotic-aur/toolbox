@@ -52,9 +52,9 @@ function deploy() {
     fi
 
     if [[ "$CAUR_TYPE" == 'cluster' ]]; then
-      (parallel-scp "$f" "$CAUR_DEPLOY_HOST" "$CAUR_DEPLOY_PATH")
+      (parallel-scp "$f" "$CAUR_DEPLOY_HOST" "$CAUR_DEPLOY_PKGS")
     else
-      cp -v "$f"{,.sig} "${CAUR_DEST_PKG}/"
+      cp -v "$f"{,.sig} "${CAUR_DEPLOY_PKGS}/"
     fi
   done
 

@@ -52,7 +52,7 @@ function db-bump() {
   fi
   _RUN_TIME="$(date -R)"
 
-  pushd "$CAUR_DEPLOY_PATH"
+  pushd "$CAUR_DEPLOY_PKGS"
   _NEW_SIGS="$(find ./*.sig -newer "$CAUR_CHECKPOINT")" || true
 
   if [[ -n "${_NEW_SIGS:-}" ]]; then
@@ -64,7 +64,7 @@ function db-bump() {
     } || true
   fi
 
-  popd # CAUR_DEPLOY_PATH
+  popd # CAUR_DEPLOY_PKGS
 
   db-unlock
   return 0
@@ -73,7 +73,7 @@ function db-bump() {
 function db-last-bump() {
   set -euo pipefail
 
-  date +'%s' >"${CAUR_DEST_LAST}"
+  date +'%s' >"${CAUR_DEPLOY_LAST}"
   echo 'Checkpoints updated'
 
   return 0
@@ -82,7 +82,7 @@ function db-last-bump() {
 function db-pkglist() {
   set -euo pipefail
 
-  pushd "${CAUR_DEST_PKG}"
+  pushd "${CAUR_DEPLOY_PKGS}"
   if (tar -tv --zstd \
     -f "${CAUR_DB_NAME}.db.${CAUR_DB_EXT}" \
     | awk '/^d/{print $6}' >../pkgs.txt); then
@@ -103,7 +103,7 @@ function db-pkglist() {
   else
     echo 'Failed to dump package list'
   fi
-  popd # CAUR_DEST_PKG
+  popd # CAUR_DEPLOY_PKGS
 
   return 0
 }

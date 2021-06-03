@@ -108,7 +108,7 @@ function clean-duplicates() {
     return 0
   fi
 
-  pushd "${CAUR_DEST_PKG}"
+  pushd "${CAUR_DEPLOY_PKGS}"
 
   local _DUPLICATED _TO_MV _U_SURE
 
@@ -147,7 +147,7 @@ function clean-duplicates() {
     esac
   fi
 
-  popd # CAUR_DEST_PKG
+  popd # CAUR_DEPLOY_PKGS
 
   return 0
 }

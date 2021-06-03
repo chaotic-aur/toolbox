@@ -196,7 +196,7 @@ function clean-archive() {
 
   [[ "$CAUR_TYPE" != 'primary' ]] && return 0
 
-  pushd "${CAUR_DEST_PKG}/../archive"
+  pushd "${CAUR_DEPLOY_PKGS}/../archive"
 
   find . -type f -mtime +7 -name '*' -execdir rm -- '{}' \; || true
 

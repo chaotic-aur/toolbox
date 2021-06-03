@@ -127,7 +127,7 @@ The ssh public key (cat /root/.ssh/id_rsa.pub) then needs to be added to the pri
 Then, configure it as follows in `/etc/chaotic.conf`, like this:
 
 ```sh
-export CAUR_DEST_PKG="/var/www/chaotic-aur/x86_64"
+export CAUR_DEPLOY_PKGS="/var/www/chaotic-aur/x86_64"
 export CAUR_URL="http://localhost:8080/chaotic-aur/x86_64"
 export CAUR_SIGN_KEY='8A9E14A07010F7E3'
 export CAUR_TYPE='cluster'

@@ -100,10 +100,12 @@ function makepkg-systemd-nspawn() {
 
   if [[ -z "${_BUILD_FAILED}" ]]; then
     echo 'success' >'building.result'
-  elif [[ -f "${_INTERFERE}/on-failure.sh" ]]; then
+  else
     echo "${_BUILD_FAILED}" >'building.result'
-    # shellcheck source=/dev/null
-    source "${_INTERFERE}/on-failure.sh"
+    if [[ -f "${_INTERFERE}/on-failure.sh" ]]; then
+      # shellcheck source=/dev/null
+      source "${_INTERFERE}/on-failure.sh"
+    fi
   fi
 
   umount -Rv machine/root \
@@ -111,6 +113,11 @@ function makepkg-systemd-nspawn() {
 
   rm 'building.pid'
   exec {_LOCK_FD}>&- # Unlock
+
+  if [[ -f "${_INPUTDIR}.log" ]]; then
+    echo 'Submiting log file...'
+    scp "${_INPUTDIR}.log" "$CAUR_DEPLOY_HOST:$CAUR_DEPLOY_LOGS/${_PKGTAG}.log"
+  fi
 
   popd # "${_INPUTDIR}"
   [[ -n "${_BUILD_FAILED}" ]] \
@@ -216,10 +223,17 @@ function makepkg-singularity() {
 
   if [[ -z "${_BUILD_FAILED}" ]]; then
     echo 'success' >'building.result'
-  elif [[ -f "${_INTERFERE}/on-failure.sh" ]]; then
+  else
     echo "${_BUILD_FAILED}" >'building.result'
-    # shellcheck source=/dev/null
-    source "${_INTERFERE}/on-failure.sh"
+    if [[ -f "${_INTERFERE}/on-failure.sh" ]]; then
+      # shellcheck source=/dev/null
+      source "${_INTERFERE}/on-failure.sh"
+    fi
+  fi
+
+  if [[ -f "${_INPUTDIR}.log" ]]; then
+    echo 'Submiting log file...'
+    scp "${_INPUTDIR}.log" "$CAUR_DEPLOY_HOST:$CAUR_DEPLOY_LOGS/${_PKGTAG}.log"
   fi
 
   rm 'building.pid'
