@@ -116,7 +116,11 @@ function makepkg-systemd-nspawn() {
 
   if [[ -f "${_INPUTDIR}.log" ]]; then
     echo 'Submiting log file...'
-    scp "${_INPUTDIR}.log" "$CAUR_DEPLOY_HOST:$CAUR_DEPLOY_LOGS/${_PKGTAG}.log"
+    if [[ "$CAUR_TYPE" == 'cluster' ]]; then
+      scp "${_INPUTDIR}.log" "$CAUR_DEPLOY_HOST:$CAUR_DEPLOY_LOGS/${_PKGTAG}.log"
+    else
+      cp "${_INPUTDIR}.log" "$CAUR_DEPLOY_LOGS/${_PKGTAG}.log"
+    fi
   fi
 
   popd # "${_INPUTDIR}"
@@ -233,7 +237,11 @@ function makepkg-singularity() {
 
   if [[ -f "${_INPUTDIR}.log" ]]; then
     echo 'Submiting log file...'
-    scp "${_INPUTDIR}.log" "$CAUR_DEPLOY_HOST:$CAUR_DEPLOY_LOGS/${_PKGTAG}.log"
+    if [[ "$CAUR_TYPE" == 'cluster' ]]; then
+      scp "${_INPUTDIR}.log" "$CAUR_DEPLOY_HOST:$CAUR_DEPLOY_LOGS/${_PKGTAG}.log"
+    else
+      cp "${_INPUTDIR}.log" "$CAUR_DEPLOY_LOGS/${_PKGTAG}.log"
+    fi
   fi
 
   rm 'building.pid'
