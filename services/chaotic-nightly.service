@@ -7,5 +7,11 @@ Group=chaotic_op
 WorkingDirectory=/tmp
 ExecStart=/usr/local/bin/chaotic routine nightly
 
+TimeoutStartSec=21000
+TimeoutStartFailureMode=terminate
+KillSignal=SIGUSR1
+TimeoutStopSec=21600
+TimeoutStopFailureMode=abort
+
 [Install]
 WantedBy=multi-user.target

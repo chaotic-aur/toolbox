@@ -3,7 +3,12 @@
 function makepwd() {
   set -euo pipefail
 
-  local _LS _pkg
+  local _LS _pkg _BUILDING_PIDS _MAX_JOBS
+
+  _MAX_JOBS="${CAUR_PARALLEL:-1}"
+  if [[ ${_MAX_JOBS} -lt 1 ]]; then
+    _MAX_JOBS="$(nproc)"
+  fi
 
   echo 'Trying to make directory...'
 
@@ -24,20 +29,26 @@ function makepwd() {
     (prepare "${_pkg}") || true # we want build to continue even if one pkg failed
   done
 
+  _BUILDING_PIDS=()
   for _pkg in "${_LS[@]}"; do
     if [[ "$_pkg" == '--' ]]; then
       echo 'Trapped, waiting jobs until here.'
-      wait
+      wait "${_BUILDING_PIDS[@]}"
+      _BUILDING_PIDS=()
     elif [[ -z "${CAUR_PARALLEL:-}" ]]; then
       pipepkg "$_pkg"
     else
-      pipelimit
+      while [[ -n "${_BUILDING_PIDS:-}" ]] \
+        && [[ $(comm -13 <(printf "%s\n" "${_BUILDING_PIDS[@]}") <(jobs -rp) | wc -l) -gt ${_MAX_JOBS} ]]; do
+        sleep 1
+      done
       pipepkg "$_pkg" &
+      _BUILDING_PIDS+=("$!")
       sleep 1
     fi
   done
 
-  if [[ -n "${CAUR_PARALLEL:-}" ]]; then
+  if [[ ${_MAX_JOBS} -gt 1 ]]; then
     echo 'Waiting all jobs to finish'
     wait
   fi
@@ -64,26 +75,13 @@ function pipepkg() {
 
   (makepkg "${_pkg}" --noconfirm 2>&1 | tee "${_pkg}.log") \
     || true # we want to cleanup even if it failed
-  (deploy "${_pkg}" && db-bump) || true
-  (cleanup "${_pkg}") || true
+
+  {
+    (deploy "${_pkg}" && db-bump) || true
+    (cleanup "${_pkg}") || true
+  } &
 
   return 0
-}
-
-function pipelimit() {
-  set -euo pipefail
-
-  local _MAX_JOBs
-
-  if [[ -n "${FREEZE_NOTIFIER:-}" ]]; then
-    _MAX_JOBs="$((1 + ${CAUR_PARALLEL:-1}))"
-  else
-    _MAX_JOBs="${CAUR_PARALLEL:-1}"
-  fi
-
-  while [[ $(jobs -rp | wc -l) -ge "${_MAX_JOBs}" ]]; do
-    sleep 1
-  done
 }
 
 function clean-logs() {

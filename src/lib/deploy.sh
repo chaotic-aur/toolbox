@@ -3,7 +3,7 @@
 function deploy() {
   set -euo pipefail
 
-  local _INPUTDIR _RESULT _NON_KISS_SUDO
+  local _INPUTDIR _RESULT _NON_KISS_SUDO _UPLOAD_PID
 
   _INPUTDIR="$(
     cd "${1:-}"
@@ -41,6 +41,7 @@ function deploy() {
     return 28
   fi
 
+  _UPLOAD_PID=()
   for f in !(*.sig); do
     [[ "$f" == '!(*.sig)' ]] && continue
 
@@ -52,11 +53,28 @@ function deploy() {
     fi
 
     if [[ "$CAUR_TYPE" == 'cluster' ]]; then
-      (parallel-scp "$f" "$CAUR_DEPLOY_HOST" "$CAUR_DEPLOY_PKGS")
+      rsync --partial "$f" "${CAUR_DEPLOY_HOST}:${CAUR_DEPLOY_PATH}" &
+      _UPLOAD_PID+=("$!")
     else
-      cp -v "$f"{,.sig} "${CAUR_DEPLOY_PKGS}/"
+      cp -v "$f" "${CAUR_DEST_PKG}/"
     fi
   done
+
+  [[ -n "${_UPLOAD_PID:-}" ]] && wait "${_UPLOAD_PID[@]}"
+
+  _UPLOAD_PID=()
+  for f in *.sig; do
+    [[ "$f" == '*.sig' ]] && continue
+
+    if [[ "$CAUR_TYPE" == 'cluster' ]]; then
+      rsync --partial "$f" "${CAUR_DEPLOY_HOST}:${CAUR_DEPLOY_PATH}" &
+      _UPLOAD_PID+=("$!")
+    else
+      cp -v "$f" "${CAUR_DEST_PKG}/"
+    fi
+  done
+
+  [[ -n "${_UPLOAD_PID:-}" ]] && wait "${_UPLOAD_PID[@]}"
 
   popd # "${_INPUTDIR}/dest"
 

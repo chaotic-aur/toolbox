@@ -89,11 +89,13 @@ function generic-routine() {
     done
 
   # put in background and wait, otherwise trap does not work
-  makepwd &
+  parse-package-list "${_LIST}" \
+    | sed -E 's/\:(.*)//g' \
+    | xargs makepwd &
   sane-wait "$!" || true
 
   cleanpwd
-  pop-routine-dir
+  popd #routine dir
 
   # good time to maybe clean the archive
   (clean-archive) || true
@@ -136,54 +138,9 @@ function push-routine-dir() {
     pushd "$_DIR"
   fi
 
-  if [ -z "${SLURM_JOB_ID:-}" ]; then
-    if [ -z "${FREEZE_NOTIFIER:-}" ]; then
-      wait-freeze-and-notify "$1" &
-      export FREEZE_NOTIFIER="$!"
-    fi
-  else
-    # shellcheck disable=SC2064
-    trap "freeze-notify '$1' '${SLURM_NODELIST:-}'" SIGUSR1
-  fi
-
-  return 0
-}
-
-function pop-routine-dir() {
-  set -euo pipefail
-
-  local _DIR
-
-  _DIR="$(basename "$PWD")"
-
-  cd ..
-
-  cancel-freeze-notify
-  #rm -rf --one-file-system "$_DIR"
-
-  popd
-
-  return 0
-}
-
-function wait-freeze-and-notify() {
-  set -euo pipefail
-
-  sleep $((4 * 3600)) # 4 hours
-  freeze-notify "$@"
-
-  return 0
-}
-
-function cancel-freeze-notify() {
-  set -euo pipefail
-
-  [[ -z "${FREEZE_NOTIFIER:-}" ]] && return 0
-
-  kill "$FREEZE_NOTIFIER" || true
-
-  unset FREEZE_NOTIFIER
-
+  # shellcheck disable=SC2064
+  trap "freeze-notify '$1' '${SLURM_NODELIST:-}'" SIGUSR1
+  
   return 0
 }
 
