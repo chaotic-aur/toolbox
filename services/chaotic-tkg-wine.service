@@ -7,11 +7,10 @@ Group=chaotic_op
 WorkingDirectory=/tmp
 ExecStart=/usr/local/bin/chaotic routine tkg-wine
 
-TimeoutStartSec=21000
-TimeoutStartFailureMode=terminate
-KillSignal=SIGUSR1
-TimeoutStopSec=21600
+TimeoutStopSec=21000
 TimeoutStopFailureMode=abort
+WatchdogSignal=SIGUSR1
+TimeoutAbortSec=600
 
 [Install]
 WantedBy=multi-user.target

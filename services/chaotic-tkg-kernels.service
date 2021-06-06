@@ -7,11 +7,10 @@ Group=chaotic_op
 WorkingDirectory=/tmp
 ExecStart=/usr/local/bin/chaotic routine tkg-kernels
 
-TimeoutStartSec=85800
-TimeoutStartFailureMode=terminate
-KillSignal=SIGUSR1
-TimeoutStopSec=86400
+TimeoutStopSec=85800
 TimeoutStopFailureMode=abort
+WatchdogSignal=SIGUSR1
+TimeoutAbortSec=600
 
 [Install]
 WantedBy=multi-user.target

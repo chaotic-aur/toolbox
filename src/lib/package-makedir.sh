@@ -35,7 +35,7 @@ function makepwd() {
       echo 'Trapped, waiting jobs until here.'
       wait "${_BUILDING_PIDS[@]}"
       _BUILDING_PIDS=()
-    elif [[ -z "${CAUR_PARALLEL:-}" ]]; then
+    elif [[ "${_MAX_JOBS}" == '1' ]]; then
       pipepkg "$_pkg"
     else
       while [[ -n "${_BUILDING_PIDS:-}" ]] \
@@ -73,7 +73,8 @@ function pipepkg() {
     return 24
   fi
 
-  (makepkg "${_pkg}" --noconfirm 2>&1 | tee "${_pkg}.log") \
+  echo "Starting making ${_pkg}"
+  (makepkg "${_pkg}" --noconfirm 2>&1 > "${_pkg}.log") \
     || true # we want to cleanup even if it failed
 
   {

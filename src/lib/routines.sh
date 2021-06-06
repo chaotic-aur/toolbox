@@ -43,12 +43,11 @@ function generic-routine() {
     return 13
   fi
 
-  local _ROUTINE
+  local _ROUTINE _LIST _DIR _URL _PACKAGES
   _ROUTINE="$1"
 
   (package-lists-sync)
 
-  local _LIST
   _LIST="${CAUR_PACKAGE_LISTS}/${CAUR_CLUSTER_NAME}/${_ROUTINE}.txt"
 
   if [[ ! -f "${_LIST}" ]]; then
@@ -79,19 +78,18 @@ function generic-routine() {
     || true
 
   # PKGBUILDs hosted on git repos (always download)
-  local _dir _url
   parse-package-list "${_LIST}" \
     | sed -En '/:/p' \
-    | while IFS=':' read -r _dir _url; do
-      git clone "${_url}" "${_dir}" \
+    | while IFS=':' read -r _DIR _URL; do
+      git clone "${_URL}" "${_DIR}" \
         | tee -a _repoctl_down.log \
         || true
     done
 
   # put in background and wait, otherwise trap does not work
-  parse-package-list "${_LIST}" \
-    | sed -E 's/\:(.*)//g' \
-    | xargs makepwd &
+  _PACKAGES=($(parse-package-list "${_LIST}" \
+    | sed -E 's/\:(.*)//g'))
+  makepwd "${_PACKAGES[@]}" &
   sane-wait "$!" || true
 
   cleanpwd
