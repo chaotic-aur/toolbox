@@ -3,8 +3,9 @@
 function routine-tkg-wine() {
   set -euo pipefail
   iterfere-sync
-  push-routine-dir 'tkg.wine' || return 12
+  push-routine-dir 'tkg.wine'
 
+  [[ -d "_repo" ]] && rm -rf --one-file-system '_repo'
   git clone 'https://github.com/Frogging-Family/wine-tkg-git.git' '_repo'
 
   local _VARIATIONS _VARIATION _i _DEST _PROFILES
@@ -38,6 +39,6 @@ function routine-tkg-wine() {
 
   (makepwd) || true
   clean-logs
-  pop-routine-dir
+  popd #routine-dir
   return 0
 }

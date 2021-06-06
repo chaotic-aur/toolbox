@@ -5,7 +5,7 @@ function lowerstrap() {
 
   local _LOCK_FN _LOCK_FD
 
-  install -o"$(whoami)" -dDm755 "$CAUR_LOWER_DIR"
+  [[ ! -e "$CAUR_LOWER_DIR" ]] && install -o"$(whoami)" -dDm755 "$CAUR_LOWER_DIR"
 
   _LOCK_FN="${CAUR_LOWER_DIR}/lock"
   touch "${_LOCK_FN}"

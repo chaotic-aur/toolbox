@@ -32,6 +32,8 @@ function routine() {
     ;;
   esac
 
+  echo 'Finished routine.'
+
   return 0
 }
 
@@ -43,12 +45,11 @@ function generic-routine() {
     return 13
   fi
 
-  local _ROUTINE
+  local _ROUTINE _LIST _DIR _URL _PACKAGES
   _ROUTINE="$1"
 
   (package-lists-sync)
 
-  local _LIST
   _LIST="${CAUR_PACKAGE_LISTS}/${CAUR_CLUSTER_NAME}/${_ROUTINE}.txt"
 
   if [[ ! -f "${_LIST}" ]]; then
@@ -79,21 +80,25 @@ function generic-routine() {
     || true
 
   # PKGBUILDs hosted on git repos (always download)
-  local _dir _url
   parse-package-list "${_LIST}" \
     | sed -En '/:/p' \
-    | while IFS=':' read -r _dir _url; do
-      git clone "${_url}" "${_dir}" \
+    | while IFS=':' read -r _DIR _URL; do
+      git clone "${_URL}" "${_DIR}" \
         | tee -a _repoctl_down.log \
         || true
     done
 
   # put in background and wait, otherwise trap does not work
-  makepwd &
+  _PACKAGES=()
+  mapfile -t _PACKAGES < <(
+    parse-package-list "${_LIST}" \
+      | sed -E 's/\:(.*)//g'
+  )
+  makepwd "${_PACKAGES[@]}" &
   sane-wait "$!" || true
 
   cleanpwd
-  pop-routine-dir
+  popd #routine dir
 
   # good time to maybe clean the archive
   (clean-archive) || true
@@ -130,65 +135,24 @@ function push-routine-dir() {
 
   if [[ -d "$_DIR" ]]; then
     pushd "$_DIR"
+    echo 'Cleaning pre-existent routine directory.'
     cleanpwd
   else
+    echo 'Creating new routine directory.'
     install -o"$(whoami)" -dDm755 "$_DIR"
     pushd "$_DIR"
   fi
 
-  if [ -z "${SLURM_JOB_ID:-}" ]; then
-    if [ -z "${FREEZE_NOTIFIER:-}" ]; then
-      wait-freeze-and-notify "$1" &
-      export FREEZE_NOTIFIER="$!"
-    fi
-  else
-    # shellcheck disable=SC2064
-    trap "freeze-notify '$1' '${SLURM_NODELIST:-}'" SIGUSR1
-  fi
-
-  return 0
-}
-
-function pop-routine-dir() {
-  set -euo pipefail
-
-  local _DIR
-
-  _DIR="$(basename "$PWD")"
-
-  cd ..
-
-  cancel-freeze-notify
-  #rm -rf --one-file-system "$_DIR"
-
-  popd
-
-  return 0
-}
-
-function wait-freeze-and-notify() {
-  set -euo pipefail
-
-  sleep $((4 * 3600)) # 4 hours
-  freeze-notify "$@"
-
-  return 0
-}
-
-function cancel-freeze-notify() {
-  set -euo pipefail
-
-  [[ -z "${FREEZE_NOTIFIER:-}" ]] && return 0
-
-  kill "$FREEZE_NOTIFIER" || true
-
-  unset FREEZE_NOTIFIER
+  # shellcheck disable=SC2064
+  trap "freeze-notify '$1' '${SLURM_NODELIST:-}'" SIGUSR1
 
   return 0
 }
 
 function freeze-notify() {
-  send-log "Hey onyii-san, wast ${1:-} buiwd on ${CAUR_CLUSTER_NAME}'s ${2:-} stawted lwng time ago (${CAUR_TELEGRAM_TAG})"
+  local _REMAINING
+  _REMAINING="$(find . -maxdepth 1 -type d | wc -l)"
+  send-log "Hey onyii-san, wast ${1:-} buiwd on ${CAUR_CLUSTER_NAME}'s ${2:-} stawted lwng time ago (${CAUR_TELEGRAM_TAG}), with ${_REMAINING} packages remaining to build."
 }
 
 function clean-archive() {
