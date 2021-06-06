@@ -32,6 +32,8 @@ function routine() {
     ;;
   esac
 
+  echo 'Finished routine.'
+
   return 0
 }
 
@@ -133,9 +135,10 @@ function push-routine-dir() {
 
   if [[ -d "$_DIR" ]]; then
     pushd "$_DIR"
-    echo 'Cleaning pre-existent routine directory'
+    echo 'Cleaning pre-existent routine directory.'
     cleanpwd
   else
+    echo 'Creating new routine directory.'
     install -o"$(whoami)" -dDm755 "$_DIR"
     pushd "$_DIR"
   fi
@@ -147,7 +150,9 @@ function push-routine-dir() {
 }
 
 function freeze-notify() {
-  send-log "Hey onyii-san, wast ${1:-} buiwd on ${CAUR_CLUSTER_NAME}'s ${2:-} stawted lwng time ago (${CAUR_TELEGRAM_TAG})"
+  local _REMAINING
+  _REMAINING="$(find . -maxdepth 1 -type d | wc -l)"
+  send-log "Hey onyii-san, wast ${1:-} buiwd on ${CAUR_CLUSTER_NAME}'s ${2:-} stawted lwng time ago (${CAUR_TELEGRAM_TAG}), with ${_REMAINING} packages remaining to build."
 }
 
 function clean-archive() {

@@ -41,7 +41,7 @@ function deploy() {
     return 28
   fi
 
-  echo "Trying to deploy pacakges."
+  echo "Trying to deploy packages."
   _UPLOAD_PID=()
   for f in !(*.sig); do
     [[ "$f" == '!(*.sig)' ]] && continue
