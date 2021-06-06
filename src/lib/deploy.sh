@@ -44,10 +44,12 @@ function deploy() {
 
   if [[ -z "${CAUR_SIGN_KEY}" ]]; then
     echo 'A signing key is required for deploying.'
+    exec {_LOCK_FD}>&- # Unlock
     return 17
   elif [[ ! -e "${_RESULT}" ]] \
     || [[ "$(cat "${_RESULT}")" != 'success' ]]; then
     echo 'Invalid package, last build did not succeed, or aready deployed.'
+    exec {_LOCK_FD}>&- # Unlock
     return 18
   fi
 
