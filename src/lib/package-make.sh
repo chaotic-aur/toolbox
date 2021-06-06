@@ -226,15 +226,6 @@ function makepkg-singularity() {
     fi
   fi
 
-  if [[ -f "${_INPUTDIR}.log" ]]; then
-    echo 'Submiting log file...'
-    if [[ "$CAUR_TYPE" == 'cluster' ]]; then
-      scp "${_INPUTDIR}.log" "$CAUR_DEPLOY_HOST:$CAUR_DEPLOY_LOGS/${_PKGTAG}.log"
-    else
-      cp "${_INPUTDIR}.log" "$CAUR_DEPLOY_LOGS/${_PKGTAG}.log"
-    fi
-  fi
-
   rm 'building.pid'
   exec {_LOCK_FD}>&- # Unlock
 

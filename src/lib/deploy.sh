@@ -3,18 +3,43 @@
 function deploy() {
   set -euo pipefail
 
-  local _INPUTDIR _RESULT _NON_KISS_SUDO _UPLOAD_PID
+  local _INPUTDIR _RESULT _NON_KISS_SUDO _UPLOAD_PID _PKGTAG
 
   _INPUTDIR="$(
     cd "${1:-}"
     pwd -P
   )"
 
+  _LOCK_FN="${_INPUTDIR}.lock"
+  touch "${_LOCK_FN}"
+  exec {_LOCK_FD}<>"${_LOCK_FN}" # Lock
+
+  if ! flock -x -n "$_LOCK_FD"; then
+    echo 'This package is already in use.'
+    exec {_LOCK_FD}>&- # Unlock
+    return 16
+  elif [[ ! -f "${_INPUTDIR}/PKGTAG" ]]; then
+    echo "\"${_INPUTDIR}\" doesn't look like a valid input directory."
+    exec {_LOCK_FD}>&- # Unlock
+    return 14
+  fi
+  _PKGTAG=$(cat "${_INPUTDIR}/PKGTAG")
+
   _RESULT="${_INPUTDIR}/building.result"
 
   _NON_KISS_SUDO=""
   if [[ -n "${CAUR_SIGN_USER}" ]]; then
     _NON_KISS_SUDO="sudo -u ${CAUR_SIGN_USER}"
+  fi
+
+  if [[ -f "${_INPUTDIR}.log" ]]; then
+    echo 'Trying to deploy log file...'
+    if [[ "$CAUR_TYPE" == 'cluster' ]]; then
+      rsync --verbose -e 'ssh -T -o Compression=no -x' -a \
+        "${_INPUTDIR}.log" "$CAUR_DEPLOY_HOST:$CAUR_DEPLOY_LOGS/${_PKGTAG}.log"
+    else
+      cp -v "${_INPUTDIR}.log" "$CAUR_DEPLOY_LOGS/${_PKGTAG}.log" || true
+    fi
   fi
 
   if [[ -z "${CAUR_SIGN_KEY}" ]]; then
@@ -38,6 +63,7 @@ function deploy() {
   unfill-dest
   if [[ -n "$(find . -type f -size 0 -print 2>&1)" ]]; then
     echo 'Failure in delete package placeholders.'
+    exec {_LOCK_FD}>&- # Unlock
     return 28
   fi
 
@@ -80,23 +106,13 @@ function deploy() {
 
   [[ -n "${_UPLOAD_PID:-}" ]] && wait "${_UPLOAD_PID[@]}"
 
-  if [[ -f "${_INPUTDIR}.log" ]]; then
-    _UPLOAD_PID=()
-    echo 'Trying to deploy log file...'
-    if [[ "$CAUR_TYPE" == 'cluster' ]]; then
-      rsync --verbose -e 'ssh -T -o Compression=no -x' -a \
-        "${_INPUTDIR}.log" "$CAUR_DEPLOY_HOST:$CAUR_DEPLOY_LOGS/${_PKGTAG}.log" &
-    else
-      cp "${_INPUTDIR}.log" "$CAUR_DEPLOY_LOGS/${_PKGTAG}.log" || true
-    fi
-  fi  
-
   popd # "${_INPUTDIR}/dest"
 
   (deploy-notify "${_INPUTDIR}") || true
 
   echo 'deployed' >"${_RESULT}"
 
+  exec {_LOCK_FD}>&- # Unlock
   return 0
 }
 

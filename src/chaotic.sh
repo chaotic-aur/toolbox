@@ -40,7 +40,6 @@ CAUR_LOWER_PKGS=(base base-devel)
 CAUR_OVERLAY_TYPE='kernel'
 CAUR_ROUTINES='/tmp/chaotic/routines'
 CAUR_SANDBOX='' # singularity only
-CAUR_SCP_STREAMS=0
 CAUR_SIGN_KEY=''
 CAUR_SIGN_USER='root' # who owns the key in gnupg's keyring.
 CAUR_SILENT=0
