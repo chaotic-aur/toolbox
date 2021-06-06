@@ -33,7 +33,9 @@ function makepwd() {
   for _pkg in "${_LS[@]}"; do
     if [[ "$_pkg" == '--' ]]; then
       echo 'Trapped, waiting jobs until here.'
-      [[ -n "${_BUILDING_PIDS}" ]] && wait "${_BUILDING_PIDS[@]}" || true
+      if [[ -n "${_BUILDING_PIDS[*]}" ]]; then
+        wait "${_BUILDING_PIDS[@]}" || true
+      fi
       _BUILDING_PIDS=()
       echo 'Keep going...'
     elif [[ "${_MAX_JOBS}" == '1' ]]; then

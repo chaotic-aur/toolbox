@@ -80,6 +80,17 @@ function deploy() {
 
   [[ -n "${_UPLOAD_PID:-}" ]] && wait "${_UPLOAD_PID[@]}"
 
+  if [[ -f "${_INPUTDIR}.log" ]]; then
+    _UPLOAD_PID=()
+    echo 'Trying to deploy log file...'
+    if [[ "$CAUR_TYPE" == 'cluster' ]]; then
+      rsync --verbose -e 'ssh -T -o Compression=no -x' -a \
+        "${_INPUTDIR}.log" "$CAUR_DEPLOY_HOST:$CAUR_DEPLOY_LOGS/${_PKGTAG}.log" &
+    else
+      cp "${_INPUTDIR}.log" "$CAUR_DEPLOY_LOGS/${_PKGTAG}.log" || true
+    fi
+  fi  
+
   popd # "${_INPUTDIR}/dest"
 
   (deploy-notify "${_INPUTDIR}") || true
