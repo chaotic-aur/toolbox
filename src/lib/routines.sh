@@ -87,8 +87,11 @@ function generic-routine() {
     done
 
   # put in background and wait, otherwise trap does not work
-  _PACKAGES=($(parse-package-list "${_LIST}" \
-    | sed -E 's/\:(.*)//g'))
+  _PACKAGES=()
+  mapfile -t _PACKAGES < <(
+    parse-package-list "${_LIST}" \
+      | sed -E 's/\:(.*)//g'
+  )
   makepwd "${_PACKAGES[@]}" &
   sane-wait "$!" || true
 
@@ -130,6 +133,7 @@ function push-routine-dir() {
 
   if [[ -d "$_DIR" ]]; then
     pushd "$_DIR"
+    echo 'Cleaning pre-existent routine directory'
     cleanpwd
   else
     install -o"$(whoami)" -dDm755 "$_DIR"
@@ -138,7 +142,7 @@ function push-routine-dir() {
 
   # shellcheck disable=SC2064
   trap "freeze-notify '$1' '${SLURM_NODELIST:-}'" SIGUSR1
-  
+
   return 0
 }
 

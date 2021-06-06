@@ -41,6 +41,7 @@ function deploy() {
     return 28
   fi
 
+  echo "Trying to deploy pacakges."
   _UPLOAD_PID=()
   for f in !(*.sig); do
     [[ "$f" == '!(*.sig)' ]] && continue
@@ -53,7 +54,8 @@ function deploy() {
     fi
 
     if [[ "$CAUR_TYPE" == 'cluster' ]]; then
-      rsync --partial "$f" "${CAUR_DEPLOY_HOST}:${CAUR_DEPLOY_PATH}" &
+      rsync --verbose --partial -e 'ssh -T -o Compression=no -x' -a \
+        "$f" "${CAUR_DEPLOY_HOST}:${CAUR_DEPLOY_PKGS}" &
       _UPLOAD_PID+=("$!")
     else
       cp -v "$f" "${CAUR_DEST_PKG}/"
@@ -62,12 +64,14 @@ function deploy() {
 
   [[ -n "${_UPLOAD_PID:-}" ]] && wait "${_UPLOAD_PID[@]}"
 
+  echo "Trying to deploy signatures."
   _UPLOAD_PID=()
   for f in *.sig; do
     [[ "$f" == '*.sig' ]] && continue
 
     if [[ "$CAUR_TYPE" == 'cluster' ]]; then
-      rsync --partial "$f" "${CAUR_DEPLOY_HOST}:${CAUR_DEPLOY_PATH}" &
+      rsync --verbose --partial -e 'ssh -T -o Compression=no -x' -a \
+        "$f" "${CAUR_DEPLOY_HOST}:${CAUR_DEPLOY_PKGS}/" &
       _UPLOAD_PID+=("$!")
     else
       cp -v "$f" "${CAUR_DEST_PKG}/"
