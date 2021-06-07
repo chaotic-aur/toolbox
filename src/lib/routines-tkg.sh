@@ -143,6 +143,6 @@ function routine-tkg-kernels() {
 
   (makepwd) || true
   clean-logs
-  pop #routine-dir
+  popd #routine-dir
   return 0
 }
