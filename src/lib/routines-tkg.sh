@@ -20,6 +20,7 @@ function tkg-kernel-variate() {
     _PKGBASE="linux-tkg-${_SCHED}"
   elif [ "${_MARCH}" == 'lts' ]; then # LTS is generic-only
     _PKGBASE="linux-lts-tkg-${_SCHED}"
+    _MARCH='generic'
   fi
 
   _TIMER_FREQ=750
