@@ -86,7 +86,7 @@ function deploy() {
         "$f" "${CAUR_DEPLOY_HOST}:${CAUR_DEPLOY_PKGS}" &
       _UPLOAD_PID+=("$!")
     else
-      cp -v "$f" "${CAUR_DEST_PKG}/"
+      cp -v "$f" "${CAUR_DEPLOY_PKGS}/"
     fi
   done
 
@@ -102,7 +102,7 @@ function deploy() {
         "$f" "${CAUR_DEPLOY_HOST}:${CAUR_DEPLOY_PKGS}/" &
       _UPLOAD_PID+=("$!")
     else
-      cp -v "$f" "${CAUR_DEST_PKG}/"
+      cp -v "$f" "${CAUR_DEPLOY_PKGS}/"
     fi
   done
 
