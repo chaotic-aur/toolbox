@@ -68,6 +68,11 @@ function interference-generic() {
     sed -i'' 's/^PKGEXT=.*$//g' PKGBUILD
   fi
 
+  # * Get rid of groups
+  if (grep -qP '^groups=' PKGBUILD); then
+    sed -i'' 's/^groups=.*$//g' PKGBUILD
+  fi
+
   return 0
 }
 
