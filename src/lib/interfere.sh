@@ -73,6 +73,11 @@ function interference-generic() {
     sed -i'' 's/^groups=.*$//g' PKGBUILD
   fi
 
+  # * Get rid of 'native optimizations'
+  if (grep -qP '-march=native' PKGBUILD); then
+    sed -i'' 's/-march=native//g' PKGBUILD
+  fi
+
   return 0
 }
 
