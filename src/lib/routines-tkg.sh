@@ -90,6 +90,7 @@ function tkg-kernels-variations() {
   _LINUX_SCHED=(
     'muqss 0'
     'bmq 1'
+    'cacule 0'
     'pds 0'
     'cfs 0'
   )
