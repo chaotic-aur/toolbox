@@ -35,7 +35,7 @@ function interference-apply() {
 }
 
 function interference-generic() {
-  set -euo pipefail
+  set -euo pipefail -o functrace
 
   local _PKGTAG
 
@@ -74,7 +74,7 @@ function interference-generic() {
   fi
 
   # * Get rid of 'native optimizations'
-  if (grep -qP '-march=native' PKGBUILD); then
+  if (grep -qP '\-march=native' PKGBUILD); then
     sed -i'' 's/-march=native//g' PKGBUILD
   fi
 
