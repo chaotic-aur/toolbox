@@ -82,8 +82,12 @@ function deploy() {
     fi
 
     if [[ "$CAUR_TYPE" == 'cluster' ]]; then
-      rsync --verbose --partial -e 'ssh -T -o Compression=no -x' -a \
-        "$f" "${CAUR_DEPLOY_HOST}:${CAUR_DEPLOY_PKGS}" &
+      {
+        if ! rsync --verbose --partial -e 'ssh -T -o Compression=no -x' -a \
+          "$f" "${CAUR_DEPLOY_HOST}:${CAUR_DEPLOY_PKGS}"; then
+          echo "$f" >>../deploy.failures
+        fi
+      } &
       _UPLOAD_PID+=("$!")
     else
       cp -v "$f" "${CAUR_DEPLOY_PKGS}/"
@@ -91,6 +95,11 @@ function deploy() {
   done
 
   [[ -n "${_UPLOAD_PID:-}" ]] && wait "${_UPLOAD_PID[@]}"
+  if [[ -e '../deploy.failures' ]]; then
+    echo 'Some packages failed to upload.'
+    exec {_LOCK_FD}>&- # Unlock
+    return 29
+  fi
 
   echo "Trying to deploy signatures."
   _UPLOAD_PID=()
@@ -98,8 +107,12 @@ function deploy() {
     [[ "$f" == '*.sig' ]] && continue
 
     if [[ "$CAUR_TYPE" == 'cluster' ]]; then
-      rsync --verbose --partial -e 'ssh -T -o Compression=no -x' -a \
-        "$f" "${CAUR_DEPLOY_HOST}:${CAUR_DEPLOY_PKGS}/" &
+      {
+        if ! rsync --verbose --partial -e 'ssh -T -o Compression=no -x' -a \
+          "$f" "${CAUR_DEPLOY_HOST}:${CAUR_DEPLOY_PKGS}/"; then
+          echo "$f" >>../deploy.failures
+        fi
+      } &
       _UPLOAD_PID+=("$!")
     else
       cp -v "$f" "${CAUR_DEPLOY_PKGS}/"
@@ -107,6 +120,11 @@ function deploy() {
   done
 
   [[ -n "${_UPLOAD_PID:-}" ]] && wait "${_UPLOAD_PID[@]}"
+  if [[ -e '../deploy.failures' ]]; then
+    echo 'Some signatures failed to upload.'
+    exec {_LOCK_FD}>&- # Unlock
+    return 29
+  fi
 
   popd # "${_INPUTDIR}/dest"
 
