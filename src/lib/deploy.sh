@@ -84,7 +84,7 @@ function deploy() {
     if [[ "$CAUR_TYPE" == 'cluster' ]]; then
       {
         if ! rsync --verbose --partial -e 'ssh -T -o Compression=no -x' -a \
-          "$f" "${CAUR_DEPLOY_HOST}:${CAUR_DEPLOY_PKGS}"; then
+          "$f" "${CAUR_DEPLOY_HOST}:${CAUR_DEPLOY_PKGS}/"; then
           echo "$f" >>../deploy.failures
         fi
       } &
