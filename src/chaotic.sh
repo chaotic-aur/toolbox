@@ -67,7 +67,7 @@ fi
 
 shopt -s extglob
 for _LIB in "${CAUR_LIB}"/*.sh; do
-  # shellcheck source=src/lib/*
+  # shellcheck source=/dev/null
   source "${_LIB}"
 done
 

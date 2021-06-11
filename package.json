@@ -4,7 +4,7 @@
     "prettier-plugin-sh": "^0.6.0"
   },
   "scripts": {
-    "lint": "prettier --check . && shellcheck src/**/* guest/bin/* slurm-jobs/**/*.sh",
+    "lint": "prettier --check . && shellcheck src/*.sh src/lib/*.sh guest/bin/* slurm-jobs/*/*.sh",
     "prettify": "prettier --write ."
   }
 }
