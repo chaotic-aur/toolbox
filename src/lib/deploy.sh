@@ -23,7 +23,11 @@ function deploy() {
     exec {_LOCK_FD}>&- # Unlock
     return 14
   fi
-  _PKGTAG=$(cat "${_INPUTDIR}/PKGTAG")
+
+  _PKGTAG="$(cat "${_INPUTDIR}/PKGTAG")"
+  if [[ -f "${_INPUTDIR}/PKGVAR" ]]; then
+    _PKGTAG+="-$(cat "${_INPUTDIR}/PKGVAR")"
+  fi
 
   _RESULT="${_INPUTDIR}/building.result"
 
