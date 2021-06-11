@@ -132,7 +132,7 @@ function deploy() {
 
   popd # "${_INPUTDIR}/dest"
 
-  (deploy-notify "${_INPUTDIR}") || true
+  (deploy-notify "${_PKGTAG}") || true
 
   echo 'deployed' >"${_RESULT}"
 
@@ -166,11 +166,9 @@ function deploypwd() {
 function deploy-notify() {
   set -euo pipefail
 
-  local _INPUTDIR _PKGTAG _AUTHOR
+  local _PKGTAG _AUTHOR
 
-  _INPUTDIR="${1:-}"
-
-  _PKGTAG="$(cat "${_INPUTDIR}/PKGTAG")"
+  _PKGTAG="${1:-}"
   [[ -z "$_PKGTAG" ]] && return 36
 
   _AUTHOR="$CAUR_DEPLOY_LABEL"
