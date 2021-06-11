@@ -27,11 +27,14 @@ function prepare() {
   fi
   _INTERFERE="${CAUR_INTERFERE}/${_PKGTAG}"
 
-  _LS=(*)
+  mapfile -t _LS < <(find . -maxdepth 1 -mindepth 1)
   install -o"$(whoami)" -dm755 'pkgwork'
   mv "${_LS[@]}" 'pkgwork/'
 
+  [[ -f 'pkgwork/PKGBASE' ]] && mv 'pkgwork/PKGBASE' ./
+  [[ -f 'pkgwork/PKGVAR' ]] && mv 'pkgwork/PKGVAR' ./
   echo -n "${_PKGTAG}" >'PKGTAG'
+
   makepkg-gen-bash-init "${_PKGDIR}"
 
   pushd 'pkgwork'
