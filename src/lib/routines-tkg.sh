@@ -3,7 +3,7 @@
 function tkg-kernel-variate() {
   set -euo pipefail
 
-  local _VER _SCHED _YIELD _MARCH _PKGBASE _TIMER_FREQ _RQ
+  local _VER _SCHED _YIELD _MARCH _PKGNAME _TIMER_FREQ _RQ
 
   if [ ${#@} -ne 4 ]; then
     echo 'Invalid variate parameters'
@@ -15,11 +15,11 @@ function tkg-kernel-variate() {
   _YIELD="$3"
   _MARCH="$4"
 
-  _PKGBASE="linux-tkg-${_SCHED}-${_MARCH}"
+  _PKGNAME="linux-tkg-${_SCHED}-${_MARCH}"
   if [ "${_MARCH}" == 'generic' ]; then
-    _PKGBASE="linux-tkg-${_SCHED}"
+    _PKGNAME="linux-tkg-${_SCHED}"
   elif [ "${_MARCH}" == 'lts' ]; then # LTS is generic-only
-    _PKGBASE="linux-lts-tkg-${_SCHED}"
+    _PKGNAME="linux-lts-tkg-${_SCHED}"
     _MARCH='generic'
   fi
 
@@ -70,11 +70,13 @@ function tkg-kernel-variate() {
   s/_runqueue_sharing=\"[^\"]*\"/_runqueue_sharing=\"${_RQ}\"/g
   s/_timer_freq=\"[^\"]*\"/_timer_freq=\"${_TIMER_FREQ}\"/g
   s/_user_patches=\"[^\"]*\"/_user_patches=\"false\"/g
-  s/_custom_pkgbase=\"[^\"]*\"/_custom_pkgbase=\"${_PKGBASE}\"/g
+  s/_custom_pkgbase=\"[^\"]*\"/_custom_pkgbase=\"${_PKGNAME}\"/g
   s/_misc_adds=\"[^\"]*\"/_misc_adds=\"true\"/g
   " customization.cfg
 
   echo '_nofallback="true"' >>customization.cfg
+  echo 'linux-tkg' >PKGBASE
+  echo "${_PKGNAME##linux*-tkg-}" >PKGVAR
 
   return 0
 }
@@ -132,7 +134,6 @@ function routine-tkg-kernels() {
 
     mkdir "$_DEST"
     cp -r 'linux-tkg'/* "$_DEST/"
-    echo 'linux-tkg' >"$_DEST/PKGBASE"
 
     pushd "$_DEST"
     # shellcheck disable=SC2086
