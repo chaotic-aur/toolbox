@@ -150,9 +150,11 @@ function push-routine-dir() {
 }
 
 function freeze-notify() {
-  local _REMAINING
-  _REMAINING="$(find . -maxdepth 1 -type d | wc -l)"
-  send-log "Hey onyii-san, wast ${1:-} buiwd on ${CAUR_CLUSTER_NAME}'s ${2:-} stawted lwng time ago (${CAUR_TELEGRAM_TAG}), with ${_REMAINING} packages remaining to build."
+  local _PREPARED_REMAINING _TOUCHED_REMAINING
+  _PREPARED_REMAINING="$(find . -mindepth 2 -maxdepth 2 -name PKGTAG | wc -l)"
+  [[ ${_PREPARED_REMAINING} -lt 1 ]] && return 0
+  _TOUCHED_REMAINING="$(find . -mindepth 2 -maxdepth 2 -name building.result | wc -l)"
+  send-log "Hey onyii-san, wast ${1:-} buiwd on ${CAUR_CLUSTER_NAME}'s ${2:-} stawted lwng time ago (${CAUR_TELEGRAM_TAG}), with ${_PREPARED_REMAINING} packages remaining to build (${_TOUCHED_REMAINING} failed/building)."
 }
 
 function clean-archive() {
