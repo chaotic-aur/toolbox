@@ -92,7 +92,7 @@ function generic-routine() {
   _PACKAGES=()
   mapfile -t _PACKAGES < <(
     parse-package-list "${_LIST}" \
-      | sed -E 's/\:(.*)//g'
+      | sed -E 's/\:(.*)//'
   )
   makepwd "${_PACKAGES[@]}" &
   sane-wait "$!" || true
@@ -114,7 +114,7 @@ function parse-package-list() {
     return 22
   fi
 
-  sed -E 's/#.*//;/^\s*$/d' "$1"
+  sed -E 's/#.*//;/^\s*$/d;s/^\s+//;s/\s+$//' "$1"
 }
 
 function push-routine-dir() {
