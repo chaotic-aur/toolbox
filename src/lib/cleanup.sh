@@ -115,7 +115,7 @@ function clean-duplicates() {
   _DUPLICATED=$(
     # shellcheck disable=SC2010
     ls \
-      | grep -Po "^(.*)(?=(?:(?:-[^-]*){3}\.pkg\.tar(?>\.xz|\.zst)?)$)" \
+      | grep -Po "^(.*)(?=(?:(?:-[^-]*){3}\.pkg\.tar(?>\.xz|\.zst)?).sig$)" \
       | uniq -d
   )
 
@@ -124,9 +124,9 @@ function clean-duplicates() {
   else
     _TO_MV=$(
       echo "${_DUPLICATED[@]}" \
-        | awk '{print "find -name \""$1"*\" -printf \"%T@ %p\\n\" | sort -n | grep -Po \"\\.\\/"$1"(((-[^-]*){3}\\.pkg\\.tar(?>\\.xz|\\.zst)?))$\" | head -n -1;"}' \
+        | awk '{print "find -name \""$1"*\" -printf \"%T@ %p\\n\" | sort -n | grep -Po \"\\.\\/"$1"(((-[^-]*){3}\\.pkg\\.tar(?>\\.xz|\\.zst)?)).sig$\" | head -n -1;"}' \
         | bash \
-        | awk '{print $1"\n"$1".sig"}'
+        | awk '{sub(/\.sig$/,"");print $1"\n"$1".sig"}'
     )
 
     echo "[!] Moving:"
