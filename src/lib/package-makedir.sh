@@ -39,7 +39,7 @@ function makepwd() {
       _BUILDING_PIDS=()
       echo 'Keep going...'
     elif [[ "${_MAX_JOBS}" == '1' ]]; then
-      pipepkg "$_pkg"
+      pipepkg "$_pkg" || true
     else
       while [[ -n "${_BUILDING_PIDS:-}" ]] \
         && [[ $(comm -13 <(printf "%s\n" "${_BUILDING_PIDS[@]}") <(jobs -rp) | wc -l) -gt ${_MAX_JOBS} ]]; do
