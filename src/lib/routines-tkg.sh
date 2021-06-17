@@ -34,7 +34,7 @@ function tkg-kernel-variate() {
   fi
 
   _BCACHEFS='true'
-  if [ "${_VER}" == '5.12' ]; then
+  if [ "${_VER}" == '5.13' ]; then
     _BCACHEFS='false'
   fi
 
