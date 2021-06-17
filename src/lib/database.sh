@@ -3,23 +3,21 @@
 function db-add() {
   set -euo pipefail
 
-  if [ ${#@} -gt 0 ]; then
+  if [ ${#@} -lt 1 ]; then
     echo 'Invalid db-add parameters'
     return 23
   fi
 
-  if [[ "$CAUR_TYPE" == 'cluster' ]]; then
-    # shellcheck disable=SC2029
-    ssh "$CAUR_DEPLOY_HOST" "chaotic db-add $*"
-
-    return 0
+  if [[ "$CAUR_TYPE" != 'primary' ]]; then
+    echo 'Only primary node can do this action.'
+    return 19
   fi
 
   # Lock bump operations
   db-lock
 
   # Add them all
-  if repo-add "${CAUR_DB_NAME}.db.${CAUR_DB_EXT}" "$@" && db-last-bump; then
+  if repo-add "${CAUR_DB_NAME}.db.${CAUR_DB_EXT}" "$@"; then
     (db-pkglist) || true # we want to unlock even if it fails
   else
     db-unlock
