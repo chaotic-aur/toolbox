@@ -11,7 +11,7 @@ From: gitlab.archlinux.org:5050/archlinux/archlinux-docker:base-master
   stee() { command tee "$@" >/dev/null; }
 
   cat /etc/makepkg.conf.append | tee -a /etc/makepkg.conf
-  echo 'PACKAGER="UFSCar's HPC Team <hpc.ufscar@chaotic.cx>"' | tee -a /etc/makepkg.conf
+  echo 'PACKAGER="UFSCar's HPC Builder <hpc.ufscar@chaotic.cx>"' | tee -a /etc/makepkg.conf
   rm /etc/makepkg.conf.append
   echo 'Server = http://mirror.ufscar.br/archlinux/$repo/os/$arch' | stee /etc/pacman.d/mirrorlist
 
