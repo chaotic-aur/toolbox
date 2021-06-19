@@ -79,7 +79,7 @@ EOF
     './var/pkgdest'
 
   popd # _CURRENT
-  ln -sf "./$_CURRENT" "./latest"
+  ln -fsT "./$_CURRENT" "./latest"
 
   popd # CAUR_LOWER_DIR
   return 0
@@ -99,7 +99,7 @@ function lowerstrap-singularity() {
   popd # CAUR_GUEST
 
   pushd "$CAUR_LOWER_DIR"
-  ln -sf "./$_CURRENT" "./latest"
+  ln -fsT "./$_CURRENT" "./latest"
   popd # CAUR_LOWER_DIR
 
   return 0
