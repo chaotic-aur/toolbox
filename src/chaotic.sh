@@ -42,6 +42,7 @@ CAUR_ROUTINES='/tmp/chaotic/routines'
 CAUR_SANDBOX='' # singularity only
 CAUR_SIGN_KEY=''
 CAUR_SIGN_USER='root' # who owns the key in gnupg's keyring.
+CAUR_PACKAGER='Chaotic-AUR Team <team@chaotic.cx>'
 CAUR_SILENT=0
 CAUR_TELEGRAM="$HOME/.config/telegram-send-group.conf"
 CAUR_TELEGRAM_LOG="$HOME/.config/telegram-send-log.conf"
