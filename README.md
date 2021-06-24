@@ -138,6 +138,16 @@ You'll find more options in `src/chaotic` first lines.
 
 Supported `type` values are: `primary`, `cluster`, and `dev`.
 
+To have clean logs & less bandwidth usage `/etc/pacman.conf` settings need to be adjusted:
+
+- Enable `NoProgressBar`
+
+- Use `Server = file:///path-to-local-repo` as repo link if a local mirror is available
+
+- Don't use `ILoveCandy`
+
+To deploy faster replace `openssh` with `openssh-hpn` on all nodes (adds peformance related [patches](https://www.psc.edu/research/networking/hpn-ssh/)). 
+
 ## Installation
 
 Install dependencies, then:
