@@ -142,9 +142,11 @@ To have clean logs & less bandwidth usage `/etc/pacman.conf` settings need to be
 
 - Enable `NoProgressBar`
 
-- Use `Server = file:///path-to-local-repo` as repo link if available
+- Use `Server = file:///path-to-local-repo` as repo link if a local mirror is available
 
 - Don't use `ILoveCandy`
+
+To ensure proper, timely uploads to the main node `openssh` will have to be replaced with `openssh-hpn` (adds peformance related [patches](https://www.psc.edu/research/networking/hpn-ssh/)). 
 
 ## Installation
 
