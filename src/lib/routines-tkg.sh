@@ -86,8 +86,8 @@ function tkg-kernels-variations() {
 
   local _LINUX_LTS _LINUX_STABLE _LINUX_MARCH _VAR_SCHED _VAR_SCHED
 
-  _LINUX_LTS='5.4'
-  _LINUX_STABLE='5.12'
+  _LINUX_LTS='5.10'
+  _LINUX_STABLE='5.13'
 
   _LINUX_SCHED=(
     'muqss 0'
