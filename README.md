@@ -146,7 +146,7 @@ To have clean logs & less bandwidth usage `/etc/pacman.conf` settings need to be
 
 - Don't use `ILoveCandy`
 
-To deploy faster replace `openssh` with `openssh-hpn` on all nodes (adds peformance related [patches](https://www.psc.edu/research/networking/hpn-ssh/)). 
+To deploy faster replace `openssh` with `openssh-hpn` on all nodes (adds peformance related [patches](https://www.psc.edu/research/networking/hpn-ssh/)).
 
 ## Installation
 
