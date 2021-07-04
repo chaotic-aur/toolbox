@@ -198,3 +198,16 @@ function clean-pkgcache() {
 
   return 0
 }
+
+function clean-archive() {
+  set -euo pipefail
+
+  [[ "$CAUR_TYPE" != 'primary' ]] && return 0
+
+  pushd "${CAUR_DEPLOY_PKGS}/../archive"
+
+  find . -type f -mtime +7 -name '*' -execdir rm -- '{}' \; || true
+
+  popd
+  return 0
+}

@@ -3,6 +3,9 @@
 function routine() {
   set -euo pipefail
 
+  # good time to maybe clean the pkgcache
+  (clean-pkgcache -q) || true
+
   if [[ -n "${XDG_RUNTIME_DIR:-}" ]] && [[ ! -e "${XDG_RUNTIME_DIR:-}" ]]; then
     # silence warning if $XDG_RUNTIME_DIR does not exist
     unset XDG_RUNTIME_DIR
@@ -155,17 +158,4 @@ function freeze-notify() {
   [[ ${_PREPARED_REMAINING} -lt 1 ]] && return 0
   _TOUCHED_REMAINING="$(find . -mindepth 2 -maxdepth 2 -name building.result | wc -l)"
   send-log "Hey onyii-san, wast ${1:-} buiwd on ${CAUR_CLUSTER_NAME}'s ${2:-} stawted lwng time ago (${CAUR_TELEGRAM_TAG}), with ${_PREPARED_REMAINING} packages remaining to build (${_TOUCHED_REMAINING} failed/building)."
-}
-
-function clean-archive() {
-  set -euo pipefail
-
-  [[ "$CAUR_TYPE" != 'primary' ]] && return 0
-
-  pushd "${CAUR_DEPLOY_PKGS}/../archive"
-
-  find . -type f -mtime +7 -name '*' -execdir rm -- '{}' \; || true
-
-  popd
-  return 0
 }
