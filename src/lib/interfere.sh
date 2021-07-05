@@ -58,6 +58,11 @@ function interference-generic() {
     $CAUR_PUSH pacman -S --needed --noconfirm mercurial
   fi
 
+  # * Multilib
+  if (echo "$_PKGTAG" | grep -qP '^lib32-'); then
+    $CAUR_PUSH pacman -S --needed --noconfirm multilib-devel
+  fi
+
   # * Read options
   if (grep -qPo "^options=\([a-z! \"']*(?<!!)ccache[ '\"\)]" PKGBUILD); then
     $CAUR_PUSH pacman -S --needed --noconfirm ccache
