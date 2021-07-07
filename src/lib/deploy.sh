@@ -52,7 +52,7 @@ function deploy() {
     return 17
   elif [[ ! -e "${_RESULT}" ]] \
     || [[ "$(cat "${_RESULT}")" != 'success' ]]; then
-    echo 'Invalid package, last build did not succeed, or aready deployed.'
+    echo 'Invalid package, last build did not succeed, or already deployed.'
     exec {_LOCK_FD}>&- # Unlock
     return 18
   fi
