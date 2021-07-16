@@ -3,7 +3,7 @@
 function tkg-kernel-variate() {
   set -euo pipefail
 
-  local _VER _SCHED _YIELD _MARCH _PKGNAME _TIMER_FREQ _RQ
+  local _VER _SCHED _YIELD _MARCH _PKGNAME _TIMER_FREQ _RQ _LTS
 
   if [ ${#@} -ne 4 ]; then
     echo 'Invalid variate parameters'
@@ -14,6 +14,7 @@ function tkg-kernel-variate() {
   _SCHED="$2"
   _YIELD="$3"
   _MARCH="$4"
+  _LTS=0
 
   _PKGNAME="linux-tkg-${_SCHED}-${_MARCH}"
   if [ "${_MARCH}" == 'generic' ]; then
@@ -21,6 +22,7 @@ function tkg-kernel-variate() {
   elif [ "${_MARCH}" == 'lts' ]; then # LTS is generic-only
     _PKGNAME="linux-lts-tkg-${_SCHED}"
     _MARCH='generic'
+    _LTS=1
   fi
 
   _TIMER_FREQ=750
@@ -75,7 +77,12 @@ function tkg-kernel-variate() {
   " customization.cfg
 
   echo '_nofallback="true"' >>customization.cfg
-  echo 'linux-tkg' >PKGBASE
+
+  if [[ "$_LTS" == '1' ]]; then
+    echo 'linux-lts-tkg' >PKGBASE
+  else
+    echo 'linux-tkg' >PKGBASE
+  fi
   echo "${_PKGNAME##linux*-tkg-}" >PKGVAR
 
   return 0
@@ -90,7 +97,7 @@ function tkg-kernels-variations() {
   _LINUX_STABLE='5.13'
 
   _LINUX_SCHED=(
-    'muqss 0'
+    #  'muqss 0'
     'bmq 1'
     'cacule 0'
     'pds 0'
@@ -98,8 +105,13 @@ function tkg-kernels-variations() {
   )
 
   readonly _LINUX_MARCH=(
-    'generic' 'generic_v3'
+    'generic_v3'
+    'generic'
   )
+
+  # Con Kolivas does not use Arch btw
+  echo '5.12' 'muqss 0' 'generic_v3'
+  echo '5.12' 'muqss 0' 'generic'
 
   # stable
   for _VAR_MARCH in "${_LINUX_MARCH[@]}"; do
