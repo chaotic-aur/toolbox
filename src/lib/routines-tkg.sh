@@ -15,6 +15,7 @@ function tkg-kernel-variate() {
   _YIELD="$3"
   _MARCH="$4"
   _LTS=0
+  _LTO=0
 
   _PKGNAME="linux-tkg-${_SCHED}-${_MARCH}"
   if [ "${_MARCH}" == 'generic' ]; then
@@ -23,6 +24,10 @@ function tkg-kernel-variate() {
     _PKGNAME="linux-lts-tkg-${_SCHED}"
     _MARCH='generic'
     _LTS=1
+  elif [ "${_MARCH}" == 'generic_v3_lto' ]; then
+    _PKGNAME="linux-tkg-${_SCHED}-lto_v3"
+    _MARCH='generic_v3'
+    _LTO=1
   fi
 
   _TIMER_FREQ=750
@@ -36,8 +41,15 @@ function tkg-kernel-variate() {
   fi
 
   _BCACHEFS='true'
-  if [ "${_VER}" == '5.13' ]; then
+  if [ "${_VER}" == '5.14' ]; then
     _BCACHEFS='false'
+  fi
+
+  _COMPILER='gcc'
+  _LTO_MODE=''
+  if [ "${_LTO}" == '1'  ]; then
+    _COMPILER='llvm'
+    _LTO_MODE='full'
   fi
 
   sed -i'' "
@@ -50,9 +62,10 @@ function tkg-kernel-variate() {
   s/_diffconfig=\"[^\"]*\"/_diffconfig=\"false\"/g
   s/_configfile=\"[^\"]*\"/_configfile=\"config.x86_64\"/g
   s/_cpusched=\"[^\"]*\"/_cpusched=\"${_SCHED}\"/g
-  s/_compiler=\"[^\"]*\"/_compiler=\"gcc\"/g
-  s/_rr_interval=\"[^\"]*\"/_rr_interval=\"default\"/g
+  s/_compiler=\"[^\"]*\"/_compiler=\"${_COMPILER}\"/g
+  s/_lto_mode=\"[^\"]*\"/_lto_mode=\"${_LTO_MODE}\"/g
   s/_sched_yield_type=\"[^\"]*\"/_sched_yield_type=\"${_YIELD}\"/g
+  s/_rr_interval=\"[^\"]*\"/_rr_interval=\"default\"/g
   s/_ftracedisable=\"[^\"]*\"/_ftracedisable=\"true\"/g
   s/_numadisable=\"[^\"]*\"/_numadisable=\"false\"/g
   s/_tickless=\"[^\"]*\"/_tickless=\"2\"/g
@@ -120,7 +133,10 @@ function tkg-kernels-variations() {
     done
   done
 
-  # lts
+  # Let's try this baby
+  echo '5.13' 'cacule 0' 'generic_v3_lto'
+ 
+ # lts
   for _VAR_SCHED in "${_LINUX_SCHED[@]}" 'pds 0'; do
     echo "$_LINUX_LTS" "$_VAR_SCHED" 'lts'
   done
