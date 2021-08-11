@@ -45,22 +45,29 @@ function db-bump() {
   # Lock bump operations
   db-lock
 
-  if [[ ! -f "$CAUR_CHECKPOINT" ]]; then
-    touch -d "$(date -R -r "$_DB_FILE")" "$CAUR_CHECKPOINT"
-  fi
-  _RUN_TIME="$(date -R)"
-
   pushd "$CAUR_DEPLOY_PKGS"
-  _NEW_SIGS="$(find ./*.sig -newer "$CAUR_CHECKPOINT")" || true
 
-  if [[ -n "${_NEW_SIGS:-}" ]]; then
-    {
-      echo "$_NEW_SIGS" \
-        | grep -Po '.*(?:-(?:[^-]*)){3}\.pkg\.tar(?:\.xz|\.zst)?(?=\.sig)' \
-        | xargs repo-add "$_DB_FILE" \
-        && db-last-bump && db-pkglist && touch -d "$_RUN_TIME" "$CAUR_CHECKPOINT"
-    } || true
-  fi
+  {
+    if [[ "${CAUR_DATABASE_BUMPER:-}" == 'repoctl' ]]; then
+      repoctl update -r \
+        && db-last-bump && db-pkglist
+
+    else
+      if [[ ! -f "$CAUR_CHECKPOINT" ]]; then
+        touch -d "$(date -R -r "$_DB_FILE")" "$CAUR_CHECKPOINT"
+      fi
+      _RUN_TIME="$(date -R)"
+
+      _NEW_SIGS="$(find ./*.sig -newer "$CAUR_CHECKPOINT")" || true
+
+      if [[ -n "${_NEW_SIGS:-}" ]]; then
+        echo "$_NEW_SIGS" \
+          | grep -Po '.*(?:-(?:[^-]*)){3}\.pkg\.tar(?:\.xz|\.zst)?(?=\.sig)' \
+          | xargs repo-add "$_DB_FILE" \
+          && db-last-bump && db-pkglist && touch -d "$_RUN_TIME" "$CAUR_CHECKPOINT"
+      fi
+    fi
+  } || true
 
   popd # CAUR_DEPLOY_PKGS
 

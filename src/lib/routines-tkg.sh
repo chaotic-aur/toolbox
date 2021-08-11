@@ -47,7 +47,7 @@ function tkg-kernel-variate() {
 
   _COMPILER='gcc'
   _LTO_MODE=''
-  if [ "${_LTO}" == '1'  ]; then
+  if [ "${_LTO}" == '1' ]; then
     _COMPILER='llvm'
     _LTO_MODE='full'
   fi
@@ -135,8 +135,8 @@ function tkg-kernels-variations() {
 
   # Let's try this baby
   echo '5.13' 'cacule 0' 'generic_v3_lto'
- 
- # lts
+
+  # lts
   for _VAR_SCHED in "${_LINUX_SCHED[@]}" 'pds 0'; do
     echo "$_LINUX_LTS" "$_VAR_SCHED" 'lts'
   done
