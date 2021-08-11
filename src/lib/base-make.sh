@@ -13,7 +13,8 @@ function lowerstrap() {
 
   if ! flock -x -n "$_LOCK_FD"; then
     echo 'Somone is already building a lowerdir, waiting...'
-    flock -x "$_LOCK_FD" -c 'echo "Finished"'
+    flock -x "$_LOCK_FD" -c true
+    echo 'Finished'
     exec {_LOCK_FD}>&- # Unlock
     return 0
   fi
