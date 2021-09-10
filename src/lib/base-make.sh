@@ -52,6 +52,7 @@ function lowerstrap-systemd-nspawn() {
   install -dm755 './usr/local/bin'
   install -m644 "$CAUR_GUEST"/etc/pacman.conf './etc/pacman.conf'
   tee -a './etc/makepkg.conf' <"${CAUR_GUEST}/etc/makepkg.conf.append"
+  echo "Server = https://cloudflaremirrors.com/archlinux/\$repo/os/\$arch" | stee './etc/pacman.d/mirrorlist'
   echo "PACKAGER=\"${CAUR_PACKAGER}\"" | tee -a './etc/makepkg.conf'
   install -m755 "$CAUR_GUEST"/bin/* './usr/local/bin/'
 
@@ -65,7 +66,7 @@ EOF
 
   echo 'en_US.UTF-8 UTF-8' | stee './etc/locale.gen'
   echo 'LANG=en_US.UTF-8' | stee './etc/locale.conf'
-  ln -rsf './usr/share/zoneinfo/America/Sao_Paulo' './etc/localtime'
+  ln -rsf './usr/share/zoneinfo/UTC' './etc/localtime'
 
   arch-chroot . /usr/bin/bash <<EOF
 #!/usr/bin/env sh
