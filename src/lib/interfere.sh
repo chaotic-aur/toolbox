@@ -85,7 +85,7 @@ function interference-generic() {
 
   # * replaces=() (for VCS packages) generally causes unnecessary problems and should be avoided.
   # * https://wiki.archlinux.org/title/VCS_package_guidelines#Guidelines
-  if ([ -z "${_PKGTAG_NON_VCS}" ] && grep -qP "^replaces=(${_PKGTAG_NON_VCS})$" PKGBUILD); then
+  if [[ -n "${_PKGTAG_NON_VCS:-}" ]] && (grep -qP "^replaces=\(${_PKGTAG_NON_VCS}\)$" PKGBUILD); then
     sed -i'' "/^replaces=(${_PKGTAG_NON_VCS})$/d" PKGBUILD
   fi
 
