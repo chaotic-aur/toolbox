@@ -3,7 +3,7 @@
 function tkg-kernel-variate() {
   set -euo pipefail
 
-  local _VER _SCHED _YIELD _MARCH _PKGNAME _TIMER_FREQ _RQ _LTS
+  local _VER _SCHED _YIELD _MARCH _PKGNAME _TIMER_FREQ _RQ _LTS _patches
 
   if [ ${#@} -ne 4 ]; then
     echo 'Invalid variate parameters'
@@ -16,6 +16,7 @@ function tkg-kernel-variate() {
   _MARCH="$4"
   _LTS=0
   _LTO=0
+  _patches=("OpenRGB.mypatch")
 
   _PKGNAME="linux-tkg-${_SCHED}-${_MARCH}"
   if [ "${_MARCH}" == 'generic' ]; then
@@ -40,9 +41,8 @@ function tkg-kernel-variate() {
     _RQ='mc-llc'
   fi
 
-  _BCACHEFS='true'
   if [ "${_VER}" == '5.14' ]; then
-    _BCACHEFS='false'
+    _patches+=('AMD_CPPC.mypatch')
   fi
 
   _COMPILER='gcc'
@@ -72,7 +72,7 @@ function tkg-kernel-variate() {
   s/_voluntary_preempt=\"[^\"]*\"/_voluntary_preempt=\"false\"/g
   s/_acs_override=\"[^\"]*\"/_acs_override=\"true\"/g
   s/_ksm_uksm=\"[^\"]*\"/_ksm_uksm=\"true\"/g
-  s/_bcachefs=\"[^\"]*\"/_bcachefs=\"${_BCACHEFS}\"/g
+  s/_bcachefs=\"[^\"]*\"/_bcachefs=\"true\"/g
   s/_bfqmq=\"[^\"]*\"/_bfqmq=\"true\"/g
   s/_zfsfix=\"[^\"]*\"/_zfsfix=\"true\"/g
   s/_fsync=\"[^\"]*\"/_fsync=\"true\"/g
@@ -85,6 +85,7 @@ function tkg-kernel-variate() {
   s/_random_trust_cpu=\"[^\"]*\"/_random_trust_cpu=\"true\"/g
   s/_runqueue_sharing=\"[^\"]*\"/_runqueue_sharing=\"${_RQ}\"/g
   s/_timer_freq=\"[^\"]*\"/_timer_freq=\"${_TIMER_FREQ}\"/g
+  s/_community_patches=\"[^\"]*\"/_community_patches=\"${_patches[*]}\"/g
   s/_user_patches=\"[^\"]*\"/_user_patches=\"false\"/g
   s/_custom_pkgbase=\"[^\"]*\"/_custom_pkgbase=\"${_PKGNAME}\"/g
   s/_misc_adds=\"[^\"]*\"/_misc_adds=\"true\"/g
