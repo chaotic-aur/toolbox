@@ -80,6 +80,7 @@ function tkg-kernel-variate() {
   s/_winesync=\"[^\"]*\"/_winesync=\"false\"/g
   s/_anbox=\"[^\"]*\"/_anbox=\"true\"/g
   s/_processor_opt=\"[^\"]*\"/_processor_opt=\"${_MARCH}\"/g
+  s/_cacule_rdb=\"[^\"]*\"/_cacule_rdb=\"true\"/g
   s/_smt_nice=\"[^\"]*\"/_smt_nice=\"true\"/g
   s/_random_trust_cpu=\"[^\"]*\"/_random_trust_cpu=\"true\"/g
   s/_runqueue_sharing=\"[^\"]*\"/_runqueue_sharing=\"${_RQ}\"/g
@@ -107,10 +108,10 @@ function tkg-kernels-variations() {
   local _LINUX_LTS _LINUX_STABLE _LINUX_MARCH _VAR_SCHED _VAR_SCHED
 
   _LINUX_LTS='5.10'
-  _LINUX_STABLE='5.13'
+  _LINUX_STABLE='5.14'
 
   _LINUX_SCHED=(
-    #  'muqss 0'
+    # 'muqss 0'
     'bmq 1'
     'cacule 0'
     'pds 0'
@@ -122,9 +123,9 @@ function tkg-kernels-variations() {
     'generic'
   )
 
-  # Con Kolivas does not use Arch btw
-  echo '5.12' 'muqss 0' 'generic_v3'
-  echo '5.12' 'muqss 0' 'generic'
+  # RIP -CK patches
+  echo '5.13' 'muqss 0' 'generic_v3'
+  echo '5.13' 'muqss 0' 'generic'
 
   # stable
   for _VAR_MARCH in "${_LINUX_MARCH[@]}"; do
@@ -134,7 +135,7 @@ function tkg-kernels-variations() {
   done
 
   # Let's try this baby
-  echo '5.13' 'cacule 0' 'generic_v3_lto'
+  echo "$_LINUX_STABLE" 'cacule 0' 'generic_v3_lto'
 
   # lts
   for _VAR_SCHED in "${_LINUX_SCHED[@]}" 'pds 0'; do
