@@ -38,6 +38,7 @@ function interference-generic() {
   set -euo pipefail -o functrace
 
   local _PKGTAG
+  local _PKGTAG_NON_VCS
 
   _PKGTAG="${1:-}"
 
@@ -47,15 +48,19 @@ function interference-generic() {
   # * Treats VCs
   if (echo "$_PKGTAG" | grep -qP '\-git$'); then
     $CAUR_PUSH pacman -S --needed --noconfirm git
+    _PKGTAG_NON_VCS="${_PKGTAG%-git}"
   fi
   if (echo "$_PKGTAG" | grep -qP '\-svn$'); then
     $CAUR_PUSH pacman -S --needed --noconfirm subversion
+    _PKGTAG_NON_VCS="${_PKGTAG%-svn}"
   fi
   if (echo "$_PKGTAG" | grep -qP '\-bzr$'); then
     $CAUR_PUSH pacman -S --needed --noconfirm breezy
+    _PKGTAG_NON_VCS="${_PKGTAG%-bzr}"
   fi
   if (echo "$_PKGTAG" | grep -qP '\-hg$'); then
     $CAUR_PUSH pacman -S --needed --noconfirm mercurial
+    _PKGTAG_NON_VCS="${_PKGTAG%-hg}"
   fi
 
   # * Multilib
@@ -76,6 +81,12 @@ function interference-generic() {
   # * Get rid of groups
   if (grep -qP '^groups=' PKGBUILD); then
     sed -i'' 's/^groups=.*$//g' PKGBUILD
+  fi
+
+  # * replaces=() (for VCS packages) generally causes unnecessary problems and should be avoided.
+  # * https://wiki.archlinux.org/title/VCS_package_guidelines#Guidelines
+  if ([ -z "${_PKGTAG_NON_VCS}" ] && grep -qP "^replaces=(${_PKGTAG_NON_VCS})$" PKGBUILD); then
+    sed -i'' "/^replaces=(${_PKGTAG_NON_VCS})$/d" PKGBUILD
   fi
 
   # * Get rid of 'native optimizations'
