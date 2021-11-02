@@ -164,6 +164,9 @@ function main() {
   'send-log' | 'al')
     send-log "${@:2}"
     ;;
+  'check-dup' | 'cd')
+    check-duplicates "${@:2}"
+    ;;
   'whoami')
     echo "#$UID or ${USER:-$(whoami)}, identified as ${CAUR_MAINTAINER} at \"$CAUR_DEPLOY_LABEL\"."
     ;;
