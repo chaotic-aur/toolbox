@@ -100,6 +100,10 @@ function makepkg-systemd-nspawn() {
 
   if [[ -z "${_BUILD_FAILED}" ]]; then
     echo 'success' >'building.result'
+    if [[ -f "${_INTERFERE}/on-success.sh" ]]; then
+      # shellcheck source=/dev/null
+      source "${_INTERFERE}/on-success.sh"
+    fi
   else
     echo "${_BUILD_FAILED}" >'building.result'
     if [[ -f "${_INTERFERE}/on-failure.sh" ]]; then
@@ -218,6 +222,10 @@ function makepkg-singularity() {
 
   if [[ -z "${_BUILD_FAILED}" ]]; then
     echo 'success' >'building.result'
+    if [[ -f "${_INTERFERE}/on-success.sh" ]]; then
+      # shellcheck source=/dev/null
+      source "${_INTERFERE}/on-success.sh"
+    fi
   else
     echo "${_BUILD_FAILED}" >'building.result'
     if [[ -f "${_INTERFERE}/on-failure.sh" ]]; then
