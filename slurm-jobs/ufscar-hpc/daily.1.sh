@@ -1,8 +1,9 @@
 #!/bin/bash
 #SBATCH --job-name=daily.1
 #SBATCH --cpus-per-task 40
+#SBATCH --mem 257500M
 #SBATCH --nodes 1
-#SBATCH --exclusive
+#SBATCH --overlap
 #SBATCH --dependency=singleton
 #SBATCH --time=04:50:00
 #SBATCH --signal=B:SIGUSR1@90
