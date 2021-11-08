@@ -215,7 +215,7 @@ function makepkg-singularity() {
     -B "${_SRCCACHE}:${_HOME}/pkgsrc" \
     -B "${CAUR_CACHE_PKG}:/var/cache/pacman/pkg" \
     "${_SANDBOX}" \
-    "/home/main-builder/wizard.sh" "${@:2}" || local _BUILD_FAILED="$?"
+    "/tini" "/home/main-builder/wizard.sh" "${@:2}" || local _BUILD_FAILED="$?"
 
   # we need to remove files inside an user namespace, otherwise we won't have permission to remove files owned by non-root
   singularity --silent exec -B "${CAUR_SANDBOX}:/sandbox" --fakeroot "${CAUR_DOCKER_ALPINE}" rm -rf "/sandbox/${_MECHA_NAME}"
