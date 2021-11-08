@@ -36,5 +36,5 @@ EOF
     "/home/main-builder/"{pkgwork,.ccache,pkgsrc,makepkglogs} \
     '/var/pkgdest'
 
-  curl -o /tini https://github.com/krallin/tini/releases/download/v0.19.0/tini-static-amd64
+  curl -Lo /tini https://github.com/krallin/tini/releases/download/v0.19.0/tini-static-amd64
   chmod +x /tini
