@@ -2,3 +2,4 @@ BUILDENV=(!distcc !color !ccache check !sign)
 PKGDEST=/var/pkgdest
 SRCDEST=/home/main-builder/pkgsrc
 LOGDEST=/home/main-builder/makepkglogs
+MAKEFLAGS="-j8"
