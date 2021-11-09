@@ -35,6 +35,3 @@ EOF
   install -dm755 -o"1000" -g"1000" \
     "/home/main-builder/"{pkgwork,.ccache,pkgsrc,makepkglogs} \
     '/var/pkgdest'
-
-  curl -Lo /tini https://github.com/krallin/tini/releases/download/v0.19.0/tini-static-amd64
-  chmod +x /tini
