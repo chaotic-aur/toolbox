@@ -75,15 +75,23 @@ function sane-wait() {
   done
 }
 
+function rm-as-root() {
+  set -euo pipefail
+
+  if [[ "${CAUR_ENGINE}" = 'singularity' ]]; then
+    $CAUR_USERNS_EXEC_CMD rm --one-file-system -rf "$1"
+  else
+    rm --one-file-system -rf "$1"
+  fi
+
+  return 0
+}
+
 function reset-fakeroot-chown() {
   set -euo pipefail
 
-  # https://podman.io/blogs/2018/10/03/podman-remove-content-homedir.html
   if [[ "${CAUR_ENGINE}" = 'singularity' ]]; then
-    tini -s -- singularity --silent exec --fakeroot \
-      -B "${1}:/what-is-mine" \
-      "${CAUR_DOCKER_ALPINE}" \
-      chown -R 0:0 /what-is-mine # give me back
+    $CAUR_USERNS_EXEC_CMD chown -R 0:0 "$1"
   fi
 
   return 0

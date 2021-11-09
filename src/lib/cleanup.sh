@@ -53,8 +53,7 @@ function cleanup() {
   popd # _INPUTDIR
 
   echo "Cleaning \"${1:-}\"..."
-  reset-fakeroot-chown "${_INPUTDIR}"
-  rm --one-file-system -rf "${_INPUTDIR}"
+  rm-as-root "${_INPUTDIR}"
 
   exec {_LOCK_FD}>&- # Unlock
 
