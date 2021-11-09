@@ -82,8 +82,8 @@ function reset-fakeroot-chown() {
   if [[ "${CAUR_ENGINE}" = 'singularity' ]]; then
     singularity --silent exec --fakeroot \
       -B "${1}:/what-is-mine" \
-      "${CAUR_DOCKER_ALPINE}" \
-      chown -R 0:0 /what-is-mine # give me back
+      "${CAUR_LOWER_DIR}/latest-alpine" \
+      /tini -s -- chown -R 0:0 /what-is-mine # give me back
   fi
 
   return 0

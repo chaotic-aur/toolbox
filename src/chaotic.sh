@@ -30,7 +30,6 @@ CAUR_DEPLOY_HOST='builds.garudalinux.org'
 CAUR_DEPLOY_PKGS="/srv/http/repos/${CAUR_DB_NAME}/x86_64"
 CAUR_DEPLOY_LOGS="/srv/http/repos/${CAUR_DB_NAME}/logs"
 CAUR_DEPLOY_LAST="/srv/http/repos/${CAUR_DB_NAME}/lastupdate"
-CAUR_DOCKER_ALPINE="docker://registry.gitlab.com/jitesoft/dockerfiles/alpine"
 CAUR_ENGINE="systemd-nspawn"
 CAUR_FILL_DEST='https://builds.garudalinux.org/repos/chaotic-aur/pkgs.files.txt'
 CAUR_GPG_PATH="/usr/bin/gpg"

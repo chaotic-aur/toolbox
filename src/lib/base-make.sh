@@ -100,10 +100,12 @@ function lowerstrap-singularity() {
 
   pushd "$CAUR_GUEST"
   singularity build --fakeroot --force "${CAUR_LOWER_DIR}/${_CURRENT}" Singularity
+  singularity build --fakeroot --force "${CAUR_LOWER_DIR}/${_CURRENT}-alpine" Singularity.alpine
   popd # CAUR_GUEST
 
   pushd "$CAUR_LOWER_DIR"
   ln -fsT "./$_CURRENT" "./latest"
+  ln -fsT "./$_CURRENT" "./latest-alpine"
   popd # CAUR_LOWER_DIR
 
   return 0
