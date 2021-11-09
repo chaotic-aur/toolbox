@@ -183,7 +183,7 @@ function makepkg-singularity() {
   _SANDBOX="${CAUR_SANDBOX}/${_MECHA_NAME}"
   if [[ -e "${_SANDBOX}" ]]; then
     echo "Sandbox ${_SANDBOX} already exists. Trying to clean it up..."
-    singularity --silent exec -B "${CAUR_SANDBOX}:/sandbox" --fakeroot "${CAUR_DOCKER_ALPINE}" rm -rf "/sandbox/${_MECHA_NAME}"
+    tini -s -- singularity --silent exec -B "${CAUR_SANDBOX}:/sandbox" --fakeroot "${CAUR_DOCKER_ALPINE}" rm -rf "/sandbox/${_MECHA_NAME}"
 
     if [[ -e "${_SANDBOX}" ]]; then
       echo "It was not possible to clean ${_SANDBOX}"
@@ -192,7 +192,7 @@ function makepkg-singularity() {
     fi
   fi
 
-  singularity build --sandbox "${_SANDBOX}" "${_LOWER}"
+  tini -s -- singularity build --sandbox "${_SANDBOX}" "${_LOWER}"
 
   _HOME="/home/main-builder"
   _CCACHE="${CAUR_CACHE_CC}/${_PKGTAG}"
@@ -208,17 +208,17 @@ function makepkg-singularity() {
   chmod 755 "${_CAUR_WIZARD}"
 
   _BUILD_FAILED=''
-  singularity exec --writable --fakeroot --no-home --containall --workdir /tmp \
+  tini -s -- singularity exec --writable --fakeroot --no-home --containall --workdir /tmp \
     -B "./pkgwork:${_HOME}/pkgwork" \
     -B "./dest:/var/pkgdest" \
     -B "${_CCACHE}:${_HOME}/.ccache" \
     -B "${_SRCCACHE}:${_HOME}/pkgsrc" \
     -B "${CAUR_CACHE_PKG}:/var/cache/pacman/pkg" \
     "${_SANDBOX}" \
-    /tini -s -- "/home/main-builder/wizard.sh" "${@:2}" || local _BUILD_FAILED="$?"
+    "/home/main-builder/wizard.sh" "${@:2}" || local _BUILD_FAILED="$?"
 
   # we need to remove files inside an user namespace, otherwise we won't have permission to remove files owned by non-root
-  singularity --silent exec -B "${CAUR_SANDBOX}:/sandbox" --fakeroot "${CAUR_DOCKER_ALPINE}" rm -rf "/sandbox/${_MECHA_NAME}"
+  tini -s -- singularity --silent exec -B "${CAUR_SANDBOX}:/sandbox" --fakeroot "${CAUR_DOCKER_ALPINE}" rm -rf "/sandbox/${_MECHA_NAME}"
 
   if [[ -z "${_BUILD_FAILED}" ]]; then
     echo 'success' >'building.result'

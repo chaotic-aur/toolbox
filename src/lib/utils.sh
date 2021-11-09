@@ -80,7 +80,7 @@ function reset-fakeroot-chown() {
 
   # https://podman.io/blogs/2018/10/03/podman-remove-content-homedir.html
   if [[ "${CAUR_ENGINE}" = 'singularity' ]]; then
-    singularity --silent exec --fakeroot \
+    tini -s -- singularity --silent exec --fakeroot \
       -B "${1}:/what-is-mine" \
       "${CAUR_DOCKER_ALPINE}" \
       chown -R 0:0 /what-is-mine # give me back
