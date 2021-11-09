@@ -5,7 +5,7 @@ if [[ -z "${CAUR_PACMAN_SYNC}" ]]; then
 fi
 install -o"$(whoami)" -dDm755 "${CAUR_PACMAN_SYNC}"
 
-exec singularity --silent exec --fakeroot \
+exec tini -s -- singularity --silent exec --fakeroot \
     -B "${CAUR_PACMAN_SYNC}":/var/lib/pacman/sync \
     docker://quay.io/chaotic/toolbox-deps \
     "$(basename "$0")" "$@"
