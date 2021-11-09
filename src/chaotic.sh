@@ -67,6 +67,11 @@ if [ "$EUID" -ne 0 ] && [ "$CAUR_ENGINE" != "singularity" ]; then
   exit 255
 fi
 
+if [[ -n "${XDG_RUNTIME_DIR:-}" ]] && [[ ! -e "${XDG_RUNTIME_DIR:-}" ]]; then
+  # avoid error if $XDG_RUNTIME_DIR does not exist
+  unset XDG_RUNTIME_DIR
+fi
+
 shopt -s extglob
 for _LIB in "${CAUR_LIB}"/*.sh; do
   # shellcheck source=/dev/null
