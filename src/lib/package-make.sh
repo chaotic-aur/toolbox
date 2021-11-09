@@ -183,7 +183,7 @@ function makepkg-singularity() {
   _SANDBOX="${CAUR_SANDBOX}/${_MECHA_NAME}"
   if [[ -e "${_SANDBOX}" ]]; then
     echo "Sandbox ${_SANDBOX} already exists. Trying to clean it up..."
-    rm-as-root "/sandbox/${_MECHA_NAME}"
+    rm-as-root "${_SANDBOX}"
 
     if [[ -e "${_SANDBOX}" ]]; then
       echo "It was not possible to clean ${_SANDBOX}"
@@ -217,7 +217,7 @@ function makepkg-singularity() {
     "${_SANDBOX}" \
     "/home/main-builder/wizard.sh" "${@:2}" || local _BUILD_FAILED="$?"
 
-  rm-as-root "/sandbox/${_MECHA_NAME}"
+  rm-as-root "${_SANDBOX}"
 
   if [[ -z "${_BUILD_FAILED}" ]]; then
     echo 'success' >'building.result'
