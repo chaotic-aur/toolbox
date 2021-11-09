@@ -96,16 +96,14 @@ function lowerstrap-singularity() {
 
   local _CURRENT
 
-  _CURRENT="$(date +%Y%m%d%H%M%S)"
+  _CURRENT="$(date +%Y%m%d%H%M%S).sif"
 
   pushd "$CAUR_GUEST"
-  singularity build --fakeroot --force "${CAUR_LOWER_DIR}/${_CURRENT}.sif" Singularity
-  singularity build --fakeroot --force "${CAUR_LOWER_DIR}/${_CURRENT}-alpine.sif" Singularity.alpine
+  singularity build --fakeroot --force "${CAUR_LOWER_DIR}/${_CURRENT}" Singularity
   popd # CAUR_GUEST
 
   pushd "$CAUR_LOWER_DIR"
-  ln -fsT "./$_CURRENT.sif" "./latest"
-  ln -fsT "./$_CURRENT-alpine.sif" "./latest-alpine"
+  ln -fsT "./$_CURRENT" "./latest"
   popd # CAUR_LOWER_DIR
 
   return 0
