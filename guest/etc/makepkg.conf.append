@@ -2,4 +2,6 @@ BUILDENV=(!distcc !color !ccache check !sign)
 PKGDEST=/var/pkgdest
 SRCDEST=/home/main-builder/pkgsrc
 LOGDEST=/home/main-builder/makepkglogs
-MAKEFLAGS="-j8"
+JOBS=8
+MAKEFLAGS="-j$JOBS"
+export SCONSFLAGS="-j$JOBS"
