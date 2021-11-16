@@ -5,6 +5,11 @@ function cleanup() {
 
   local _INPUTDIR _LOCK_FN _LOCK_FD
 
+  if [[ ! -d "${1:-}" ]]; then
+    echo 'Request for cleaning something that is not a directory.'
+    return 0
+  fi
+
   _INPUTDIR="$(
     cd "${1:-}"
     pwd -P
@@ -73,7 +78,7 @@ function clean-srccache() {
   _PKG_CACHE_DIR="${CAUR_CACHE_SRC}/${1}"
 
   if [[ ! -d "$_PKG_CACHE_DIR" ]]; then
-    echo 'Invalid parameters or empty cache directory.'
+    echo 'Invalid parameters or non-exiting cache directory.'
     echo "$_PKG_CACHE_DIR"
     return 0
   fi
@@ -104,6 +109,11 @@ function clean-duplicates() {
 
   if [[ "$CAUR_TYPE" != 'primary' ]]; then
     echo 'Only primary node needs to de-dup.'
+    return 0
+  fi
+
+  if [[ ! -d "$CAUR_DEPLOY_PKGS" ]]; then
+    echo 'Deploying directory not found.'
     return 0
   fi
 
@@ -154,6 +164,11 @@ function clean-duplicates() {
 function clean-pkgcache() {
   set -euo pipefail
 
+  if [[ ! -d "$CAUR_CACHE_PKG" ]]; then
+    echo 'Non-exiting cache directory'
+    return 0
+  fi
+
   pushd "${CAUR_CACHE_PKG}"
 
   local _DUPLICATED _TO_MV _U_SURE
@@ -202,6 +217,11 @@ function clean-archive() {
   set -euo pipefail
 
   [[ "$CAUR_TYPE" != 'primary' ]] && return 0
+
+  if [[ ! -d "${CAUR_DEPLOY_PKGS}/../archive" ]]; then
+    echo 'Non-exiting archive directory'
+    return 0
+  fi
 
   pushd "${CAUR_DEPLOY_PKGS}/../archive"
 
