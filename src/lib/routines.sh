@@ -98,7 +98,8 @@ function generic-routine() {
   cleanpwd
   popd #routine dir
 
-  # good time to maybe clean the archive
+  # good time to do some cleanup
+  (clean-duplicates -q) || true
   (clean-archive) || true
 
   return 0
