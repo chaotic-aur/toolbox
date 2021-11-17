@@ -12,7 +12,7 @@ JOB_PERIOD=$((24 * 3600))
 # shellcheck disable=SC2034
 JOB_OFFSET=$((10 * 3600))
 
-export CAUR_PARALLEL=5
+export CAUR_PARALLEL=2
 
 # shellcheck source=/dev/null
 source common.sh
