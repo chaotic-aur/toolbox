@@ -218,6 +218,9 @@ function clean-archive() {
 
   [[ "$CAUR_TYPE" != 'primary' ]] && return 0
 
+  # Let's save time!
+  (clean-duplicates -q) || true
+
   if [[ ! -d "${CAUR_DEPLOY_PKGS}/../archive" ]]; then
     echo 'Non-exiting archive directory'
     return 0
