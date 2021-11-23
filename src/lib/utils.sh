@@ -97,6 +97,10 @@ function reset-fakeroot-chown() {
   return 0
 }
 
+function clean-xdg() {
+  rm -rf "/tmp/run-$(id -u)" || true
+}
+
 function send-group() {
   # group messages cannot be silenced
 

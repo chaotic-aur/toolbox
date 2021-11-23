@@ -46,6 +46,8 @@ function generic-routine() {
   local _ROUTINE _LIST _DIR _URL _PACKAGES
   _ROUTINE="$1"
 
+  clean-xdg
+
   (package-lists-sync)
 
   _LIST="${CAUR_PACKAGE_LISTS}/${CAUR_CLUSTER_NAME}/${_ROUTINE}.txt"

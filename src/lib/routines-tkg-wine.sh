@@ -2,6 +2,7 @@
 
 function routine-tkg-wine() {
   set -euo pipefail
+  clean-xdg
   iterfere-sync
   push-routine-dir 'tkg.wine'
 

@@ -150,6 +150,7 @@ function tkg-kernels-variations() {
 
 function routine-tkg-kernels() {
   set -euo pipefail
+  clean-xdg
   iterfere-sync
   push-routine-dir 'tkg.kernels' || return 12
 
