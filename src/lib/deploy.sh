@@ -98,7 +98,7 @@ function deploy() {
     fi
   done
 
-  [[ -n "${_UPLOAD_PID:-}" ]] && wait "${_UPLOAD_PID[@]}"
+  [[ -n "${_UPLOAD_PID:-}" ]] && sane-wait "${_UPLOAD_PID[@]}"
   if [[ -e '../deploy.failures' ]]; then
     echo 'Some packages failed to upload.'
     exec {_LOCK_FD}>&- # Unlock
@@ -123,7 +123,7 @@ function deploy() {
     fi
   done
 
-  [[ -n "${_UPLOAD_PID:-}" ]] && wait "${_UPLOAD_PID[@]}"
+  [[ -n "${_UPLOAD_PID:-}" ]] && sane-wait "${_UPLOAD_PID[@]}"
   if [[ -e '../deploy.failures' ]]; then
     echo 'Some signatures failed to upload.'
     exec {_LOCK_FD}>&- # Unlock

@@ -34,7 +34,7 @@ function makepwd() {
     if [[ "$_pkg" == '--' ]]; then
       echo 'Trapped, waiting jobs until here.'
       if [[ -n "${_BUILDING_PIDS[*]}" ]]; then
-        wait "${_BUILDING_PIDS[@]}" || true
+        sane-wait "${_BUILDING_PIDS[@]}" || true
       fi
       _BUILDING_PIDS=()
       echo 'Keep going...'
@@ -52,7 +52,7 @@ function makepwd() {
   done
 
   echo 'Waiting all jobs to finish'
-  wait
+  sane-wait
 
   return 0
 }
