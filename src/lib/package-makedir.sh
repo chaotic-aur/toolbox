@@ -78,10 +78,8 @@ function pipepkg() {
   (makepkg "${_pkg}" --noconfirm 2>&1 | tee "${_pkg}.log") \
     || true # we want to cleanup even if it failed
 
-  {
-    (deploy "${_pkg}" && db-bump 2>&1 | tee -a "${_pkg}.log") || true
-    (cleanup "${_pkg}" 2>&1 | tee -a "${_pkg}.log") || true
-  } &
+  (deploy "${_pkg}" && db-bump 2>&1 | tee -a "${_pkg}.log") || true
+  (cleanup "${_pkg}" 2>&1 | tee -a "${_pkg}.log") || true
 
   return 0
 }
