@@ -219,6 +219,8 @@ function makepkg-singularity() {
 
   rm-as-root "${_SANDBOX}"
 
+  $CAUR_USERNS_EXEC_CMD find "${_SRCCACHE}" -exec touch '{}' +
+
   if [[ -z "${_BUILD_FAILED}" ]]; then
     echo 'success' >'building.result'
     if [[ -f "${_INTERFERE}/on-success.sh" ]]; then
