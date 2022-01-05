@@ -2,6 +2,7 @@
 #SBATCH --job-name=hourly.2
 #SBATCH --cpus-per-task 40
 #SBATCH --mem 257500M
+#SBATCH --partition fast
 #SBATCH --nodes 1
 #SBATCH --dependency=singleton
 #SBATCH --time=02:20:00
