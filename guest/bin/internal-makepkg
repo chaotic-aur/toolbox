@@ -7,9 +7,9 @@ export USER="main-builder"
 export SHELL='/bin/bash'
 export TERM='dumb'
 
-mkdir -p /tmp/xdg-runtime
-chown "$USER":"$USER" /tmp/xdg-runtime
 export XDG_RUNTIME_DIR='/tmp/xdg-runtime'
+mkdir -p "$XDG_RUNTIME_DIR"
+chown "$USER":"$USER" "$XDG_RUNTIME_DIR"
 
 chown -R "$USER":"$USER" "${HOME}"
 chown "$USER":"$USER" '/var/pkgdest'
