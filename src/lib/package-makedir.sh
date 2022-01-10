@@ -42,7 +42,7 @@ function makepwd() {
       pipepkg "$_pkg" || true
     else
       while [[ -n "${_BUILDING_PIDS:-}" ]] \
-        && [[ $(comm -12 <(printf "%s\n" "${_BUILDING_PIDS[@]}") <(jobs -rp) | wc -l) -gt ${_MAX_JOBS} ]]; do
+        && [[ $(comm -12 <(printf "%s\n" "${_BUILDING_PIDS[@]}" | sort) <(jobs -rp | sort) | wc -l) -gt ${_MAX_JOBS} ]]; do
         sleep 1
       done
       pipepkg "$_pkg" &
