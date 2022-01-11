@@ -9,6 +9,7 @@ CAUR_INTERFERE="${HOME}/chaotic/interfere"
 CAUR_PACKAGE_LISTS="${HOME}/chaotic/packages"
 
 CAUR_ENGINE="singularity"
+CAUR_USERNS_EXEC_CMD="podman unshare"
 CAUR_SCP_STREAMS=2
 CAUR_CACHE="/tmp/chaotic"
 CAUR_CACHE_CC="${CAUR_CACHE}/cc"

@@ -260,7 +260,7 @@ function fill-dest() {
 function unfill-dest() {
   set -euo pipefail
 
-  find . -type f -empty -delete || return 28
+  $CAUR_USERNS_EXEC_CMD find . -type f -empty -delete || return 28
 
   return 0
 }
