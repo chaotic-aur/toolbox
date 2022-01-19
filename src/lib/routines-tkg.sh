@@ -109,7 +109,7 @@ function tkg-kernels-variations() {
 
   local _LINUX_LTS _LINUX_STABLE _LINUX_MARCH _VAR_SCHED _VAR_SCHED
 
-  _LINUX_LTS='5.10'
+  _LINUX_LTS='5.15'
   _LINUX_STABLE='5.16'
 
   _LINUX_SCHED=(
@@ -122,9 +122,6 @@ function tkg-kernels-variations() {
     'generic_v3'
     'generic'
   )
-
-  # RIP -CK patches
-  echo "$_LINUX_LTS" 'muqss 0' 'lts'
 
   # stable
   for _VAR_MARCH in "${_LINUX_MARCH[@]}"; do
@@ -140,6 +137,9 @@ function tkg-kernels-variations() {
   for _VAR_SCHED in "${_LINUX_SCHED[@]}" 'pds 0'; do
     echo "$_LINUX_LTS" "$_VAR_SCHED" 'lts'
   done
+
+  # RIP -CK patches
+  echo '5.10' 'muqss 0' 'lts'
 
   return 0
 }
