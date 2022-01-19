@@ -113,9 +113,7 @@ function tkg-kernels-variations() {
   _LINUX_STABLE='5.16'
 
   _LINUX_SCHED=(
-    # 'muqss 0'
     'bmq 1'
-    'cacule 0'
     'pds 0'
     'cfs 0'
   )
@@ -126,8 +124,6 @@ function tkg-kernels-variations() {
   )
 
   # RIP -CK patches
-  #echo '5.13' 'muqss 0' 'generic_v3'
-  #echo '5.13' 'muqss 0' 'generic'
   echo "$_LINUX_LTS" 'muqss 0' 'lts'
 
   # stable
@@ -138,7 +134,7 @@ function tkg-kernels-variations() {
   done
 
   # Let's try this baby
-  echo "$_LINUX_STABLE" 'cacule 0' 'generic_v3_lto'
+  echo "$_LINUX_STABLE" 'cfs 0' 'generic_v3_lto'
 
   # lts
   for _VAR_SCHED in "${_LINUX_SCHED[@]}" 'pds 0'; do
