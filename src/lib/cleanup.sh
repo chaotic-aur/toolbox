@@ -151,7 +151,7 @@ function clean-duplicates() {
     case "${_U_SURE}" in
     [yY])
       # shellcheck disable=SC2086
-      mv -v -f -t ../archive/ ${_TO_MV[*]}
+      mv -v -f -t ../archive/ "${_TO_MV[@]}"
       ;;
     esac
   fi
@@ -203,7 +203,7 @@ function clean-pkgcache() {
     case "${_U_SURE}" in
     [yY])
       # shellcheck disable=SC2086
-      rm -vf ${_TO_MV[*]}
+      rm -vf "${_TO_MV[@]}"
       ;;
     esac
   fi
