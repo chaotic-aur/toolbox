@@ -94,6 +94,7 @@ function makepkg-systemd-nspawn() {
   #shellcheck disable=SC2086
   systemd-nspawn -M "${_MECHA_NAME}" \
     -u "root" \
+    --suppress-sync=true \
     --capability=CAP_IPC_LOCK,CAP_SYS_NICE \
     -D machine/root ${_CONTAINER_ARGS:-} \
     "/home/main-builder/wizard.sh" "${@:2}" || local _BUILD_FAILED="$?"
