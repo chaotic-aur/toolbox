@@ -105,7 +105,7 @@ If at some point you see something that could be better, then please open a PR. 
 
 # Dependencies
 
-`pacman -S --needed base-devel git arch-install-scripts repoctl fuse-overlayfs rsync python-telegram-send`
+`pacman -S --needed base-devel git arch-install-scripts repoctl fuse-overlayfs rsync python-telegram-send openssh`
 
 One needs an active mirror or a setting (in /etc/chaotic.conf) like this:
 
