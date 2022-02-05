@@ -2,7 +2,7 @@
 Description=Chaotic's hourly routine
 
 [Timer]
-OnCalendar=*-*-* *:00:00
+OnCalendar=hourly
 Persistent=false
 
 [Install]
