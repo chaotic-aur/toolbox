@@ -41,7 +41,7 @@ function repoctl-sync-db() {
   fi
 
   install -o"$(whoami)" -dDm755 "$(dirname "$CAUR_REPOCTL_DB_FILE")"
-  curl -s -o "${CAUR_REPOCTL_DB_FILE}" "${CAUR_REPOCTL_DB_URL}"
+  curl -sLo "${CAUR_REPOCTL_DB_FILE}" "${CAUR_REPOCTL_DB_URL}"
 
   stee "${REPOCTL_CONFIG}" <<EOF
 [profiles.default]
