@@ -250,7 +250,7 @@ function fill-dest() {
 
   pushd 'dest'
 
-  curl -s "$CAUR_FILL_DEST" \
+  curl -Ls "$CAUR_FILL_DEST" \
     | sed 's/\//.pkg.tar.zst/g' | xargs touch
 
   popd # dest
