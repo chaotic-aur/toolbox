@@ -203,7 +203,7 @@ function clean-pkgcache() {
     case "${_U_SURE}" in
     [yY])
       # shellcheck disable=SC2086
-      rm -vf "${_TO_MV[@]}"
+      echo "${_TO_MV[@]}" | xargs rm -vf
       ;;
     esac
   fi
