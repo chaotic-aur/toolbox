@@ -35,6 +35,17 @@ function routine() {
   return 0
 }
 
+function parse-package-list() {
+  set -euo pipefail
+
+  if [[ ! -f "${1:-}" ]]; then
+    echo 'Unrecognized routine'
+    return 22
+  fi
+
+  sed -E 's/#.*//;/^\s*$/d;s/^\s+//;s/\s+$//' "$1"
+}
+
 function generic-routine() {
   set -euo pipefail
 
@@ -65,34 +76,52 @@ function generic-routine() {
   push-routine-dir "${_ROUTINE}" || return 12
 
   # non-VCS packages from AUR (download if updated)
-  parse-package-list "${_LIST}" \
-    | sed -E '/:/d;/-(git|svn|bzr|hg|nightly)$/d' \
-    | xargs --no-run-if-empty -L 200 repoctl down -u 2>&1 \
-    | tee -a _repoctl_down.log \
-    || true
+  routine_packages=$(parse-package-list "${_LIST}" | sed -E '/:/d;/-(git|svn|bzr|hg|nightly)$/d')
+  existing_packages_list=$(repoctl list)
+
+  packages_not_in_repo=""
+  packages_in_repo=""
+
+  for pkg in ${routine_packages}; do
+    if [[ "$existing_packages_list" == *"$pkg"* ]]; then
+      packages_in_repo+="$pkg "
+    else
+      packages_not_in_repo+="$pkg "
+    fi
+  done
+
+  echo "$packages_in_repo" |
+    xargs --no-run-if-empty -L 200 repoctl down -u 2>&1 |
+    tee -a _repoctl_down.log ||
+    true
+
+  echo "$packages_not_in_repo" |
+    xargs --no-run-if-empty -L 200 repoctl down 2>&1 |
+    tee -a _repoctl_down.log ||
+    true
 
   # VCS packages from AUR (always download)
-  parse-package-list "${_LIST}" \
-    | sed -E '/:/d' \
-    | sed -En '/-(git|svn|bzr|hg|nightly)$/p' \
-    | xargs --no-run-if-empty -L 200 repoctl down 2>&1 \
-    | tee -a _repoctl_down.log \
-    || true
+  parse-package-list "${_LIST}" |
+    sed -E '/:/d' |
+    sed -En '/-(git|svn|bzr|hg|nightly)$/p' |
+    xargs --no-run-if-empty -L 200 repoctl down 2>&1 |
+    tee -a _repoctl_down.log ||
+    true
 
   # PKGBUILDs hosted on git repos (always download)
-  parse-package-list "${_LIST}" \
-    | sed -En '/:/p' \
-    | while IFS=':' read -r _DIR _URL; do
-      git clone "${_URL}" "${_DIR}" \
-        | tee -a _repoctl_down.log \
-        || true
+  parse-package-list "${_LIST}" |
+    sed -En '/:/p' |
+    while IFS=':' read -r _DIR _URL; do
+      git clone "${_URL}" "${_DIR}" |
+        tee -a _repoctl_down.log ||
+        true
     done
 
   # put in background and wait, otherwise trap does not work
   _PACKAGES=()
   mapfile -t _PACKAGES < <(
-    parse-package-list "${_LIST}" \
-      | sed -E 's/\:(.*)//'
+    parse-package-list "${_LIST}" |
+      sed -E 's/\:(.*)//'
   )
   makepwd "${_PACKAGES[@]}" &
   sane-wait "$!" || true
@@ -104,17 +133,6 @@ function generic-routine() {
   (clean-archive) || true
 
   return 0
-}
-
-function parse-package-list() {
-  set -euo pipefail
-
-  if [[ ! -f "${1:-}" ]]; then
-    echo 'Unrecognized routine'
-    return 22
-  fi
-
-  sed -E 's/#.*//;/^\s*$/d;s/^\s+//;s/\s+$//' "$1"
 }
 
 function push-routine-dir() {
