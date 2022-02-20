@@ -80,7 +80,7 @@ function generic-routine() {
   existing_packages_list=$(repoctl list)
 
   packages_not_in_repo=$(comm -13 <(sort -u <(echo "$existing_packages_list" | tr " " "\n")) <(sort -u <(echo "$routine_packages" | tr " " "\n")))
-  packages_in_repo=$(comm -23 <(sort -u <(echo "$existing_packages_list" | tr " " "\n")) <(sort -u <(echo "$routine_packages" | tr " " "\n")))
+  packages_in_repo=$(comm -12 <(sort -u <(echo "$existing_packages_list" | tr " " "\n")) <(sort -u <(echo "$routine_packages" | tr " " "\n")))
 
   echo "$packages_in_repo" |
     xargs --no-run-if-empty -L 200 repoctl down -u 2>&1 |
