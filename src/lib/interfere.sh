@@ -9,8 +9,8 @@ function interference-apply() {
   interference-generic "${_PKGTAG}"
 
   # shellcheck source=/dev/null
-  [[ -f "${_INTERFERE}/prepare" ]] \
-    && source "${_INTERFERE}/prepare"
+  [[ -f "${_INTERFERE}/prepare" ]] &&
+    source "${_INTERFERE}/prepare"
 
   if [[ -f "${_INTERFERE}/interfere.patch" ]]; then
     if patch -Np1 <"${_INTERFERE}/interfere.patch"; then
@@ -28,8 +28,8 @@ function interference-apply() {
     echo "$_PKGBUILD" >>PKGBUILD
   fi
 
-  [[ -f "${_INTERFERE}/PKGBUILD.append" ]] \
-    && cat "${_INTERFERE}/PKGBUILD.append" >>PKGBUILD
+  [[ -f "${_INTERFERE}/PKGBUILD.append" ]] &&
+    cat "${_INTERFERE}/PKGBUILD.append" >>PKGBUILD
 
   return 0
 }

@@ -49,8 +49,8 @@ function db-bump() {
 
   {
     if [[ "${CAUR_DATABASE_BUMPER:-}" == 'repoctl' ]]; then
-      repoctl update -r \
-        && db-last-bump && db-pkglist
+      repoctl update -r &&
+        db-last-bump && db-pkglist
 
     else
       if [[ ! -f "$CAUR_CHECKPOINT" ]]; then
@@ -61,10 +61,10 @@ function db-bump() {
       _NEW_SIGS="$(find ./*.sig -newer "$CAUR_CHECKPOINT")" || true
 
       if [[ -n "${_NEW_SIGS:-}" ]]; then
-        echo "$_NEW_SIGS" \
-          | grep -Po '.*(?:-(?:[^-]*)){3}\.pkg\.tar(?:\.xz|\.zst)?(?=\.sig)' \
-          | xargs repo-add "$_DB_FILE" \
-          && db-last-bump && db-pkglist && touch -d "$_RUN_TIME" "$CAUR_CHECKPOINT"
+        echo "$_NEW_SIGS" |
+          grep -Po '.*(?:-(?:[^-]*)){3}\.pkg\.tar(?:\.xz|\.zst)?(?=\.sig)' |
+          xargs repo-add "$_DB_FILE" &&
+          db-last-bump && db-pkglist && touch -d "$_RUN_TIME" "$CAUR_CHECKPOINT"
       fi
     fi
   } || true
@@ -89,8 +89,8 @@ function db-pkglist() {
 
   pushd "${CAUR_DEPLOY_PKGS}"
   if (tar -tv --zstd \
-    -f "${CAUR_DB_NAME}.db.${CAUR_DB_EXT}" \
-    | awk '/^d/{print $6}' >../pkgs.txt); then
+    -f "${CAUR_DB_NAME}.db.${CAUR_DB_EXT}" |
+    awk '/^d/{print $6}' >../pkgs.txt); then
 
     if [[ -e ../pkgs.files.txt ]]; then
       mv ../pkgs.files.txt ../pkgs.files.old.txt
@@ -99,9 +99,9 @@ function db-pkglist() {
     ls -- *.pkg.* >../pkgs.files.txt
 
     if [[ -e ../pkgs.files.old.txt ]]; then
-      diff ../pkgs.files.old.txt ../pkgs.files.txt \
-        | grep '^[\<\>]' \
-        | send-log --stdin --pre
+      diff ../pkgs.files.old.txt ../pkgs.files.txt |
+        grep '^[\<\>]' |
+        send-log --stdin --pre
     fi
 
     echo "Database's package list dumped"
@@ -184,8 +184,8 @@ function remove-notify() {
   _AUTHOR="${CAUR_MAINTAINER}@$CAUR_DEPLOY_LABEL"
 
   send-log --format markdown \
-    "${_AUTHOR} just removed \`$*\`" \
-    || true
+    "${_AUTHOR} just removed \`$*\`" ||
+    true
 
   return 0
 }

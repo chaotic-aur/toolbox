@@ -113,15 +113,15 @@ function makepkg-systemd-nspawn() {
     fi
   fi
 
-  umount -Rv machine/root \
-    && rm --one-file-system -rf machine
+  umount -Rv machine/root &&
+    rm --one-file-system -rf machine
 
   rm 'building.pid'
   exec {_LOCK_FD}>&- # Unlock
 
   popd # "${_INPUTDIR}"
-  [[ -n "${_BUILD_FAILED}" ]] \
-    && return ${_BUILD_FAILED}
+  [[ -n "${_BUILD_FAILED}" ]] &&
+    return ${_BUILD_FAILED}
   return 0
 }
 
@@ -240,8 +240,8 @@ function makepkg-singularity() {
   exec {_LOCK_FD}>&- # Unlock
 
   popd # "${_INPUTDIR}"
-  [[ -n "${_BUILD_FAILED}" ]] \
-    && return ${_BUILD_FAILED}
+  [[ -n "${_BUILD_FAILED}" ]] &&
+    return ${_BUILD_FAILED}
   return 0
 }
 
@@ -250,8 +250,8 @@ function fill-dest() {
 
   pushd 'dest'
 
-  curl -Ls "$CAUR_FILL_DEST" \
-    | sed 's/\//.pkg.tar.zst/g' | xargs touch
+  curl -Ls "$CAUR_FILL_DEST" |
+    sed 's/\//.pkg.tar.zst/g' | xargs touch
 
   popd # dest
 

@@ -47,9 +47,9 @@ function cleanup() {
     fi
   fi
 
-  if [[ "$CAUR_CLEAN_ONLY_DEPLOYED" == '1' ]] \
-    && { [[ ! -f 'building.result' ]] \
-      || [[ "$(cat building.result)" != 'deployed' ]]; }; then
+  if [[ "$CAUR_CLEAN_ONLY_DEPLOYED" == '1' ]] &&
+    { [[ ! -f 'building.result' ]] ||
+      [[ "$(cat building.result)" != 'deployed' ]]; }; then
     popd               # _INPUTDIR
     exec {_LOCK_FD}>&- # Unlock
     return 0
@@ -123,19 +123,19 @@ function clean-duplicates() {
 
   _DUPLICATED=$(
     # shellcheck disable=SC2010
-    ls \
-      | grep -Po "^(.*)(?=(?:(?:-[^-]*){3}\.pkg\.tar(?>\.xz|\.zst)?)\.sig$)" \
-      | uniq -d
+    ls |
+      grep -Po "^(.*)(?=(?:(?:-[^-]*){3}\.pkg\.tar(?>\.xz|\.zst)?)\.sig$)" |
+      uniq -d
   )
 
   if [[ -z "${_DUPLICATED}" ]]; then
     echo "No duplicate packages were found!"
   else
     _TO_MV=$(
-      echo "${_DUPLICATED[@]}" \
-        | awk '{print "find -name \""$1"*\" -printf \"%T@ %p\\n\" | sort -n | grep -Po \"\\.\\/"$1"(((-[^-]*){3}\\.pkg\\.tar(?>\\.xz|\\.zst)?))\\.sig$\" | head -n -1;"}' \
-        | bash \
-        | awk '{sub(/\.sig$/,"");print $1"\n"$1".sig"}'
+      echo "${_DUPLICATED[@]}" |
+        awk '{print "find -name \""$1"*\" -printf \"%T@ %p\\n\" | sort -n | grep -Po \"\\.\\/"$1"(((-[^-]*){3}\\.pkg\\.tar(?>\\.xz|\\.zst)?))\\.sig$\" | head -n -1;"}' |
+        bash |
+        awk '{sub(/\.sig$/,"");print $1"\n"$1".sig"}'
     )
 
     echo "[!] Moving:"
@@ -175,19 +175,19 @@ function clean-pkgcache() {
 
   _DUPLICATED=$(
     # shellcheck disable=SC2010
-    ls \
-      | grep -Po "^(.*)(?=(?:(?:-[^-]*){3}\.pkg\.tar(?>\.xz|\.zst)?)$)" \
-      | uniq -d
+    ls |
+      grep -Po "^(.*)(?=(?:(?:-[^-]*){3}\.pkg\.tar(?>\.xz|\.zst)?)$)" |
+      uniq -d
   )
 
   if [[ -z "${_DUPLICATED}" ]]; then
     echo "No duplicate packages were found!"
   else
     _TO_MV=$(
-      echo "${_DUPLICATED[@]}" \
-        | awk '{print "find -name \""$1"*\" -printf \"%T@ %p\\n\" | sort -n | grep -Po \"\\.\\/"$1"(((-[^-]*){3}\\.pkg\\.tar(?>\\.xz|\\.zst)?))$\" | head -n -1;"}' \
-        | bash \
-        | awk '{print $1"\n"$1".sig"}'
+      echo "${_DUPLICATED[@]}" |
+        awk '{print "find -name \""$1"*\" -printf \"%T@ %p\\n\" | sort -n | grep -Po \"\\.\\/"$1"(((-[^-]*){3}\\.pkg\\.tar(?>\\.xz|\\.zst)?))$\" | head -n -1;"}' |
+        bash |
+        awk '{print $1"\n"$1".sig"}'
     )
 
     echo "[!] Deleting:"

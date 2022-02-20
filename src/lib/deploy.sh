@@ -50,8 +50,8 @@ function deploy() {
     echo 'A signing key is required for deploying.'
     exec {_LOCK_FD}>&- # Unlock
     return 17
-  elif [[ ! -e "${_RESULT}" ]] \
-    || [[ "$(cat "${_RESULT}")" != 'success' ]]; then
+  elif [[ ! -e "${_RESULT}" ]] ||
+    [[ "$(cat "${_RESULT}")" != 'success' ]]; then
     echo 'Invalid package, last build did not succeed, or already deployed.'
     exec {_LOCK_FD}>&- # Unlock
     return 18
@@ -175,8 +175,8 @@ function deploy-notify() {
   [[ "${CAUR_IN_ROUTINE:-0}" != '1' ]] && _AUTHOR="${CAUR_MAINTAINER}@$CAUR_DEPLOY_LABEL"
 
   send-log --format markdown \
-    "${_AUTHOR} just deployed \`${_PKGTAG}\` successfully!" \
-    || true
+    "${_AUTHOR} just deployed \`${_PKGTAG}\` successfully!" ||
+    true
 
   return 0
 }

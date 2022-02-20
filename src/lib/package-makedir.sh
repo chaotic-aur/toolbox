@@ -41,8 +41,8 @@ function makepwd() {
     elif [[ "${_MAX_JOBS}" == '1' ]]; then
       pipepkg "$_pkg" || true
     else
-      while [[ -n "${_BUILDING_PIDS:-}" ]] \
-        && [[ $(comm -12 <(printf "%s\n" "${_BUILDING_PIDS[@]}" | sort) <(jobs -rp | sort) | wc -l) -gt ${_MAX_JOBS} ]]; do
+      while [[ -n "${_BUILDING_PIDS:-}" ]] &&
+        [[ $(comm -12 <(printf "%s\n" "${_BUILDING_PIDS[@]}" | sort) <(jobs -rp | sort) | wc -l) -gt ${_MAX_JOBS} ]]; do
         sleep 1
       done
       pipepkg "$_pkg" &
@@ -75,8 +75,8 @@ function pipepkg() {
   fi
 
   echo "Starting making ${_pkg}"
-  (makepkg "${_pkg}" --noconfirm 2>&1 | tee "${_pkg}.log") \
-    || true # we want to cleanup even if it failed
+  (makepkg "${_pkg}" --noconfirm 2>&1 | tee "${_pkg}.log") ||
+    true # we want to cleanup even if it failed
 
   (deploy "${_pkg}" && db-bump 2>&1 | tee -a "${_pkg}.log") || true
   (cleanup "${_pkg}" 2>&1 | tee -a "${_pkg}.log") || true
