@@ -79,16 +79,8 @@ function generic-routine() {
   routine_packages=$(parse-package-list "${_LIST}" | sed -E '/:/d;/-(git|svn|bzr|hg|nightly)$/d')
   existing_packages_list=$(repoctl list)
 
-  packages_not_in_repo=""
-  packages_in_repo=""
-
-  for pkg in ${routine_packages}; do
-    if [[ "$existing_packages_list" == *"$pkg"* ]]; then
-      packages_in_repo+="$pkg "
-    else
-      packages_not_in_repo+="$pkg "
-    fi
-  done
+  packages_not_in_repo=$(comm -13 <(sort -u <(echo "$existing_packages_list" | tr " " "\n")) <(sort -u <(echo "$routine_packages" | tr " " "\n")))
+  packages_in_repo=$(comm -23 <(sort -u <(echo "$existing_packages_list" | tr " " "\n")) <(sort -u <(echo "$routine_packages" | tr " " "\n")))
 
   echo "$packages_in_repo" |
     xargs --no-run-if-empty -L 200 repoctl down -u 2>&1 |
