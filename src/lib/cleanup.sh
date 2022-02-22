@@ -151,7 +151,7 @@ function clean-duplicates() {
     case "${_U_SURE}" in
     [yY])
       # shellcheck disable=SC2086
-      mv -v -f -t ../archive/ "${_TO_MV[@]}"
+      echo "${_TO_MV[@]}" | xargs mv -v -f -t ../archive/
       ;;
     esac
   fi
