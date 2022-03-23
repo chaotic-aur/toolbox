@@ -110,7 +110,7 @@ function tkg-kernels-variations() {
   local _LINUX_LTS _LINUX_STABLE _LINUX_MARCH _VAR_SCHED _VAR_SCHED
 
   _LINUX_LTS='5.15'
-  _LINUX_STABLE='5.16'
+  _LINUX_STABLE='5.17'
 
   _LINUX_SCHED=(
     'bmq 1'
