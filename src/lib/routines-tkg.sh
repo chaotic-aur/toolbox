@@ -49,7 +49,7 @@ function tkg-kernel-variate() {
   _LTO_MODE=''
   if [ "${_LTO}" == '1' ]; then
     _COMPILER='llvm'
-    _LTO_MODE='full'
+    _LTO_MODE='thin'
   fi
 
   sed -i'' "
