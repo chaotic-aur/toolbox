@@ -125,7 +125,12 @@ function sort-logs() {
     return 0
   fi
 
-  local CAUR_CACHE="mktemp /tmp/chaotic/logs-XXXXXXXXXX"
+  local CAUR_CACHE="$(mktemp '/tmp/chaotic/logs-XXXXXXXXXX')"
+  
+  if ![[ -d "$CAUR_CACHE" ]]; then
+     echo 'It was not possible to create a temporary directory for this action.'
+     return 62 # Nico, find the next number, and put it here, I lost count already.
+  fi
 
   function cleanup-logs()
   {
