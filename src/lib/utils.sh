@@ -125,9 +125,9 @@ function sort-logs() {
     return 0
   fi
 
-  local CAUR_CACHE="$(mktemp '/tmp/chaotic/logs-XXXXXXXXXX')"
+  local CAUR_LOG_CACHE="$(mktemp '/tmp/chaotic/logs-XXXXXXXXXX')"
   
-  if ![[ -d "$CAUR_CACHE" ]]; then
+  if ![[ -d "$CAUR_LOG_CACHE" ]]; then
      echo 'It was not possible to create a temporary directory for this action.'
      return 62 # Nico, find the next number, and put it here, I lost count already.
   fi
@@ -148,7 +148,7 @@ function sort-logs() {
   cleanup-logs "A package has already been built."
   cleanup-logs "Finished making:"
 
-  mkdir -p "$CAUR_CACHE"/logs/{partly-built,source-changed,misc,checksums,build-failed,dep-not-in-repo,dep-runtime,space-missing}
+  mkdir -p "$CAUR_LOG_CACHE"/logs/{partly-built,source-changed,misc,checksums,build-failed,dep-not-in-repo,dep-runtime,space-missing}
 
   move-logs "Part of the package group has already been built." "partly-build"
   move-logs "is not a clone of" "source-changed"
@@ -162,5 +162,5 @@ function sort-logs() {
 
   # We don't want to have already fixed logs in there
   rm -r "$CAUR_DEPLOY_LOGS_FILTERED"
-  mv "$CAUR_CACHE"/logs "$CAUR_DEPLOY_LOGS_FILTERED"
+  mv "$CAUR_LOG_CACHE"/logs "$CAUR_DEPLOY_LOGS_FILTERED"
 }
