@@ -117,7 +117,7 @@ function send-log() {
   return 0
 }
 
-function sort-logs() {
+function sort-logs() (
   set -euo pipefail
 
   if [[ "$CAUR_TYPE" != 'primary' ]]; then
@@ -133,14 +133,14 @@ function sort-logs() {
   fi
 
   function cleanup-logs()
-  (
+  {
       for i in *; do grep "$1" "$i" && rm "$i"; done
-  )
+  }
 
   function move-logs()
-  (
+  {
       for i in *; do grep "$1" "$i" && mv "$i" "$2"; done
-  )
+  }
 
   cp -ar "$CAUR_DEPLOY_LOGS" "$CAUR_LOG_CACHE" && cd "$CAUR_LOG_CACHE"/logs
 
@@ -163,4 +163,4 @@ function sort-logs() {
   # We don't want to have already fixed logs in there
   rm -r "$CAUR_DEPLOY_LOGS_FILTERED"
   mv "$CAUR_LOG_CACHE"/logs "$CAUR_DEPLOY_LOGS_FILTERED"
-}
+)
