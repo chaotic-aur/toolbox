@@ -1,4 +1,4 @@
-2#!/usr/bin/env bash
+#!/usr/bin/env bash
 # shellcheck disable=SC2034,SC2164
 
 pushd() { command pushd "$@" >/dev/null; }
