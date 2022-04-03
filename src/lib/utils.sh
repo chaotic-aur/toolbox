@@ -133,14 +133,14 @@ function sort-logs() {
   fi
 
   function cleanup-logs()
-  {
+  (
       for i in *; do grep "$1" "$i" && rm "$i"; done
-  }
+  )
 
   function move-logs()
-  {
+  (
       for i in *; do grep "$1" "$i" && mv "$i" "$2"; done
-  }
+  )
 
   cp -ar "$CAUR_DEPLOY_LOGS" "$CAUR_LOG_CACHE" && cd "$CAUR_LOG_CACHE"/logs
 
