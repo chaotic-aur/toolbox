@@ -118,7 +118,13 @@ function send-log() {
 }
 
 function sort-logs() {
+
   set -euo pipefail
+
+  if [[ "$CAUR_TYPE" != 'primary' ]]; then
+    echo 'Only primary node can do this action.'
+    return 19
+  fi
 
   local CAUR_CACHE="mktemp /tmp/chaotic/logs-XXXXXXXXXX"
 
