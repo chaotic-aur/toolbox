@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+2#!/usr/bin/env bash
 # shellcheck disable=SC2034,SC2164
 
 pushd() { command pushd "$@" >/dev/null; }
@@ -29,11 +29,11 @@ CAUR_CHECKPOINT="${CAUR_CACHE}/checkpoint"
 CAUR_DEPLOY_HOST='builds.garudalinux.org'
 CAUR_DEPLOY_PKGS="/srv/http/repos/${CAUR_DB_NAME}/x86_64"
 CAUR_DEPLOY_LOGS="/srv/http/repos/${CAUR_DB_NAME}/logs"
+CAUR_DEPLOY_LOGS_FILTERED="$CAUR_DEPLOY_LOGS/filtered"
 CAUR_DEPLOY_LAST="/srv/http/repos/${CAUR_DB_NAME}/lastupdate"
 CAUR_USERNS_EXEC_CMD="podman unshare"
 CAUR_ENGINE="systemd-nspawn"
 CAUR_FILL_DEST='https://builds.garudalinux.org/repos/chaotic-aur/pkgs.files.txt'
-CAUR_FILTERED_LOGS="$CAUR_DEPLOY_LOGS/filtered"
 CAUR_GPG_PATH="/usr/bin/gpg"
 CAUR_LIB="${CAUR_PREFIX}/lib/chaotic"
 CAUR_GUEST="${CAUR_LIB}/guest"

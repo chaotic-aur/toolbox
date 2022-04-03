@@ -120,37 +120,37 @@ function send-log() {
 function sort-logs() {
   set -euo pipefail
 
-  local CAUR_CACHE=="/tmp/chaotic/"
+  local CAUR_CACHE="mktemp /tmp/chaotic/logs-XXXXXXXXXX"
 
-  function cleanlogs
+  function cleanup-logs()
   {
-      for i in *; do cat "$i" | grep "$1" && rm "$i"; done
+      for i in *; do grep "$1" "$i" && rm "$i"; done
   }
 
-  function movelogs
+  function move-logs()
   {
-      for i in *; do cat "$i" | grep "$1" && mv "$i" "$2"; done
+      for i in *; do grep "$1" "$i" && mv "$i" "$2"; done
   }
 
-  cp -ar "$CAUR_DEPLOY_LOGS" "$CAUR_CACHE=" && cd "$CAUR_CACHE="/logs || exit
+  cp -ar "$CAUR_DEPLOY_LOGS" "$CAUR_CACHE" && cd "$CAUR_CACHE"/logs
 
-  cleanlogs "The package group has already been built."
-  cleanlogs "A package has already been built."
-  cleanlogs "Finished making:"
+  cleanup-logs "The package group has already been built."
+  cleanup-logs "A package has already been built."
+  cleanup-logs "Finished making:"
 
-  mkdir -p $CAUR_CACHE=/logs/{partly-built,source-changed,misc,checksums,build-failed,dep-not-in-repo,dep-runtime,space-missing}
+  mkdir -p "$CAUR_CACHE"/logs/{partly-built,source-changed,misc,checksums,build-failed,dep-not-in-repo,dep-runtime,space-missing}
 
-  movelogs "Part of the package group has already been built." "partly-build"
-  movelogs "is not a clone of" "source-changed"
-  movelogs "One or more files did not pass the validity check!" "checksums"
-  movelogs "error: target not found:" "dep-not-in-repo"
-  movelogs "not found, tried pkgconfig" "dep-runtime"
-  movelogs "No space left on device" "space-missing"
-  movelogs "build stopped: subcommand failed." "build-failed"
+  move-logs "Part of the package group has already been built." "partly-build"
+  move-logs "is not a clone of" "source-changed"
+  move-logs "One or more files did not pass the validity check!" "checksums"
+  move-logs "error: target not found:" "dep-not-in-repo"
+  move-logs "not found, tried pkgconfig" "dep-runtime"
+  move-logs "No space left on device" "space-missing"
+  move-logs "build stopped: subcommand failed." "build-failed"
 
   mv ./*.log misc 
 
   # We don't want to have already fixed logs in there
-  rm -r "$CAUR_FILTERED_LOGS"
-  mv $CAUR_CACHE=/logs "$CAUR_FILTERED_LOGS"
+  rm -r "$CAUR_DEPLOY_LOGS_FILTERED"
+  mv "$CAUR_CACHE"/logs "$CAUR_DEPLOY_LOGS_FILTERED"
 }
