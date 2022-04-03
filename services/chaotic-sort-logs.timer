@@ -1,0 +1,9 @@
+[Unit]
+Description=Chaotic's automatic log sorting utility
+
+[Timer]
+OnCalendar=hourly
+Persistent=false
+
+[Install]
+WantedBy=timers.target
