@@ -142,7 +142,7 @@ function sort-logs() {
       for i in *; do grep "$1" "$i" && mv "$i" "$2"; done
   }
 
-  cp -ar "$CAUR_DEPLOY_LOGS" "$CAUR_CACHE" && cd "$CAUR_CACHE"/logs
+  cp -ar "$CAUR_DEPLOY_LOGS" "$CAUR_LOG_CACHE" && cd "$CAUR_LOG_CACHE"/logs
 
   cleanup-logs "The package group has already been built."
   cleanup-logs "A package has already been built."
