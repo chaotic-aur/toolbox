@@ -77,14 +77,14 @@ object-keys@^1.0.12:
   resolved "https://registry.yarnpkg.com/object-keys/-/object-keys-1.1.1.tgz#1c47f272df277f3b1daf061677d9c82e2322c60e"
   integrity sha512-NuAESUOUMrlIXOfHKzD6bpPu3tYt3xvjNdRIQ+FeT0lNb4K8WR70CaDxhuNguS2XG+GjkyMwOzsN5ZktImfhLA==
 
-prettier-plugin-sh@^0.6.0:
+prettier-plugin-sh@^0.6.1:
   version "0.6.1"
   resolved "https://registry.yarnpkg.com/prettier-plugin-sh/-/prettier-plugin-sh-0.6.1.tgz#094d1d190f0d8a53bfd522a68f17a95ca741047d"
   integrity sha512-Weelg53FBb1Z5Q1/GpQIb4s//BdhmPAABjJfe6VTQ3m8upQjM36sVVboNOUVvYn3K+LMwzW4vkxhqLQ+vvfBKQ==
   dependencies:
     mvdan-sh "^0.5.0"
 
-prettier@^2.3.0:
+prettier@^2.6.2:
   version "2.6.2"
   resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.6.2.tgz#e26d71a18a74c3d0f0597f55f01fb6c06c206032"
   integrity sha512-PkUpF+qoXTqhOeWL9fu7As8LXsIUZ1WYaJiY/a7McAQzxjk82OF0tibkFXVCDImZtWxbvojFjerkiLb0/q8mew==
