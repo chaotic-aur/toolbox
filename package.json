@@ -1,7 +1,8 @@
 {
   "devDependencies": {
-    "prettier": "^2.3.0",
-    "prettier-plugin-sh": "^0.6.0"
+    "prettier": "^2.6.2",
+    "prettier-plugin-sh": "^0.6.1",
+    "shellcheck": "^1.1.0"
   },
   "scripts": {
     "lint": "prettier --check . && shellcheck src/*.sh src/lib/*.sh guest/bin/* slurm-jobs/*/*.sh",
