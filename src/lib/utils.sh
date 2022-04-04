@@ -127,20 +127,18 @@ function sort-logs() (
 
   local CAUR_LOG_CACHE
   CAUR_LOG_CACHE="$(mktemp '/tmp/chaotic/logs-XXXXXXXXXX')"
-  
+
   if ! [[ -d "$CAUR_LOG_CACHE" ]]; then
-     echo 'It was not possible to create a temporary directory for this action.'
-     return 62 # Nico, find the next number, and put it here, I lost count already.
+    echo 'It was not possible to create a temporary directory for this action.'
+    return 62 # Nico, find the next number, and put it here, I lost count already.
   fi
 
-  function cleanup-logs()
-  {
-      for i in *; do grep "$1" "$i" && rm "$i"; done
+  function cleanup-logs() {
+    for i in *; do grep "$1" "$i" && rm "$i"; done
   }
 
-  function move-logs()
-  {
-      for i in *; do grep "$1" "$i" && mv "$i" "$2"; done
+  function move-logs() {
+    for i in *; do grep "$1" "$i" && mv "$i" "$2"; done
   }
 
   cp -ar "$CAUR_DEPLOY_LOGS" "$CAUR_LOG_CACHE" && cd "$CAUR_LOG_CACHE"/logs
@@ -159,7 +157,7 @@ function sort-logs() (
   move-logs "No space left on device" "space-missing"
   move-logs "build stopped: subcommand failed." "build-failed"
 
-  mv ./*.log misc 
+  mv ./*.log misc
 
   # We don't want to have already fixed logs in there
   rm -r "$CAUR_DEPLOY_LOGS_FILTERED"

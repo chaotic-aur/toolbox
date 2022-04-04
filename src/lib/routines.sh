@@ -82,38 +82,38 @@ function generic-routine() {
   packages_not_in_repo=$(comm -13 <(sort -u <(echo "$existing_packages_list" | tr " " "\n")) <(sort -u <(echo "$routine_packages" | tr " " "\n")))
   packages_in_repo=$(comm -12 <(sort -u <(echo "$existing_packages_list" | tr " " "\n")) <(sort -u <(echo "$routine_packages" | tr " " "\n")))
 
-  echo "$packages_in_repo" |
-    xargs --no-run-if-empty -L 200 repoctl down -u 2>&1 |
-    tee -a _repoctl_down.log ||
-    true
+  echo "$packages_in_repo" \
+    | xargs --no-run-if-empty -L 200 repoctl down -u 2>&1 \
+    | tee -a _repoctl_down.log \
+    || true
 
-  echo "$packages_not_in_repo" |
-    xargs --no-run-if-empty -L 200 repoctl down 2>&1 |
-    tee -a _repoctl_down.log ||
-    true
+  echo "$packages_not_in_repo" \
+    | xargs --no-run-if-empty -L 200 repoctl down 2>&1 \
+    | tee -a _repoctl_down.log \
+    || true
 
   # VCS packages from AUR (always download)
-  parse-package-list "${_LIST}" |
-    sed -E '/:/d' |
-    sed -En '/-(git|svn|bzr|hg|nightly)$/p' |
-    xargs --no-run-if-empty -L 200 repoctl down 2>&1 |
-    tee -a _repoctl_down.log ||
-    true
+  parse-package-list "${_LIST}" \
+    | sed -E '/:/d' \
+    | sed -En '/-(git|svn|bzr|hg|nightly)$/p' \
+    | xargs --no-run-if-empty -L 200 repoctl down 2>&1 \
+    | tee -a _repoctl_down.log \
+    || true
 
   # PKGBUILDs hosted on git repos (always download)
-  parse-package-list "${_LIST}" |
-    sed -En '/:/p' |
-    while IFS=':' read -r _DIR _URL; do
-      git clone "${_URL}" "${_DIR}" |
-        tee -a _repoctl_down.log ||
-        true
+  parse-package-list "${_LIST}" \
+    | sed -En '/:/p' \
+    | while IFS=':' read -r _DIR _URL; do
+      git clone "${_URL}" "${_DIR}" \
+        | tee -a _repoctl_down.log \
+        || true
     done
 
   # put in background and wait, otherwise trap does not work
   _PACKAGES=()
   mapfile -t _PACKAGES < <(
-    parse-package-list "${_LIST}" |
-      sed -E 's/\:(.*)//'
+    parse-package-list "${_LIST}" \
+      | sed -E 's/\:(.*)//'
   )
   makepwd "${_PACKAGES[@]}" &
   sane-wait "$!" || true
