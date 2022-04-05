@@ -160,6 +160,8 @@ function sort-logs() (
   mv ./*.log misc
 
   # We don't want to have already fixed logs in there
-  rm -r "$CAUR_DEPLOY_LOGS_FILTERED"
+  if [[ -d "$CAUR_DEPLOY_LOGS_FILTERED" ]]; then
+    rm -r "$CAUR_DEPLOY_LOGS_FILTERED"
+  fi
   mv "$CAUR_LOG_CACHE"/logs "$CAUR_DEPLOY_LOGS_FILTERED"
 )
