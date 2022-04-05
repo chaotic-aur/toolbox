@@ -126,9 +126,9 @@ function sort-logs() (
   fi
 
   local CAUR_LOG_CACHE
-  CAUR_LOG_CACHE="$(mktemp '/tmp/chaotic/logs-XXXXXXXXXX')"
+  CAUR_LOG_CACHE="$(mktemp '/tmp/chaotic/logs-XXXXXXXXXX' || true)"
 
-  if ! [[ -d "$CAUR_LOG_CACHE" ]]; then
+  if [[ -z "$CAUR_LOG_CACHE" ]] || [[ ! -d "$CAUR_LOG_CACHE" ]]; then
     echo 'It was not possible to create a temporary directory for this action.'
     return 38
   fi
