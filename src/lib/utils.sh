@@ -142,7 +142,7 @@ function sort-logs() (
   }
 
   for candidate in "${candidates[@]}"; do
-    symlink-logs "$candidate" "Part of the package group has already been built." "partly-build" \
+    symlink-logs "$candidate" "Part of the package group has already been built." "partly-built" \
       || symlink-logs "$candidate" "is not a clone of" "source-changed" \
       || symlink-logs "$candidate" "One or more files did not pass the validity check!" "checksums" \
       || symlink-logs "$candidate" "error: target not found:" "dep-not-in-repo" \
