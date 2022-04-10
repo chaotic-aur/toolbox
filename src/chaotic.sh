@@ -29,6 +29,7 @@ CAUR_CHECKPOINT="${CAUR_CACHE}/checkpoint"
 CAUR_DEPLOY_HOST='builds.garudalinux.org'
 CAUR_DEPLOY_PKGS="/srv/http/repos/${CAUR_DB_NAME}/x86_64"
 CAUR_DEPLOY_LOGS="/srv/http/repos/${CAUR_DB_NAME}/logs"
+CAUR_DEPLOY_LOGS_FILTERED="$CAUR_DEPLOY_LOGS/filtered"
 CAUR_DEPLOY_LAST="/srv/http/repos/${CAUR_DB_NAME}/lastupdate"
 CAUR_USERNS_EXEC_CMD="podman unshare"
 CAUR_ENGINE="systemd-nspawn"
@@ -39,7 +40,8 @@ CAUR_GUEST="${CAUR_LIB}/guest"
 CAUR_LOWER_DIR="${CAUR_CACHE}/lower"
 CAUR_LOWER_PKGS=(base base-devel)
 CAUR_OVERLAY_TYPE='kernel'
-CAUR_ROUTINES='/tmp/chaotic/routines'
+CAUR_TEMP='/tmp/chaotic'
+CAUR_ROUTINES="${CAUR_TEMP}/routines"
 CAUR_SANDBOX='' # singularity only
 CAUR_SIGN_KEY=''
 CAUR_SIGN_USER='root' # who owns the key in gnupg's keyring.
@@ -168,6 +170,9 @@ function main() {
     ;;
   'send-log' | 'al')
     send-log "${@:2}"
+    ;;
+  'sort-logs' | 'srt')
+    sort-logs "${@:2}"
     ;;
   'whoami')
     echo "#$UID or ${USER:-$(whoami)}, identified as ${CAUR_MAINTAINER} at \"$CAUR_DEPLOY_LABEL\"."

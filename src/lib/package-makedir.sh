@@ -23,7 +23,7 @@ function makepwd() {
       echo "Skipping \"${_pkg}\", not a directory."
       continue
     elif [[ ! -f "${_pkg}/PKGBUILD" ]]; then
-      echo "Skipping \"${_pkg}\", does not contains a PKGBUILD."
+      echo "Skipping \"${_pkg}\", does not contain a PKGBUILD."
       continue
     fi
     (prepare "${_pkg}") || true # we want build to continue even if one pkg failed

@@ -1,0 +1,11 @@
+[Unit]
+Description=Chaotic's automatic log sorting utility
+
+[Service]
+User=root
+Group=chaotic_op
+WorkingDirectory=/tmp
+ExecStart=/usr/local/bin/chaotic sort-logs
+
+[Install]
+WantedBy=multi-user.target

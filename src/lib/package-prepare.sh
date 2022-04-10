@@ -15,7 +15,7 @@ function prepare() {
     echo "Package already was prepared."
     return 0
   elif [[ ! -e "${_PKGDIR}/PKGBUILD" ]]; then
-    echo "Invalid parameter, \"${_PKGDIR}\" does not contains a PKGBUILD."
+    echo "Invalid parameter, \"${_PKGDIR}\" does not contain a PKGBUILD."
     return 10
   fi
 

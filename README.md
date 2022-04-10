@@ -81,6 +81,10 @@ If at some point you see something that could be better, then please open a PR. 
 
   Removes cached sources from a specific package.
 
+- `chaotic {srt,sort-logs}`
+
+  Unclutters and sorts the raw log directory into easy to read subcategories
+
 ## Involved directories
 
 - `/var/cache/chaotic/sources/${PACKAGETAG}`
