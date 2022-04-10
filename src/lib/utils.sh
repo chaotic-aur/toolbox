@@ -132,7 +132,7 @@ function sort-logs() (
   mkdir -p "${CAUR_DEPLOY_LOGS_FILTERED}"/{partly-built,source-changed,misc,checksums,build-failed,dep-not-in-repo,dep-runtime,space-missing}
 
   # Find all candidate files, excluding successful packages
-  mapfile candidates < <(find "${CAUR_DEPLOY_LOGS}" -maxdepth 1 -type f -exec grep -LFe "The package group has already been built." -e "A package has already been built." -e "Finished making:" {} \;)
+  mapfile -t candidates < <(find "${CAUR_DEPLOY_LOGS}" -maxdepth 1 -type f -exec grep -LFe "The package group has already been built." -e "A package has already been built." -e "Finished making:" {} \;)
 
   function symlink-logs() {
     set -euo pipefail
@@ -142,13 +142,13 @@ function sort-logs() (
   }
 
   for candidate in "${candidates[@]}"; do
-    symlink-logs "$candidate" "Part of the package group has already been built." "partly-build" ||
-    symlink-logs "$candidate" "is not a clone of" "source-changed" ||
-    symlink-logs "$candidate" "One or more files did not pass the validity check!" "checksums" ||
-    symlink-logs "$candidate" "error: target not found:" "dep-not-in-repo" ||
-    symlink-logs "$candidate" "not found, tried pkgconfig" "dep-runtime" ||
-    symlink-logs "$candidate" "No space left on device" "space-missing" ||
-    symlink-logs "$candidate" "build stopped: subcommand failed." "build-failed" ||
-    symlink-logs "$candidate" "" "misc"
+    symlink-logs "$candidate" "Part of the package group has already been built." "partly-build" \
+      || symlink-logs "$candidate" "is not a clone of" "source-changed" \
+      || symlink-logs "$candidate" "One or more files did not pass the validity check!" "checksums" \
+      || symlink-logs "$candidate" "error: target not found:" "dep-not-in-repo" \
+      || symlink-logs "$candidate" "not found, tried pkgconfig" "dep-runtime" \
+      || symlink-logs "$candidate" "No space left on device" "space-missing" \
+      || symlink-logs "$candidate" "build stopped: subcommand failed." "build-failed" \
+      || symlink-logs "$candidate" "" "misc"
   done
 )
