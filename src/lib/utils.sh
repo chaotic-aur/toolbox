@@ -125,43 +125,30 @@ function sort-logs() (
     return 0
   fi
 
-  local CAUR_LOG_CACHE
-  CAUR_LOG_CACHE="$(mktemp -d '/tmp/chaotic/logs-XXXXXXXXXX' || true)"
-
-  if [[ -z "$CAUR_LOG_CACHE" ]] || [[ ! -d "$CAUR_LOG_CACHE" ]]; then
-    echo 'It was not possible to create a temporary directory for this action.'
-    return 38
-  fi
-
-  function cleanup-logs() {
-    for i in *; do grep "$1" "$i" && rm "$i"; done
-  }
-
-  function move-logs() {
-    for i in *; do grep "$1" "$i" && mv "$i" "$2"; done
-  }
-
-  cp -ar "$CAUR_DEPLOY_LOGS" "$CAUR_LOG_CACHE" && cd "$CAUR_LOG_CACHE"/logs
-
-  cleanup-logs "The package group has already been built."
-  cleanup-logs "A package has already been built."
-  cleanup-logs "Finished making:"
-
-  mkdir -p "$CAUR_LOG_CACHE"/logs/{partly-built,source-changed,misc,checksums,build-failed,dep-not-in-repo,dep-runtime,space-missing}
-
-  move-logs "Part of the package group has already been built." "partly-build"
-  move-logs "is not a clone of" "source-changed"
-  move-logs "One or more files did not pass the validity check!" "checksums"
-  move-logs "error: target not found:" "dep-not-in-repo"
-  move-logs "not found, tried pkgconfig" "dep-runtime"
-  move-logs "No space left on device" "space-missing"
-  move-logs "build stopped: subcommand failed." "build-failed"
-
-  mv ./*.log misc
-
   # We don't want to have already fixed logs in there
   if [[ -d "$CAUR_DEPLOY_LOGS_FILTERED" ]]; then
     rm -r "$CAUR_DEPLOY_LOGS_FILTERED"
   fi
-  mv "$CAUR_LOG_CACHE"/logs "$CAUR_DEPLOY_LOGS_FILTERED"
+  mkdir -p "${CAUR_DEPLOY_LOGS_FILTERED}"/{partly-built,source-changed,misc,checksums,build-failed,dep-not-in-repo,dep-runtime,space-missing}
+
+  # Find all candidate files, excluding successful packages
+  mapfile candidates < <(find "${CAUR_DEPLOY_LOGS}" -maxdepth 1 -type f -exec grep -LFe "The package group has already been built." -e "A package has already been built." -e "Finished making:" {} \;)
+
+  function symlink-logs() {
+    set -euo pipefail
+    local DESTINATION
+    DESTINATION="${CAUR_DEPLOY_LOGS_FILTERED}/${3}/"
+    grep -qF "$2" "$1" && ln -s "$(realpath --relative-to="${DESTINATION}" "${1}")" "${DESTINATION}"
+  }
+
+  for candidate in "${candidates[@]}"; do
+    symlink-logs "$candidate" "Part of the package group has already been built." "partly-build" ||
+    symlink-logs "$candidate" "is not a clone of" "source-changed" ||
+    symlink-logs "$candidate" "One or more files did not pass the validity check!" "checksums" ||
+    symlink-logs "$candidate" "error: target not found:" "dep-not-in-repo" ||
+    symlink-logs "$candidate" "not found, tried pkgconfig" "dep-runtime" ||
+    symlink-logs "$candidate" "No space left on device" "space-missing" ||
+    symlink-logs "$candidate" "build stopped: subcommand failed." "build-failed" ||
+    symlink-logs "$candidate" "" "misc"
+  done
 )
