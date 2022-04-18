@@ -31,6 +31,8 @@ function interference-apply() {
   [[ -f "${_INTERFERE}/PKGBUILD.append" ]] \
     && cat "${_INTERFERE}/PKGBUILD.append" >>PKGBUILD
 
+  interference-pkgrel "${_PKGTAG}"
+
   return 0
 }
 
@@ -80,7 +82,7 @@ function interference-generic() {
 
   # * Get rid of groups
   if (grep -qP '^groups=' PKGBUILD); then
-    sed -i'' 's/^groups=.*$//g' PKGBUILD
+    sed -i'' 's/^\s*groups=.*$//g' PKGBUILD
   fi
 
   # * replaces=() (for VCS packages) generally causes unnecessary problems and should be avoided.
@@ -95,6 +97,38 @@ function interference-generic() {
   fi
 
   return 0
+}
+
+function interference-pkgrel() {
+  set -euo pipefail
+
+  local _BUMPSFILE _PKGTAG _BUMPINFO
+
+  _PKGTAG="${1:-}"
+  _BUMPSFILE="${CAUR_INTERFERE}/PKGREL_BUMPS"
+
+  if [ ! -f "${_BUMPSFILE}" ]; then
+    return 0
+  fi
+
+  IFS=" " read -r -a _BUMPINFO <<<"$(awk -v pkgtag="${_PKGTAG}" '$1==pkgtag {print $2 " " $3; exit}' "${_BUMPSFILE}")"
+
+  if [[ "${#_BUMPINFO[@]}" -eq 0 ]]; then
+    return 0
+  fi
+  if [[ "${#_BUMPINFO[@]}" -eq 1 ]]; then
+    _BUMPINFO+=(1)
+  fi
+
+  echo "case \"\$(vercmp \"${_BUMPINFO[0]}\" \"\$pkgver\")\" in
+  \"1\")
+    pkgrel=1
+    pkgver=\"${_BUMPINFO[0]}\"
+    ;&
+  \"0\")
+    pkgrel=\$((pkgrel+${_BUMPINFO[1]}))
+    ;;
+esac" >>PKGBUILD
 }
 
 function interference-makepkg() {
