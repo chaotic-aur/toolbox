@@ -102,7 +102,7 @@ function interference-generic() {
 function interference-pkgrel() {
   set -euo pipefail
 
-  local _BUMPSFILE _PKGTAG _BUMPINFO
+  local _BUMPSFILE _PKGTAG _EPOCH _PKGVER _PKGREL _BUMPCOUNT
 
   _PKGTAG="${1:-}"
   _BUMPSFILE="${CAUR_INTERFERE}/PKGREL_BUMPS"
@@ -111,22 +111,25 @@ function interference-pkgrel() {
     return 0
   fi
 
-  IFS=" " read -r -a _BUMPINFO <<<"$(awk -v pkgtag="${_PKGTAG}" '$1==pkgtag {print $2 " " $3; exit}' "${_BUMPSFILE}")"
+  IFS=";" read -r _EPOCH _PKGVER _PKGREL _BUMPCOUNT <<<"$(awk -v pkgtag="${_PKGTAG}" '$1==pkgtag { epoch_index=index($2,":"); pkgrel_index=index($2,"-"); print (epoch_index==0 ? "0" : substr($2,0,epoch_index-1)) ";" substr($2,epoch_index+1,pkgrel_index-epoch_index-1) ";" substr($2,pkgrel_index+1) ";" $3; exit}' "${_BUMPSFILE}")"
 
-  if [[ "${#_BUMPINFO[@]}" -eq 0 ]]; then
+  if [[ -z "${_EPOCH}" ]] || [[ -z "${_PKGVER}" ]] || [[ -z "${_PKGREL}" ]]; then
     return 0
   fi
-  if [[ "${#_BUMPINFO[@]}" -eq 1 ]]; then
-    _BUMPINFO+=(1)
+  if [[ -z "${_BUMPCOUNT}" ]]; then
+    _BUMPCOUNT=1
   fi
 
-  echo "case \"\$(vercmp \"${_BUMPINFO[0]}\" \"\$pkgver\")\" in
+  echo "case \"\$(vercmp \"${_EPOCH}:${_PKGVER}\" \"\$epoch:\$pkgver\")\" in
   \"1\")
     pkgrel=1
-    pkgver=\"${_BUMPINFO[0]}\"
+    pkgver=\"${_PKGVER}\"
+    epoch=\"${_EPOCH}\"
     ;&
   \"0\")
-    pkgrel=\$((pkgrel+${_BUMPINFO[1]}))
+    if [[ \"\$pkgrel\" == \"${_PKGREL}\" ]]; then
+      pkgrel=\"\$pkgrel.${_BUMPCOUNT}\"
+    fi
     ;;
 esac" >>PKGBUILD
 }
