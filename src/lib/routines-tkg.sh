@@ -147,7 +147,7 @@ function tkg-kernels-variations() {
 function routine-tkg-kernels() {
   set -euo pipefail
   clean-xdg
-  iterfere-sync
+  interfere-sync
   push-routine-dir 'tkg.kernels' || return 12
 
   git clone 'https://github.com/Frogging-Family/linux-tkg.git' 'linux-tkg'

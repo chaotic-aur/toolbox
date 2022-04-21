@@ -8,6 +8,7 @@ stee() { command tee "$@" >/dev/null; }
 pushd "$(dirname "$0")/.." || exit 2
 CAUR_PREFIX="$(pwd -P)"
 [[ -z "${HOME:-}" ]] && HOME="$(getent passwd "$(whoami)" | cut -d: -f6)"
+export HOME
 CAUR_MAINTAINER="${CAUR_REAL_USER:-${CAUR_REAL_UID:-${USER:-$UID}}}"
 popd || exit 2
 
@@ -114,8 +115,11 @@ function main() {
   'makepwd' | 'mkd')
     makepwd "${@:2}"
     ;;
-  'iterfere-sync' | 'si')
-    iterfere-sync "${@:2}"
+  'interfere-sync' | 'si')
+    interfere-sync "${@:2}"
+    ;;
+  'interfere-bump' | 'bump')
+    interference-bump "${@:2}"
     ;;
   'package-lists-sync' | 'sp')
     package-lists-sync "${@:2}"
