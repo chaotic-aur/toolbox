@@ -3,7 +3,7 @@
 function routine-tkg-wine() {
   set -euo pipefail
   clean-xdg
-  iterfere-sync
+  interfere-sync
   push-routine-dir 'tkg.wine'
 
   [[ -d "_repo" ]] && rm -rf --one-file-system '_repo'

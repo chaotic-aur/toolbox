@@ -68,7 +68,7 @@ function generic-routine() {
     return 22
   fi
 
-  (iterfere-sync)
+  (interfere-sync)
   (repoctl-sync-db)
 
   load-config "routines/$1"

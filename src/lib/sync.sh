@@ -1,11 +1,24 @@
 #!/usr/bin/env bash
 
-function iterfere-sync() {
+function interfere-sync() {
   set -euo pipefail
 
   echo 'Syncing interfere...'
   pushd "${CAUR_INTERFERE}"
-  git pull --ff-only || true
+  git fetch || true
+  git reset --hard '@{u}' || true
+  popd #CAUR_INTERFERE
+
+  return 0
+}
+
+function interfere-push-bumps() {
+  set -euo pipefail
+
+  echo 'Push interfere...'
+  pushd "${CAUR_INTERFERE}"
+  GIT_AUTHOR_NAME="${CAUR_MAINTAINER}@$CAUR_DEPLOY_LABEL" git commit -m 'Update PKGREL_BUMPS' PKGREL_BUMPS \
+    && git push || return 1
   popd #CAUR_INTERFERE
 
   return 0

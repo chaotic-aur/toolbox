@@ -142,6 +142,53 @@ function interference-makepkg() {
   return 0
 }
 
+function interference-bump() {
+  set -euo pipefail
+
+  local _PACKAGES _PKGTAG _VERSION _BUMPSFILE _BUMPS _BUMP
+
+  _BUMPSFILE="${CAUR_INTERFERE}/PKGREL_BUMPS"
+
+  if [ -f "${_BUMPSFILE}" ]; then
+    _BUMPS=$(<"${_BUMPSFILE}")
+  else
+    _BUMPS=""
+  fi
+
+  _PACKAGES="$(repoctl list -v)"
+
+  # Clear old bumps
+  while IFS= read -r _BUMP; do
+    _PKGTAG=${_BUMP%% *}
+    _VERSION="$(awk -v pkgtag="${_PKGTAG}" '$1==pkgtag { print $NF; exit }' <<<"${_PACKAGES}")"
+    local _INTERNALVERSION _INTERNALBUMPCOUNT
+    IFS=";" read -r _INTERNALVERSION _INTERNALBUMPCOUNT <<<"$(awk -v pkgtag="${_PKGTAG}" '$1==pkgtag { print $2 ";" $3; exit }' <<<"${_BUMPS}")"
+    if [[ -z "${_INTERNALVERSION}" ]] || [[ -z "${_INTERNALBUMPCOUNT}" ]]; then
+      continue
+    fi
+    if [[ "$(vercmp "${_VERSION}" "${_INTERNALVERSION}.${_INTERNALBUMPCOUNT}")" -gt 0 ]]; then
+      _BUMPS="$(awk -v pkgtag="$_PKGTAG" '/^$/ {next} $1==pkgtag { next } 1' <<<"${_BUMPS}")"
+    fi
+  done <<<"$_BUMPS"
+
+  # Add/increase existing bumps
+  for _PKGTAG in "$@"; do
+    _VERSION="$(awk -v pkgtag="${_PKGTAG}" '$1==pkgtag { print $NF; exit }' <<<"${_PACKAGES}")"
+    if [ -z "${_VERSION}" ]; then
+      echo "Package ${_PKGTAG} not found in repo" >&2
+      return 1
+    fi
+    _VERSION="${_VERSION##* }"
+    _BUMPS="$(awk -v pkgtag="$_PKGTAG" -v version="$_VERSION" '/^$/ {next} $1==pkgtag { if (!set) { print $1 " " $2 " " $3+1; set=1 }; next } ENDFILE { if (!set) { print pkgtag " " version " " "1" }; exit } 1' <<<"${_BUMPS}")"
+  done
+
+  echo "${_BUMPS}"
+  echo "${_BUMPS}" >"${_BUMPSFILE}"
+
+  interfere-push-bumps || interfere-sync
+  return 0
+}
+
 function interference-finish() {
   set -euo pipefail
 

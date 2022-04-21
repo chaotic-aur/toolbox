@@ -29,9 +29,14 @@ If at some point you see something that could be better, then please open a PR. 
   Prepare and build all packages in the current directory.
   If `PACKAGES` are not provided then it will try to build all sub-directories.
 
-- `chaotic {si,iterfere-sync}`
+- `chaotic {si,interfere-sync}`
 
   Sync packages' interference repo.
+
+- `chaotic {bump,interfere-bump} [${PACKAGES[@]}]`
+
+  Generate and push a PKGREL_BUMPS file for use in interfere. Old entries will automatically be removed.
+  Uses `repoctl`.
 
 - `chaotic {sp,package-lists-sync}`
 
