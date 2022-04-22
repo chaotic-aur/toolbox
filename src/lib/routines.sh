@@ -104,7 +104,7 @@ function generic-routine() {
   parse-package-list "${_LIST}" \
     | sed -En '/:/p' \
     | while IFS=':' read -r _DIR _URL; do
-      git clone "${_URL}" "${_DIR}" \
+      git clone --depth 1 "${_URL}" "${_DIR}" \
         | tee -a _repoctl_down.log \
         || true
     done
