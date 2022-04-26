@@ -1,5 +1,7 @@
 [Unit]
 Description=Chaotic's morning routine
+After=network-online.target
+Wants=network-online.target
 
 [Service]
 User=root
