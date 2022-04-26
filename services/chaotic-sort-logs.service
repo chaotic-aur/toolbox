@@ -1,5 +1,7 @@
 [Unit]
 Description=Chaotic's automatic log sorting utility
+After=network-online.target
+Wants=network-online.target
 
 [Service]
 User=root
