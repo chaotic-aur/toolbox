@@ -149,7 +149,7 @@ Supported `type` values are: `primary`, `cluster`, and `dev`.
 
 Furthermore, a valid `.gitconfig` needs to be supplied in `/root/.gitconfig` to allow bumping packages via `chaotic bump` with a meaningful `email` and `name` supplied:
 
-```sh
+```ini
 [user]
 email = "team@chaotic.cx"
 name = "Chaotic Dragon (Node) ☭"
