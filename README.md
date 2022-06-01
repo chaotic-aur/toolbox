@@ -147,6 +147,15 @@ You'll find more options in `src/chaotic` first lines.
 
 Supported `type` values are: `primary`, `cluster`, and `dev`.
 
+Furthermore, a valid `.gitconfig` needs to be supplied in `/root/.gitconfig` to allow bumping packages via `chaotic bump`, they should consist of email of the team and the name of the node:
+
+```sh
+[user]
+email = team@chaotic.cx
+name = Chaotic Dragon (Node)
+```
+To allow pushing to the interfere repo, a fitting ssh key also needs to be added to authenticate the node.
+
 To have clean logs & less bandwidth usage `/etc/pacman.conf` settings need to be adjusted:
 
 - Enable `NoProgressBar`
