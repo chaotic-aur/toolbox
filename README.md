@@ -151,8 +151,8 @@ Furthermore, a valid `.gitconfig` needs to be supplied in `/root/.gitconfig` to 
 
 ```sh
 [user]
-email = team@chaotic.cx
-name = Chaotic Dragon (Node)
+email = "team@chaotic.cx"
+name = "Chaotic Dragon (Node) ☭"
 ```
 
 To allow pushing to the interfere repo, a fitting ssh key also needs to be added to authenticate the node.
