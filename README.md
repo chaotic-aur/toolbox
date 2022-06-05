@@ -4,7 +4,7 @@
 
 I receive questions like "Why didn't you write it in language X? Why didn't you use sudoers instead of `setuid`? Why don't you guarantee reproducible builds? Why don't you use submodules and review every PKGBUILD change?"
 
-Because I can't, I am only one person, taking care of all the steps required for updating 3800 packages non-stop, treating all the differences between those PKGBUILDs and their sources, in an infra that runs in donated VMs which are not any similar.
+Because I can't, I am the only person, taking care of all the steps required for updating 3800 packages non-stop, treating all the differences between those PKGBUILDs and their sources, in an infra that runs in donated VMs which are not similar.
 
 If at some point you see something that could be better, then please open a PR. And keep it simple, the more complex the codebase becomes, the more complicated will be in the future for one man alone to maintain it.
 
@@ -13,7 +13,7 @@ If at some point you see something that could be better, then please open a PR. 
 - `chaotic pr{,epare} ${INPUTDIR} $@`
 
   It generates a building script to be later run in a containerized environment.
-  `$INPUTDIR` is the name of directory in "$PWD" which contains a PKGBUILD.
+  `$INPUTDIR` is the name of the directory in "$PWD" which contains a PKGBUILD.
 
 - `chaotic {lw,lowerstrap}`
 
@@ -48,7 +48,7 @@ If at some point you see something that could be better, then please open a PR. 
 
 - `chaotic {dbb,db-bump}`
 
-  Add recently deployed packages to the database, while moving replaced packages to archive.
+  Add recently deployed packages to the database, while moving replaced packages to the archive.
   Uses `repoctl`.
 
 - `chaotic {rm,remove} ${PACKAGES[@]}`
@@ -68,7 +68,7 @@ If at some point you see something that could be better, then please open a PR. 
 - `chaotic help {syncthing,rsync}`
 
   Instructions to the mirroring services.
-  RSync is one-way (primary->cluster) only, and Syncthing both ways.
+  RSync is one-way (primary->cluster) only, and Syncthing is both ways.
 
 - `chaotic routine {hourly,morning,afternoon,nightly,midnight}`
 
@@ -132,7 +132,7 @@ Then generate a ssh keypair for the root user.
 sudo ssh-keygen
 ```
 
-The ssh public key (cat /root/.ssh/id_rsa.pub) then needs to be added to the primary servers root authorized keys (/root/.ssh/authorized_keys). After that follow these [instructions](https://wiki.archlinux.org/index.php/GnuPG#Export_your_public_key) to export the gpg public key. This key will have to be [uploaded](https://wiki.archlinux.org/index.php/GnuPG#Sending_keys) to [keyserver.ubuntu.com](keyserver.ubuntu.com) in order for the key to be verified.
+The ssh public key (cat /root/.ssh/id_rsa.pub) then needs to be added to the primary servers' root authorized keys (/root/.ssh/authorized_keys). After that follow these [instructions](https://wiki.archlinux.org/index.php/GnuPG#Export_your_public_key) to export the gpg public key. This key will have to be [uploaded](https://wiki.archlinux.org/index.php/GnuPG#Sending_keys) to [keyserver.ubuntu.com](keyserver.ubuntu.com) in order for the key to be verified.
 Then, configure it as follows in `/etc/chaotic.conf`, like this:
 
 ```sh
@@ -145,7 +145,7 @@ export REPOCTL_CONFIG='/etc/chaotic/repoctl.toml'
 
 You'll find more options in `src/chaotic` first lines.
 
-Supported `type` values are: `primary`, `cluster`, and `dev`.
+Supported `type` values are `primary`, `cluster`, and `dev`.
 
 Furthermore, a valid `.gitconfig` needs to be supplied in `/root/.gitconfig` to allow bumping packages via `chaotic bump` with a meaningful `email` and `name` supplied:
 
@@ -165,7 +165,7 @@ To have clean logs & less bandwidth usage `/etc/pacman.conf` settings need to be
 
 - Don't use `ILoveCandy`
 
-To deploy faster replace `openssh` with `openssh-hpn` on all nodes (adds peformance related [patches](https://www.psc.edu/research/networking/hpn-ssh/)).
+To deploy faster replace `openssh` with `openssh-hpn` on all nodes (adds performance-related [patches](https://www.psc.edu/research/networking/hpn-ssh/)). It should be noted that `openssh-hpn` recently changed its configuration and behavior and therefore doesn't provide a 1:1 replacement for `openssh` anymore.
 
 ## Installation
 
