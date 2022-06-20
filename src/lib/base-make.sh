@@ -85,6 +85,13 @@ EOF
   popd # _CURRENT
   ln -fsT "./$_CURRENT" "./latest"
 
+  # Delete old, unused lowerdirs
+  echo 'Deleting old systemd-nspawn lowerdirs'
+  for d in */; do
+    if [ -L "${d%/}" ] || [[ "${d%/}" == "$_CURRENT" ]]; then continue; fi
+    if [[ "$(findmnt -rnO "lowerdir=$(realpath "$d")")" == "" ]]; then rm -rf --one-file-system "$d"; fi
+  done
+
   popd # CAUR_LOWER_DIR
   return 0
 }
