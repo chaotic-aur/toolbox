@@ -88,7 +88,7 @@ EOF
   # Delete old, unused lowerdirs
   echo 'Deleting old systemd-nspawn lowerdirs'
   for d in */; do
-    if [ -L "${d%/}" ] || [[ "${d%/}" == "$_CURRENT" ]]; then continue; fi
+    if [ -L "${d%/}" ] || [[ "${d%/}" == "$_CURRENT" ]] || [[ "$d" == "*/" ]]; then continue; fi
     if [[ "$(findmnt -rnO "lowerdir=$(realpath "$d")")" == "" ]]; then rm -rf --one-file-system "$d"; fi
   done
 
@@ -111,6 +111,13 @@ function lowerstrap-singularity() {
 
   pushd "$CAUR_LOWER_DIR"
   ln -fsT "./$_CURRENT" "./latest"
+
+  # Delete old, unused lowerdirs
+  echo 'Deleting old singularity lowerdirs'
+  for f in *.sif; do
+    if [[ "${f}" == "$_CURRENT" ]] || [[ "$f" == "*.sif" ]]; then continue; fi
+    rm "$f"
+  done
   popd # CAUR_LOWER_DIR
 
   return 0
