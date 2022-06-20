@@ -159,7 +159,8 @@ function makepkg-singularity() {
 
   echo -n $$ >"${_INPUTDIR}/building.pid"
 
-  if [[ ! -e "${CAUR_LOWER_DIR}/latest" ]] && ! lowerstrap; then
+  # Check if we are missing a lowerdir or our lowerdir is out of date
+  if { [[ ! -e "${CAUR_LOWER_DIR}/latest" ]] || [[ "$(date -r "${CAUR_LOWER_DIR}/latest" "+%F")" != "$(date "+%F")" ]]; } && ! lowerstrap; then
     _FAILURE=$?
     exec {_LOCK_FD}>&- # Unlock
     return ${_FAILURE}
