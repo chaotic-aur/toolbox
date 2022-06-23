@@ -18,7 +18,7 @@ CAUR_DB_NAME='chaotic-aur'
 CAUR_INTERFERE='/var/lib/chaotic/interfere'
 CAUR_PACKAGE_LISTS='/var/lib/chaotic/packages'
 
-CAUR_ARCH_MIRROR="Server = https://cloudflaremirrors.com/archlinux/\$repo/os/\$arch"
+CAUR_ARCH_MIRROR="Server = https://cloudflaremirrors.com/archlinux/\$repo/os/\$arch\nServer = https://mirror.rackspace.com/archlinux/\$repo/os/\$arch"
 CAUR_BASH_WIZARD='wizard.sh'
 CAUR_CACHE_CC="${CAUR_CACHE}/cc"
 CAUR_CACHE_PKG="${CAUR_CACHE}/packages"
