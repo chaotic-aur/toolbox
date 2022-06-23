@@ -53,7 +53,7 @@ function lowerstrap-systemd-nspawn() {
   install -m644 "$CAUR_GUEST"/etc/pacman.conf './etc/pacman.conf'
   tee -a './etc/makepkg.conf' <"${CAUR_GUEST}/etc/makepkg.conf.append"
   if [[ -n "$CAUR_ARCH_MIRROR" ]]; then
-    echo "$CAUR_ARCH_MIRROR" | stee './etc/pacman.d/mirrorlist'
+    echo -e "$CAUR_ARCH_MIRROR" | stee './etc/pacman.d/mirrorlist'
   fi
   echo "PACKAGER=\"${CAUR_PACKAGER}\"" | tee -a './etc/makepkg.conf'
   install -m755 "$CAUR_GUEST"/bin/* './usr/local/bin/'
