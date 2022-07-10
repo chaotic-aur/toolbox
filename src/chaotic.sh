@@ -142,6 +142,9 @@ function main() {
   'db-bump' | 'dbb')
     db-bump "${@:2}"
     ;;
+  'db-rebuild')
+    db-rebuild "${@:2}"
+    ;;
   'remove' | 'rm')
     remove "${@:2}"
     ;;

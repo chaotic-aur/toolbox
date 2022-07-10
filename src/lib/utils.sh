@@ -122,7 +122,7 @@ function sort-logs() (
 
   if [[ "$CAUR_TYPE" != 'primary' ]]; then
     echo 'Only primary node can do this action.'
-    return 0
+    return 19
   fi
 
   # We don't want to have already fixed logs in there
