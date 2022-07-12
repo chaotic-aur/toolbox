@@ -122,7 +122,7 @@ function generic-routine() {
   popd #routine dir
 
   # good time to do some cleanup
-  (clean-archive) || true
+  (clean-post-routine) || true
 
   return 0
 }
