@@ -133,6 +133,9 @@ function main() {
   'clean-pkgcache' | 'clp')
     clean-pkgcache "${@:2}"
     ;;
+  'clean-sigs')
+    clean-sigs "${@:2}"
+    ;;
   'deploy' | 'dp')
     deploy "${@:2}"
     ;;

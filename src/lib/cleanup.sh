@@ -152,6 +152,8 @@ function clean-duplicates() {
     [yY])
       # shellcheck disable=SC2086
       echo "${_TO_MV[@]}" | xargs mv -v -f -t ../archive/
+      # Make sure we don't instantly delete them from archive if the package is too old
+      echo "${_TO_MV[@]}" | xargs touch --no-create
       ;;
     esac
   fi
@@ -231,5 +233,59 @@ function clean-archive() {
   find . -type f -mtime +7 -name '*' -execdir rm -- '{}' \; || true
 
   popd
+  return 0
+}
+
+function clean-sigs() {
+  set -euo pipefail
+
+  [[ "$CAUR_TYPE" != 'primary' ]] && return 0
+
+  local _TO_MV=()
+
+  pushd "${CAUR_DEPLOY_PKGS}"
+
+  readarray -d '' _TO_MV < <(find . -name "*.pkg.tar.zst" -mmin +59 -exec sh -c '[[ ! -f "${1}.sig" ]]' -- "{}" \; -print0)
+  readarray -d '' -O "${#_TO_MV[@]}" _TO_MV < <(find . -name "*.pkg.tar.zst.sig" -mmin +59 -exec sh -c '[[ ! -f "${1%.*}" ]]' -- "{}" \; -print0)
+
+  if [[ -z "${_TO_MV:-}" ]]; then
+    if [[ "${1:-}" != '-q' ]]; then
+      echo '[!] Nothing to do...'
+    fi
+    exit 0
+  fi
+
+  echo '[!] Missing sig or archive:'
+  printf '%s\n' "${_TO_MV[@]}"
+
+  echo "[!] Total: ${#_TO_MV[@]}"
+  if [[ "${1:-}" == '-q' ]]; then
+    _U_SURE='Y'
+  else
+    read -r -p "[?] Are you sure? [y/N] " _U_SURE
+  fi
+
+  case "${_U_SURE}" in
+  [yY])
+    # shellcheck disable=SC2086
+    echo "${_TO_MV[@]}" | xargs mv -v -f -t ../archive/
+    # Make sure we don't instantly delete them from archive if the package is too old
+    echo "${_TO_MV[@]}" | xargs touch --no-create
+    ;;
+  esac
+
+  popd
+
+  return 0
+}
+
+function clean-post-routine() {
+  set -euo pipefail
+
+  [[ "$CAUR_TYPE" != 'primary' ]] && return 0
+
+  (clean-archive -q) || true
+  (clean-sigs -q) || true
+
   return 0
 }
