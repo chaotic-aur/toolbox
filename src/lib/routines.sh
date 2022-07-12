@@ -54,7 +54,7 @@ function generic-routine() {
     return 13
   fi
 
-  local _ROUTINE _LIST _DIR _URL _PACKAGES
+  local _ROUTINE _LIST _DIR _URL _PACKAGES _ROUTINE_PACKAGES _EXISTING_PACKAGES_LIST _PACKAGES_NOT_IN_REPO _PACKAGES_IN_REPO
   _ROUTINE="$1"
 
   clean-xdg
@@ -76,18 +76,18 @@ function generic-routine() {
   push-routine-dir "${_ROUTINE}" || return 12
 
   # non-VCS packages from AUR (download if updated)
-  routine_packages=$(parse-package-list "${_LIST}" | sed -E '/:/d;/-(git|svn|bzr|hg|nightly)$/d')
-  existing_packages_list=$(repoctl list)
+  _ROUTINE_PACKAGES="$(parse-package-list "${_LIST}" | sed -E '/:/d;/-(git|svn|bzr|hg|nightly)$/d')"
+  _EXISTING_PACKAGES_LIST="$(repoctl list)"
 
-  packages_not_in_repo=$(comm -13 <(sort -u <(echo "$existing_packages_list" | tr " " "\n")) <(sort -u <(echo "$routine_packages" | tr " " "\n")))
-  packages_in_repo=$(comm -12 <(sort -u <(echo "$existing_packages_list" | tr " " "\n")) <(sort -u <(echo "$routine_packages" | tr " " "\n")))
+  _PACKAGES_NOT_IN_REPO=$(comm -13 <(tr " " "\n" <<<"$_EXISTING_PACKAGES_LIST" | sort -u) <(tr " " "\n" <<<"$_ROUTINE_PACKAGES" | sort -u))
+  _PACKAGES_IN_REPO=$(comm -12 <(tr " " "\n" <<<"$_EXISTING_PACKAGES_LIST" | sort -u) <(tr " " "\n" <<<"$_ROUTINE_PACKAGES" | sort -u))
 
-  echo "$packages_in_repo" \
+  echo "$_PACKAGES_IN_REPO" \
     | xargs --no-run-if-empty -L 200 repoctl down -u 2>&1 \
     | tee -a _repoctl_down.log \
     || true
 
-  echo "$packages_not_in_repo" \
+  echo "$_PACKAGES_NOT_IN_REPO" \
     | xargs --no-run-if-empty -L 200 repoctl down 2>&1 \
     | tee -a _repoctl_down.log \
     || true

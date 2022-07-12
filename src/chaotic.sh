@@ -184,6 +184,9 @@ function main() {
   'sort-logs' | 'srt')
     sort-logs "${@:2}"
     ;;
+  'find-discarded')
+    find-discarded "${@:2}"
+    ;;
   'whoami')
     echo "#$UID or ${USER:-$(whoami)}, identified as ${CAUR_MAINTAINER} at \"$CAUR_DEPLOY_LABEL\"."
     ;;
