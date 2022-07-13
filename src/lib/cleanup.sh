@@ -245,8 +245,8 @@ function clean-sigs() {
 
   pushd "${CAUR_DEPLOY_PKGS}"
 
-  readarray -d '' _TO_MV < <(find . -name "*.pkg.tar.zst" -mmin +59 -exec sh -c '[[ ! -f "${1}.sig" ]]' -- "{}" \; -print0)
-  readarray -d '' -O "${#_TO_MV[@]}" _TO_MV < <(find . -name "*.pkg.tar.zst.sig" -mmin +59 -exec sh -c '[[ ! -f "${1%.*}" ]]' -- "{}" \; -print0)
+  readarray -d '' _TO_MV < <(find . -name "*.pkg.${CAUR_DB_EXT}" -mmin +59 -exec sh -c '[[ ! -f "${1}.sig" ]]' -- "{}" \; -print0)
+  readarray -d '' -O "${#_TO_MV[@]}" _TO_MV < <(find . -name "*.pkg.${CAUR_DB_EXT}.sig" -mmin +59 -exec sh -c '[[ ! -f "${1%.*}" ]]' -- "{}" \; -print0)
 
   if [[ -z "${_TO_MV:-}" ]]; then
     if [[ "${1:-}" != '-q' ]]; then

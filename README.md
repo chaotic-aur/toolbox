@@ -52,7 +52,7 @@ If at some point you see something that could be better, then please open a PR. 
 
 - `chaotic db-rebuild`
 
-  Completely rebuild the database and files database from scratch, keeping the original DB around until the build is finished.
+  Completely rebuild the database and files database from scratch, keeping the original DB around until the rebuild is finished.
 
 - `chaotic {rm,remove} ${PACKAGES[@]}`
 
@@ -95,12 +95,16 @@ If at some point you see something that could be better, then please open a PR. 
 
 - `chaotic clean-sigs {,-q}`
 
-  Removes package files or archive files without their corresponding signature or archive file.
-  Files have to be at least 1 hour long to be considered.
+  Moves package files or archive files without their corresponding signature or archive file to the package archive.
+  Files have to be at least 1 hour old to be considered.
 
 - `chaotic {srt,sort-logs}`
 
   Unclutters and sorts the raw log directory into easy to read subcategories
+
+- `chaotic find-discarded`
+
+  Find and print discarded packages. All packages that are in the database, but do not exist in the package list repo, are considered discarded, but have to be deleted manually.
 
 ## Involved directories
 
