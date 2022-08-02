@@ -18,7 +18,7 @@ CAUR_DB_NAME='chaotic-aur'
 CAUR_INTERFERE='/var/lib/chaotic/interfere'
 CAUR_PACKAGE_LISTS='/var/lib/chaotic/packages'
 
-CAUR_ARCH_MIRROR="Server = https://cloudflaremirrors.com/archlinux/\$repo/os/\$arch"
+CAUR_ARCH_MIRROR="Server = https://cloudflaremirrors.com/archlinux/\$repo/os/\$arch\nServer = https://mirror.rackspace.com/archlinux/\$repo/os/\$arch"
 CAUR_BASH_WIZARD='wizard.sh'
 CAUR_CACHE_CC="${CAUR_CACHE}/cc"
 CAUR_CACHE_PKG="${CAUR_CACHE}/packages"
@@ -133,6 +133,9 @@ function main() {
   'clean-pkgcache' | 'clp')
     clean-pkgcache "${@:2}"
     ;;
+  'clean-sigs')
+    clean-sigs "${@:2}"
+    ;;
   'deploy' | 'dp')
     deploy "${@:2}"
     ;;
@@ -141,6 +144,9 @@ function main() {
     ;;
   'db-bump' | 'dbb')
     db-bump "${@:2}"
+    ;;
+  'db-rebuild')
+    db-rebuild "${@:2}"
     ;;
   'remove' | 'rm')
     remove "${@:2}"
@@ -177,6 +183,9 @@ function main() {
     ;;
   'sort-logs' | 'srt')
     sort-logs "${@:2}"
+    ;;
+  'find-discarded')
+    find-discarded "${@:2}"
     ;;
   'whoami')
     echo "#$UID or ${USER:-$(whoami)}, identified as ${CAUR_MAINTAINER} at \"$CAUR_DEPLOY_LABEL\"."

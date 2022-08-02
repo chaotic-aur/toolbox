@@ -53,7 +53,7 @@ function lowerstrap-systemd-nspawn() {
   install -m644 "$CAUR_GUEST"/etc/pacman.conf './etc/pacman.conf'
   tee -a './etc/makepkg.conf' <"${CAUR_GUEST}/etc/makepkg.conf.append"
   if [[ -n "$CAUR_ARCH_MIRROR" ]]; then
-    echo "$CAUR_ARCH_MIRROR" | stee './etc/pacman.d/mirrorlist'
+    echo -e "$CAUR_ARCH_MIRROR" | stee './etc/pacman.d/mirrorlist'
   fi
   echo "PACKAGER=\"${CAUR_PACKAGER}\"" | tee -a './etc/makepkg.conf'
   install -m755 "$CAUR_GUEST"/bin/* './usr/local/bin/'
@@ -85,6 +85,13 @@ EOF
   popd # _CURRENT
   ln -fsT "./$_CURRENT" "./latest"
 
+  # Delete old, unused lowerdirs
+  echo 'Deleting old systemd-nspawn lowerdirs'
+  for d in */; do
+    if [ -L "${d%/}" ] || [[ "${d%/}" == "$_CURRENT" ]] || [[ "$d" == "*/" ]]; then continue; fi
+    if [[ "$(findmnt -rnO "lowerdir=$(realpath "$d")")" == "" ]]; then rm -rf --one-file-system "$d"; fi
+  done
+
   popd # CAUR_LOWER_DIR
   return 0
 }
@@ -104,6 +111,13 @@ function lowerstrap-singularity() {
 
   pushd "$CAUR_LOWER_DIR"
   ln -fsT "./$_CURRENT" "./latest"
+
+  # Delete old, unused lowerdirs
+  echo 'Deleting old singularity lowerdirs'
+  for f in *.sif; do
+    if [[ "${f}" == "$_CURRENT" ]] || [[ "$f" == "*.sif" ]]; then continue; fi
+    rm "$f"
+  done
   popd # CAUR_LOWER_DIR
 
   return 0

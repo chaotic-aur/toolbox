@@ -51,6 +51,9 @@ If at some point you see something that could be better, then please open a PR. 
   Add recently deployed packages to the database, while moving replaced packages to the archive.
   Uses `repoctl`.
 
+- `chaotic db-rebuild`
+  Completely rebuild the database and files database from scratch, keeping the original DB around until the rebuild is finished.
+
 - `chaotic {rm,remove} ${PACKAGES[@]}`
 
   Remove and archive all listed packages.
@@ -78,6 +81,10 @@ If at some point you see something that could be better, then please open a PR. 
 
   When on a primary node, clean up the archive folder.
 
+- `chaotic {clean-duplicates,dedup}`
+
+  Moves packages which have been replaced by newer (modify time) packages to the archive folder.
+
 - `chaotic {clg,clean-logs}`
 
   After a `chaotic makepwd`, remove successfull and "already built" logs.
@@ -86,9 +93,18 @@ If at some point you see something that could be better, then please open a PR. 
 
   Removes cached sources from a specific package.
 
+- `chaotic clean-sigs {,-q}`
+
+  Moves package files or archive files without their corresponding signature or archive file to the package archive.
+  Files have to be at least 1 hour old to be considered.
+
 - `chaotic {srt,sort-logs}`
 
   Unclutters and sorts the raw log directory into easy to read subcategories
+
+- `chaotic find-discarded`
+
+  Find and print discarded packages. All packages that are in the database, but do not exist in the package list repo, are considered discarded, but have to be deleted manually.
 
 ## Involved directories
 

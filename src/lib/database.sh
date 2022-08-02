@@ -113,8 +113,40 @@ function db-pkglist() {
   return 0
 }
 
+function db-rebuild() {
+  set -euo pipefail
+
+  local _DESTDIR
+
+  if [[ "$CAUR_TYPE" != 'primary' ]]; then
+    echo 'Only primary node can do this action.'
+    return 19
+  fi
+
+  _DESTDIR="$(mktemp -d)"
+
+  # Lock bump operations
+  db-lock
+
+  {
+    # Reset checkpoint to epoch
+    touch -d "@0" "$CAUR_CHECKPOINT"
+    CAUR_DATABASE_BUMPER="repo-add" CAUR_DB_LOCK_DISABLE=true CAUR_DB_NAME="${_DESTDIR}/${CAUR_DB_NAME}" db-bump
+    mv "${_DESTDIR}/"* "${CAUR_DEPLOY_PKGS}"
+  } || true
+
+  db-unlock
+  rm -r --one-file-system "${_DESTDIR}"
+
+  return 0
+}
+
 function db-lock() {
   set -euo pipefail
+
+  if [[ -v CAUR_DB_LOCK_DISABLE ]]; then
+    return 0
+  fi
 
   touch "${CAUR_DB_LOCK}"
   exec {CAUR_LOCK_FD}<>"${CAUR_DB_LOCK}"
@@ -132,6 +164,10 @@ function db-lock() {
 }
 
 function db-unlock() {
+  if [[ -v CAUR_DB_LOCK_DISABLE ]]; then
+    return 0
+  fi
+
   exec {CAUR_LOCK_FD}>&-
 
   unset CAUR_LOCK_FD

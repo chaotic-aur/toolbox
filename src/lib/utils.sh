@@ -122,7 +122,7 @@ function sort-logs() (
 
   if [[ "$CAUR_TYPE" != 'primary' ]]; then
     echo 'Only primary node can do this action.'
-    return 0
+    return 19
   fi
 
   # We don't want to have already fixed logs in there
@@ -152,3 +152,27 @@ function sort-logs() (
       || symlink-logs "$candidate" "" "misc"
   done
 )
+
+function find-discarded() {
+  set -euo pipefail
+
+  local _CURRENT_PACKAGES _INTENDED_PACKAGES _EXTRA_PACKAGES
+
+  if [[ "$CAUR_TYPE" != 'primary' ]]; then
+    echo 'Only primary node can do this action.'
+    return 19
+  fi
+
+  _CURRENT_PACKAGES="$(tar -xaf "${CAUR_DEPLOY_PKGS}/${CAUR_DB_NAME}.db.${CAUR_DB_EXT}" --wildcards --no-anchored 'desc' -O | awk 'f{if (!a[$0]++) {print} ;f=0} /%BASE%/{f=1}')"
+  _INTENDED_PACKAGES="$(find "${CAUR_PACKAGE_LISTS}" -name '*.txt' | while read -r _LIST; do parse-package-list "$_LIST"; done | awk -F ':' '{print $1}')"
+  _EXTRA_PACKAGES="$(comm -13 <(tr " " "\n" <<<"$_INTENDED_PACKAGES" | sort -u) <(tr " " "\n" <<<"$_CURRENT_PACKAGES" | sort -u))"
+
+  if [[ -z "${_EXTRA_PACKAGES}" ]]; then
+    echo "No discarded packages were found!"
+  else
+    echo "[!] Discarded packages in repo:"
+    echo "${_EXTRA_PACKAGES}"
+
+    echo "[!] Total: $(echo -n "${_EXTRA_PACKAGES}" | wc -l)"
+  fi
+}
