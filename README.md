@@ -49,9 +49,9 @@ If at some point you see something that could be better, then please open a PR. 
 - `chaotic {dbb,db-bump}`
 
   Add recently deployed packages to the database, while moving replaced packages to the archive.
+  Uses `repoctl`.
 
 - `chaotic db-rebuild`
-
   Completely rebuild the database and files database from scratch, keeping the original DB around until the rebuild is finished.
 
 - `chaotic {rm,remove} ${PACKAGES[@]}`
