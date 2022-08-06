@@ -134,12 +134,12 @@ function tkg-kernels-variations() {
   echo "$_LINUX_STABLE" 'cfs 0' 'generic_v3_lto'
 
   # lts
-  for _VAR_SCHED in "${_LINUX_SCHED[@]}" 'pds 0'; do
-    echo "$_LINUX_LTS" "$_VAR_SCHED" 'lts'
-  done
+  # for _VAR_SCHED in "${_LINUX_SCHED[@]}" 'pds 0'; do
+  #   echo "$_LINUX_LTS" "$_VAR_SCHED" 'lts'
+  # done
 
   # RIP -CK patches
-  echo '5.10' 'muqss 0' 'lts'
+  # echo '5.10' 'muqss 0' 'lts'
 
   return 0
 }
