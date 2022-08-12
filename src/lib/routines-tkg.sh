@@ -52,6 +52,7 @@ function tkg-kernel-variate() {
     _LTO_MODE='thin'
   fi
 
+  # bcachefs is temporarily set to false as a hotfix for https://github.com/Frogging-Family/linux-tkg/issues/550
   sed -i'' "
   s/_distro=\"[^\"]*\"/_distro=\"Arch\"/g
   s/_version=\"[^\"]*\"/_version=\"${_VER}\"/g
@@ -72,7 +73,7 @@ function tkg-kernel-variate() {
   s/_voluntary_preempt=\"[^\"]*\"/_voluntary_preempt=\"false\"/g
   s/_acs_override=\"[^\"]*\"/_acs_override=\"true\"/g
   s/_ksm_uksm=\"[^\"]*\"/_ksm_uksm=\"true\"/g
-  s/_bcachefs=\"[^\"]*\"/_bcachefs=\"true\"/g
+  s/_bcachefs=\"[^\"]*\"/_bcachefs=\"false\"/g
   s/_bfqmq=\"[^\"]*\"/_bfqmq=\"true\"/g
   s/_zfsfix=\"[^\"]*\"/_zfsfix=\"true\"/g
   s/_fsync=\"[^\"]*\"/_fsync=\"true\"/g
