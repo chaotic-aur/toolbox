@@ -13,7 +13,7 @@ From: gitlab.archlinux.org:5050/archlinux/archlinux-docker:base-master
   cat /etc/makepkg.conf.append | tee -a /etc/makepkg.conf
   echo 'PACKAGER="UFSCar HPC Builder <hpc.ufscar@chaotic.cx>"' | tee -a /etc/makepkg.conf
   rm /etc/makepkg.conf.append
-  echo 'Server = http://mirror.ufscar.br/$repo/os/$arch' | stee /etc/pacman.d/mirrorlist
+  echo 'Server = http://mirror.ufscar.br/archlinux/$repo/os/$arch' | stee /etc/pacman.d/mirrorlist
 
   stee -a '/etc/pacman.conf' <<EOF
 [chaotic-aur]
