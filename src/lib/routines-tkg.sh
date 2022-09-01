@@ -52,7 +52,6 @@ function tkg-kernel-variate() {
     _LTO_MODE='thin'
   fi
 
-  # bcachefs is temporarily set to false as a hotfix for https://github.com/Frogging-Family/linux-tkg/issues/550
   sed -i'' "
   s/_distro=\"[^\"]*\"/_distro=\"Arch\"/g
   s/_version=\"[^\"]*\"/_version=\"${_VER}\"/g
