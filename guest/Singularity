@@ -1,5 +1,5 @@
 Bootstrap: docker
-From: gitlab.archlinux.org:5050/archlinux/archlinux-docker:base-devel
+From: gitlab.archlinux.org:5050/archlinux/archlinux-docker:base-devel-master
 
 %files
   /etc/mtab /etc/
