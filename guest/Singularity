@@ -1,5 +1,5 @@
 Bootstrap: docker
-From: gitlab.archlinux.org:5050/archlinux/archlinux-docker:base-master
+From: gitlab.archlinux.org:5050/archlinux/archlinux-docker:base-devel
 
 %files
   /etc/mtab /etc/
@@ -22,7 +22,6 @@ Server = https://builds.garudalinux.org/repos/chaotic-aur/x86_64
 EOF
 
   pacman -Syyu --noconfirm --noprogressbar --quiet
-  pacman -S --noconfirm --noprogressbar --quiet base base-devel
 
   echo 'en_US.UTF-8 UTF-8' | stee '/etc/locale.gen'
   echo 'LANG=en_US.UTF-8' | stee '/etc/locale.conf'
