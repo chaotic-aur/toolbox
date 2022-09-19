@@ -59,7 +59,7 @@ function makepkg-gen-bash-init() {
 
   export CAUR_WIZARD="${_DEST}/${CAUR_BASH_WIZARD}"
   stee "${CAUR_WIZARD}" <<EOF
-#!/usr/bin/env bash
+#!/usr/bin/bash
 source /etc/profile
 
 EOF

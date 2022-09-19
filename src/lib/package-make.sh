@@ -97,6 +97,7 @@ function makepkg-systemd-nspawn() {
     -u "root" \
     --suppress-sync=true \
     --capability=CAP_IPC_LOCK,CAP_SYS_NICE \
+    --bind-ro=/etc/hosts:/etc/hosts \
     -D machine/root ${_CONTAINER_ARGS:-} \
     "/home/main-builder/wizard.sh" "${@:2}" || local _BUILD_FAILED="$?"
 
