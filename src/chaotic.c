@@ -15,7 +15,8 @@ int main(int argc, char *argv[]) {
         meEnv = (char*)malloc(sizeof(ME_ENV) + 1 + strlen(me));
         sprintf(meEnv, ME_ENV"=%s", me);
         sprintf(euidEnv, UID_ENV"=%u", getuid());
-        envp = (char*[]){meEnv, euidEnv, NULL};
+        envp = malloc(3 * sizeof(char*));
+        memcpy(envp, (char*[]){meEnv, euidEnv, NULL}, sizeof envp);
     }
 
     setuid(0);
