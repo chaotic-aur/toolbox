@@ -162,7 +162,7 @@ function routine-tkg-kernels() {
     _DEST="linux-tkg.$(printf '%04d' $_i)"
 
     mkdir "$_DEST"
-    cp -r 'linux-tkg'/* "$_DEST/"
+    cp -rT 'linux-tkg/' "$_DEST/"
 
     pushd "$_DEST"
     # shellcheck disable=SC2086
