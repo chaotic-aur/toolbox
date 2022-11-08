@@ -95,6 +95,7 @@ function makepkg-systemd-nspawn() {
   #shellcheck disable=SC2086
   systemd-nspawn -M "${_MECHA_NAME}" \
     -u "root" \
+    --pipe \
     --suppress-sync=true \
     --capability=CAP_IPC_LOCK,CAP_SYS_NICE \
     --bind-ro=/etc/hosts:/etc/hosts \

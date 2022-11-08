@@ -75,7 +75,7 @@ function pipepkg() {
   fi
 
   echo "Starting making ${_pkg}"
-  (makepkg "${_pkg}" --noconfirm 2>&1 | tee "${_pkg}.log") \
+  ({ time makepkg "${_pkg}" --noconfirm; } 2>&1 | tee "${_pkg}.log") \
     || true # we want to cleanup even if it failed
 
   (deploy "${_pkg}" && db-bump 2>&1 | tee -a "${_pkg}.log") || true

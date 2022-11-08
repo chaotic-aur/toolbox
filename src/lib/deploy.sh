@@ -39,7 +39,7 @@ function deploy() {
   if [[ -f "${_INPUTDIR}.log" ]]; then
     echo 'Trying to deploy log file...'
     if [[ "$CAUR_TYPE" == 'cluster' ]]; then
-      rsync --verbose -e 'ssh -T -o Compression=no -x' \
+      rsync --timeout=60 --verbose -e 'ssh -T -o Compression=no -o "ConnectionAttempts 5" -o "ConnectTimeout 10" -x' \
         "${_INPUTDIR}.log" "$CAUR_DEPLOY_HOST:$CAUR_DEPLOY_LOGS/${_PKGTAG}.log"
     else
       cp -v "${_INPUTDIR}.log" "$CAUR_DEPLOY_LOGS/${_PKGTAG}.log" || true
@@ -87,7 +87,7 @@ function deploy() {
 
     if [[ "$CAUR_TYPE" == 'cluster' ]]; then
       {
-        if ! rsync --verbose --partial -e 'ssh -T -o Compression=no -x' \
+        if ! rsync --timeout=60 --verbose --partial -e 'ssh -T -o Compression=no -o "ConnectionAttempts 5" -o "ConnectTimeout 10" -x' \
           "./$f" "${CAUR_DEPLOY_HOST}:${CAUR_DEPLOY_PKGS}/"; then
           echo "$f" >>../deploy.failures
         fi
@@ -112,7 +112,7 @@ function deploy() {
 
     if [[ "$CAUR_TYPE" == 'cluster' ]]; then
       {
-        if ! rsync --verbose --partial -e 'ssh -T -o Compression=no -x' \
+        if ! rsync --timeout=60 --verbose --partial -e 'ssh -T -o Compression=no -o "ConnectionAttempts 5" -o "ConnectTimeout 10" -x' \
           "./$f" "${CAUR_DEPLOY_HOST}:${CAUR_DEPLOY_PKGS}/"; then
           echo "$f" >>../deploy.failures
         fi
