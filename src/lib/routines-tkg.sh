@@ -116,6 +116,7 @@ function tkg-kernels-variations() {
     'bmq 1'
     'pds 0'
     'cfs 0'
+    'tt 1'
   )
 
   readonly _LINUX_MARCH=(
