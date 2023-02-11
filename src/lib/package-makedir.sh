@@ -82,6 +82,8 @@ function pipepkg() {
         || true
     elif grep -qP "One or more files did not pass the validity check!" "${_pkg}.log"; then
       clean-srccache "${_pkg}" # To fight failed builds due to wrong cached files
+      ({ time makepkg "${_pkg}" --noconfirm; } 2>&1 | tee "${_pkg}.log") \
+        || true
     fi \
     || true # we want to cleanup even if it failed
 
