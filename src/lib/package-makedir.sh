@@ -61,6 +61,7 @@ function pipepkg() {
   set -euo pipefail
 
   local _pkg
+  local _already_failed
 
   if [ ${#@} -ne 1 ]; then
     echo 'Invalid number of parameters.'
@@ -76,14 +77,14 @@ function pipepkg() {
 
   echo "Starting making ${_pkg}"
   ({ time makepkg "${_pkg}" --noconfirm; } 2>&1 | tee "${_pkg}.log") \
-    || if grep -qP "is not a clone of" "${_pkg}.log"; then
+    || if grep -qP "is not a clone of" "${_pkg}.log" && [ -z "${_already_failed}" ]; then
       clean-srccache "${_pkg}" # To fight failed builds due to changed git source
       ({ time makepkg "${_pkg}" --noconfirm; } 2>&1 | tee "${_pkg}.log") \
-        || true
-    elif grep -qP "One or more files did not pass the validity check!" "${_pkg}.log"; then
+        || _already_failed=1 && true
+    elif grep -qP "One or more files did not pass the validity check!" "${_pkg}.log" && [ -z "${_already_failed}" ]; then
       clean-srccache "${_pkg}" # To fight failed builds due to wrong cached files
       ({ time makepkg "${_pkg}" --noconfirm; } 2>&1 | tee "${_pkg}.log") \
-        || true
+        || _already_failed=1 && true
     fi \
     || true # we want to cleanup even if it failed
 
