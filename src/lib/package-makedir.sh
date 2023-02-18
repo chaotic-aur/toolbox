@@ -76,6 +76,17 @@ function pipepkg() {
 
   echo "Starting making ${_pkg}"
   ({ time makepkg "${_pkg}" --noconfirm; } 2>&1 | tee "${_pkg}.log") \
+    || if grep -qP "is not a clone of" "${_pkg}.log"; then
+      echo 'The cached git repo is invalid, clearing source and retrying.'
+      clean-srccache "${_pkg}" # To fight failed builds due to changed git source
+      ({ time makepkg "${_pkg}" --noconfirm; } 2>&1 | tee "${_pkg}.log") \
+        || true
+    elif grep -qP "One or more files did not pass the validity check!" "${_pkg}.log"; then
+      echo 'The cached file did not pass validity check, clearing source and retrying.'
+      clean-srccache "${_pkg}" # To fight failed builds due to wrong cached files
+      ({ time makepkg "${_pkg}" --noconfirm; } 2>&1 | tee "${_pkg}.log") \
+        || true
+    fi \
     || true # we want to cleanup even if it failed
 
   (deploy "${_pkg}" && db-bump 2>&1 | tee -a "${_pkg}.log") || true
