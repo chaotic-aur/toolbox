@@ -21,7 +21,7 @@ If at some point you see something that could be better, then please open a PR. 
 
 - `chaotic {mk,makepkg} ${INPUTDIR} $@`
 
-  Builds the package in a container using systed-nspawn.
+  Builds the package in a container using systemd-nspawn.
   `$INPUTDIR` is the result of a `prepare`
 
 - `chaotic {mkd,makepwd} [${PACKAGES[@]}]`
