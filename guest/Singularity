@@ -2,8 +2,6 @@ Bootstrap: docker
 From: docker.io/library/archlinux:base-devel
 
 %files
-  /etc/mtab /etc/
-
   etc/* /etc/
   bin/* /usr/local/bin/
 
