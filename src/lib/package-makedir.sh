@@ -74,7 +74,7 @@ function pipepkg() {
     return 24
   fi
 
-  echo "Starting making ${_pkg}"
+  echo "Starting making ${_pkg} at $(date)"
   ({ time makepkg "${_pkg}" --noconfirm; } 2>&1 | tee "${_pkg}.log") \
     || if grep -qP "is not a clone of" "${_pkg}.log"; then
       echo 'The cached git repo is invalid, clearing source and retrying.'
