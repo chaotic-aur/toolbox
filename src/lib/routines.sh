@@ -109,6 +109,8 @@ function generic-routine() {
         || true
     done
 
+  (pkgrel-incrementer-start)
+
   # put in background and wait, otherwise trap does not work
   _PACKAGES=()
   mapfile -t _PACKAGES < <(
@@ -117,6 +119,8 @@ function generic-routine() {
   )
   makepwd "${_PACKAGES[@]}" &
   sane-wait "$!" || true
+
+  (pkgrel-incrementer-stop)
 
   cleanpwd
   popd #routine dir
