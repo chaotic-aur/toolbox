@@ -32,9 +32,13 @@ CAUR_TELEGRAM_TAG='@thotypous'
 EOF
 
 mkdir -p "${HOME}/chaotic"
-for repo in toolbox interfere packages; do
+for repo in toolbox interfere packages pkgrel_incrementer; do
   [[ -d "${HOME}/chaotic/${repo}" ]] || git clone "https://github.com/chaotic-aur/${repo}.git" "${HOME}/chaotic/${repo}"
 done
+
+pushd "${HOME}/chaotic/toolbox/pkgrel_incrementer"
+make
+popd
 
 pushd "${HOME}/chaotic/toolbox/src"
 ln -sf "./chaotic.sh" "./chaotic"
