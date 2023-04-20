@@ -14,6 +14,7 @@ LIBS = \
 	package-make \
 	package-makedir \
 	package-prepare \
+	pkgrel-incrementer \
 	routines \
 	routines-tkg \
 	routines-tkg-wine \
