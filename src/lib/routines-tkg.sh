@@ -41,10 +41,6 @@ function tkg-kernel-variate() {
     _RQ='mc-llc'
   fi
 
-  if [ "${_VER}" == '5.15' ]; then
-    _patches+=('AMD_CPPC.mypatch')
-  fi
-
   _COMPILER='gcc'
   _LTO_MODE=''
   if [ "${_LTO}" == '1' ]; then
@@ -109,7 +105,7 @@ function tkg-kernels-variations() {
 
   local _LINUX_LTS _LINUX_STABLE _LINUX_MARCH _VAR_SCHED _VAR_SCHED
 
-  _LINUX_LTS='5.15'
+  _LINUX_LTS='6.1'
   _LINUX_STABLE='6.3'
 
   _LINUX_SCHED=(
@@ -138,9 +134,6 @@ function tkg-kernels-variations() {
   for _VAR_SCHED in "${_LINUX_SCHED[@]}" 'pds 0'; do
     echo "$_LINUX_LTS" "$_VAR_SCHED" 'lts'
   done
-
-  # RIP -CK patches
-  echo '5.10' 'muqss 0' 'lts'
 
   return 0
 }
