@@ -135,9 +135,6 @@ function tkg-kernels-variations() {
     echo "$_LINUX_LTS" "$_VAR_SCHED" 'lts'
   done
 
-  # RIP -CK patches
-  echo '5.10' 'muqss 0' 'lts'
-
   return 0
 }
 
