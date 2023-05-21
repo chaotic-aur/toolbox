@@ -57,6 +57,12 @@ function makepwd() {
   return 0
 }
 
+function makepwdsi() {
+  export CAUR_SKIP_INTERFERE=1
+  makepwd "${@:2}"
+  export CAUR_SKIP_INTERFERE=0
+}
+
 function pipepkg() {
   set -euo pipefail
 

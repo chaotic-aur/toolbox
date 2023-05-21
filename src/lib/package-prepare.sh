@@ -38,7 +38,11 @@ function prepare() {
   makepkg-gen-bash-init "${_PKGDIR}"
 
   pushd 'pkgwork'
-  interference-apply "${_INTERFERE}"
+  if [[ ${CAUR_SKIP_INTERFERE} == 0 ]]; then
+    interference-apply "${_INTERFERE}"
+  else
+    echo "Skipping interference for ${_PKGTAG}."
+  fi
   popd # pkgwork
 
   interference-makepkg "${@:2}"

@@ -56,6 +56,7 @@ CAUR_TELEGRAM_TAG="@pedrohlc"
 CAUR_STAMPROUTINES=0
 CAUR_REPOCTL_DB_URL=''  # only required when not hosting a local mirror
 CAUR_REPOCTL_DB_FILE='' # only required when not hosting a local mirror
+CAUR_SKIP_INTERFERE=0
 
 # shellcheck source=/dev/null
 [[ -f '/etc/chaotic.conf' ]] && source '/etc/chaotic.conf'
@@ -114,6 +115,9 @@ function main() {
     ;;
   'makepwd' | 'mkd')
     makepwd "${@:2}"
+    ;;
+  'makepwdsi' | 'mkdsi')
+    makepwdsi "${@:2}"
     ;;
   'interfere-sync' | 'si')
     interfere-sync "${@:2}"
