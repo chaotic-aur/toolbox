@@ -40,6 +40,7 @@ CAUR_LIB="${CAUR_PREFIX}/lib/chaotic"
 CAUR_GUEST="${CAUR_LIB}/guest"
 CAUR_LOWER_DIR="${CAUR_CACHE}/lower"
 CAUR_LOWER_PKGS=(base base-devel)
+CAUR_MAKEPKG_EXTRA_APPEND_FILE=""
 CAUR_OVERLAY_TYPE='kernel'
 CAUR_TEMP='/tmp/chaotic'
 CAUR_ROUTINES="${CAUR_TEMP}/routines"
