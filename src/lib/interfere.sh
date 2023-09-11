@@ -8,28 +8,33 @@ function interference-apply() {
 
   interference-generic "${_PKGTAG}"
 
-  # shellcheck source=/dev/null
-  [[ -f "${_INTERFERE}/prepare" ]] \
-    && source "${_INTERFERE}/prepare"
+  if [[ -e "interfere.bypass" ]]; then
+    # bypass interfere
+    :
+  else
+    # shellcheck source=/dev/null
+    [[ -f "${_INTERFERE}/prepare" ]] \
+      && source "${_INTERFERE}/prepare"
 
-  if [[ -f "${_INTERFERE}/interfere.patch" ]]; then
-    if patch -Np1 <"${_INTERFERE}/interfere.patch"; then
-      echo 'Patches applied with success'
-    else
-      echo 'Ignoring patch failure...'
+    if [[ -f "${_INTERFERE}/interfere.patch" ]]; then
+      if patch -Np1 <"${_INTERFERE}/interfere.patch"; then
+        echo 'Patches applied with success'
+      else
+        echo 'Ignoring patch failure...'
+      fi
     fi
-  fi
 
-  if [[ -f "${_INTERFERE}/PKGBUILD.prepend" ]]; then
-    # The worst one, but KISS and easier to maintain
-    _PREPEND="$(cat "${_INTERFERE}/PKGBUILD.prepend")"
-    _PKGBUILD="$(cat PKGBUILD)"
-    echo "$_PREPEND" >PKGBUILD
-    echo "$_PKGBUILD" >>PKGBUILD
-  fi
+    if [[ -f "${_INTERFERE}/PKGBUILD.prepend" ]]; then
+      # The worst one, but KISS and easier to maintain
+      _PREPEND="$(cat "${_INTERFERE}/PKGBUILD.prepend")"
+      _PKGBUILD="$(cat PKGBUILD)"
+      echo "$_PREPEND" >PKGBUILD
+      echo "$_PKGBUILD" >>PKGBUILD
+    fi
 
-  [[ -f "${_INTERFERE}/PKGBUILD.append" ]] \
-    && cat "${_INTERFERE}/PKGBUILD.append" >>PKGBUILD
+    [[ -f "${_INTERFERE}/PKGBUILD.append" ]] \
+      && cat "${_INTERFERE}/PKGBUILD.append" >>PKGBUILD
+  fi
 
   interference-pkgrel "${_PKGTAG}"
 
