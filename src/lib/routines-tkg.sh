@@ -75,7 +75,7 @@ function tkg-kernel-variate() {
   s/_futex2=\"[^\"]*\"/_futex2=\"true\"/g
   s/_futex_waitv=\"[^\"]*\"/_futex_waitv=\"true\"/g
   s/_winesync=\"[^\"]*\"/_winesync=\"false\"/g
-  s/_anbox=\"[^\"]*\"/_anbox=\"true\"/g
+  s/_waydroid=\"[^\"]*\"/_waydroid=\"true\"/g
   s/_processor_opt=\"[^\"]*\"/_processor_opt=\"${_MARCH}\"/g
   s/_cacule_rdb=\"[^\"]*\"/_cacule_rdb=\"true\"/g
   s/_smt_nice=\"[^\"]*\"/_smt_nice=\"true\"/g
@@ -110,10 +110,10 @@ function tkg-kernels-variations() {
 
   _LINUX_SCHED=(
     'bmq 1'
-    'pds 0'
     'cfs 0'
-    'tt 1'
     'eevdf 1'
+    'pds 0'
+    'tt 1'
   )
 
   readonly _LINUX_MARCH=(
