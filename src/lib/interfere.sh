@@ -81,12 +81,13 @@ function interference-generic() {
   $CAUR_PUSH pacman -Syu --noconfirm "${extra_pkgs[@]}"
 
   # * Add missing newlines at end of file
-  printf '\n\n\n' >> PKGBUILD
-
   # * Get rid of troublesome options
-  echo 'unset PKGEXT' >> PKGBUILD
-  echo 'unset groups' >> PKGBUILD
-  echo 'unset replaces' >> PKGBUILD
+  {
+    echo -e '\n\n\n'
+    echo 'unset PKGEXT'
+    echo 'unset groups'
+    echo 'unset replaces'
+  } >>PKGBUILD
 
   # * Get rid of 'native optimizations'
   if (grep -qP '\-march=native' PKGBUILD); then
