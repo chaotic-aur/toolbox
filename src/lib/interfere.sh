@@ -84,7 +84,7 @@ function interference-generic() {
   # * Get rid of troublesome options
   {
     echo -e '\n\n\n'
-    echo 'unset PKGEXT'
+    echo "PKGEXT='.pkg.tar.zst'"
     echo 'unset groups'
     echo 'unset replaces'
   } >>PKGBUILD
