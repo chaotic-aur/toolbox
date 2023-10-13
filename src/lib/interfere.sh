@@ -80,21 +80,14 @@ function interference-generic() {
   # * CHROOT Update
   $CAUR_PUSH pacman -Syu --noconfirm "${extra_pkgs[@]}"
 
-  # * People who think they're smart
-  if (grep -qP '^\s*PKGEXT=' PKGBUILD); then
-    sed -i'' 's/^\s*PKGEXT=.*$//g' PKGBUILD
-  fi
-
-  # * Get rid of groups
-  if (grep -qP '^\s*groups=' PKGBUILD); then
-    sed -i'' 's/^\s*groups=.*$//g' PKGBUILD
-  fi
-
-  # * replaces=() (for VCS packages) generally causes unnecessary problems and should be avoided.
-  # * https://wiki.archlinux.org/title/VCS_package_guidelines#Guidelines
-  if [[ -n "${_PKGTAG_NON_VCS:-}" ]] && (grep -qP "^\s*replaces=\(${_PKGTAG_NON_VCS}\)$" PKGBUILD); then
-    sed -i'' "/^\s*replaces=(${_PKGTAG_NON_VCS})$/d" PKGBUILD
-  fi
+  # * Add missing newlines at end of file
+  # * Get rid of troublesome options
+  {
+    echo -e '\n\n\n'
+    echo 'unset PKGEXT'
+    echo 'unset groups'
+    echo 'unset replaces'
+  } >>PKGBUILD
 
   # * Get rid of 'native optimizations'
   if (grep -qP '\-march=native' PKGBUILD); then
