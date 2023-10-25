@@ -8,6 +8,8 @@ function interference-apply() {
 
   interference-generic "${_PKGTAG}"
 
+  [[ -d "${_INTERFERE}" ]] && echo 'optdepends+=("chaotic-interfere")' >>PKGBUILD
+
   # shellcheck source=/dev/null
   [[ -f "${_INTERFERE}/prepare" ]] \
     && source "${_INTERFERE}/prepare"
