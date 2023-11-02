@@ -217,19 +217,27 @@ function interference-bump() {
     )
   done <<<"${_BUMPS_TMP}"
 
-  # Add/increase existing bumps
+  # Add new bump or increase existing one
   for _PKGTAG in "$@"; do
-    [[ -z "${_PKGTAG}" ]] && continue
-    _LINE=$(grep -E "^${_PKGTAG} " <<<"${_BUMPS}")
-    _BUMP=$(sed -E 's&^.* ([0-9]+)&\1&' <<<"${_LINE}")
-    _BUMPS=$(sed -E 's&^('"${_LINE% *}"') '"${_BUMP}"'$&\1 '"$((_BUMP + 1))"'&' <<<"${_BUMPS}")
+    [[ -z "$_PKGTAG" ]] && continue
+    # increase existing bump
+    _LINE=$(grep -E "^$_PKGTAG " <<<"$_BUMPS" || true)
+    if [[ -z "$_LINE" ]]; then
+      # add new bump
+      _LINE=$(grep -E "^$_PKGTAG " <<<"$_PACKAGES" || true)
+      _BUMPS+=$'\n'"$_LINE"
+    fi
+    if [[ ! -z "$_LINE" ]]; then
+      _BUMP=$(sed -E 's&^.* ([0-9]+)&\1&' <<<"$_LINE")
+      _BUMPS=$(sed -E 's&^('"${_LINE% *}"') '"$_BUMP"'$&\1 '"$((_BUMP + 1))"'&' <<<"$_BUMPS")
+    fi
   done
 
   # show broken packages without version info
   echo "${_BUMPS_BRK}" | sed -E 's& .*$&&' | sort -u
 
   # save bumps file
-  echo "${_BUMPS}" >"${_BUMPSFILE}"
+  sort -u <<<"${_BUMPS}" >"${_BUMPSFILE}"
 
   interfere-push-bumps || interfere-sync
   return 0
