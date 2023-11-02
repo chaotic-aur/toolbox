@@ -160,7 +160,7 @@ function interference-bump() {
   _PACKAGES="$(
     repoctl list -v \
       | sed -E \
-        -e 's@-([0-9]+\S*)$@-\1 0@'
+        -e 's@-([0-9]+\S*)$@-\1 0@' \
         -e 's@-([0-9]+)(\.([0-9]+)) 0$@-\1 \3@' \
       | sort -u
   )"
@@ -176,7 +176,7 @@ function interference-bump() {
   # collect existing versions of packages
   _BUMPS_TMP+=$(
     echo
-    while IFS= read -r _LINE ; do
+    while read -r _LINE ; do
       [[ -z "$_LINE" ]] && continue
       grep -E '^'"${_LINE%% *}"'\b .*$' <<< "$_PACKAGES"
     done <<< "$_BUMPS_TMP"
@@ -211,7 +211,7 @@ function interference-bump() {
   # remove updated packages from bump list
   _BUMPS_TMP=$(sed -E 's& .*$&&' <<< "$_BUMPS_UPD")
 
-  while read _LINE ; do
+  while read -r _LINE ; do
     [[ -z "$_LINE" ]] && continue
     _BUMPS=$(
       sed -E "s&^$_LINE .*+\$&&" <<< "$_BUMPS"
