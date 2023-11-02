@@ -145,45 +145,89 @@ function interference-makepkg() {
 function interference-bump() {
   set -euo pipefail
 
-  local _PACKAGES _PKGTAG _VERSION _BUMPSFILE _BUMPS _BUMP
+  local _PACKAGES _PKGTAG _BUMPSFILE _BUMPS
+  local _BUMPS_TMP _BUMPS_UPD _BUMPS_BRK _BUMP _LINE
 
   _BUMPSFILE="${CAUR_INTERFERE}/PKGREL_BUMPS"
 
   if [ -f "${_BUMPSFILE}" ]; then
-    _BUMPS=$(<"${_BUMPSFILE}")
+    _BUMPS=$(sort -u "${_BUMPSFILE}")
   else
     _BUMPS=""
   fi
 
-  _PACKAGES="$(repoctl list -v)"
+  # put into format: [name] [version]-pkgrel bump
+  _PACKAGES="$(
+    repoctl list -v \
+      | sed -E \
+        -e 's@-([0-9]+\S*)$@-\1 0@'
+        -e 's@-([0-9]+)(\.([0-9]+)) 0$@-\1 \3@' \
+      | sort -u
+  )"
 
-  # Clear old bumps
-  while IFS= read -r _BUMP; do
-    _PKGTAG=${_BUMP%% *}
-    _VERSION="$(awk -v pkgtag="${_PKGTAG}" '$1==pkgtag { print $NF; exit }' <<<"${_PACKAGES}")"
-    local _INTERNALVERSION _INTERNALBUMPCOUNT
-    IFS=";" read -r _INTERNALVERSION _INTERNALBUMPCOUNT <<<"$(awk -v pkgtag="${_PKGTAG}" '$1==pkgtag { print $2 ";" $3; exit }' <<<"${_BUMPS}")"
-    if [[ -z "${_INTERNALVERSION}" ]] || [[ -z "${_INTERNALBUMPCOUNT}" ]]; then
-      continue
-    fi
-    if [[ "$(vercmp "${_VERSION}" "${_INTERNALVERSION}.${_INTERNALBUMPCOUNT}")" -gt 0 ]]; then
-      _BUMPS="$(awk -v pkgtag="$_PKGTAG" '/^$/ {next} $1==pkgtag { next } 1' <<<"${_BUMPS}")"
-    fi
-  done <<<"$_BUMPS"
+  ## Clear old bumps
+  # collect packages that have not been rebuilt
+  _BUMPS_TMP=$(
+    comm -13 \
+      <(sort -u <<< "$_PACKAGES") \
+      <(sort -u <<< "$_BUMPS")
+  )
+
+  # collect existing versions of packages
+  _BUMPS_TMP+=$(
+    echo
+    while IFS= read -r _LINE ; do
+      [[ -z "$_LINE" ]] && continue
+      grep -E '^'"${_LINE%% *}"'\b .*$' <<< "$_PACKAGES"
+    done <<< "$_BUMPS_TMP"
+  )
+
+  _BUMPS_TMP=$(
+    echo
+    sort -u <<< "$_BUMPS_TMP"
+  )
+
+  _BUMPS_BRK="$_BUMPS_TMP"
+
+  # remove broken packages; keep updated packages
+  _BUMPS_TMP=$(
+    sed -Ez \
+      -e 's&\n(\S+ \S+) \S+\n\1 \S+\n&\n\n&g' \
+      -e 's&\n(\S+ \S+) \S+\n\1 \S+\n&\n\n&g' \
+      <<< "$_BUMPS_TMP"
+  )
+
+  _BUMPS_UPD=$(
+    sort -u <<< "$_BUMPS_TMP"
+  )
+
+  # keep broken packages only
+  _BUMPS_BRK=$(
+    comm -23 \
+      <(sort -u <<< "$_BUMPS_BRK" ) \
+      <(sort -u <<< "$_BUMPS_UPD" )
+  )
+
+  # remove updated packages from bump list
+  _BUMPS_TMP=$(sed -E 's& .*$&&' <<< "$_BUMPS_UPD")
+
+  while read _LINE ; do
+    [[ -z "$_LINE" ]] && continue
+    _BUMPS=$(
+      sed -E "s&^$_LINE .*+\$&&" <<< "$_BUMPS"
+    )
+  done <<< "$_BUMPS_TMP"
 
   # Add/increase existing bumps
   for _PKGTAG in "$@"; do
-    _VERSION="$(awk -v pkgtag="${_PKGTAG}" '$1==pkgtag { print $NF; exit }' <<<"${_PACKAGES}")"
-    if [ -z "${_VERSION}" ]; then
-      echo "Package ${_PKGTAG} not found in repo" >&2
-      return 1
-    fi
-    _VERSION="${_VERSION##* }"
-    _BUMPS="$(awk -v pkgtag="$_PKGTAG" -v version="$_VERSION" '/^$/ {next} $1==pkgtag { if (!set) { print $1 " " $2 " " $3+1; set=1 }; next } ENDFILE { if (!set) { print pkgtag " " version " " "1" }; exit } 1' <<<"${_BUMPS}")"
+    [[ -z "$_PKGTAG" ]] && continue
+    _LINE=$(grep -E "^$_PKGTAG " <<< "$_BUMPS")
+    _BUMP=$(sed -E 's&^.* ([0-9]+)&\1&' <<< "$_LINE")
+    _BUMPS=$(sed -E 's&^('"${_LINE% *}"') '"$_BUMP"'$&\1 '"$((_BUMP+1))"'&' <<< "$_BUMPS")
   done
 
-  echo "${_BUMPS}"
-  echo "${_BUMPS}" >"${_BUMPSFILE}"
+  echo "${_BUMPS_BRK}"
+  echo "${_BUMPS}" > "${_BUMPSFILE}"
 
   interfere-push-bumps || interfere-sync
   return 0
