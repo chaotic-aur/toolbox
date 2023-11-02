@@ -227,7 +227,7 @@ function interference-bump() {
       _LINE=$(grep -E "^$_PKGTAG " <<<"$_PACKAGES" || true)
       _BUMPS+=$'\n'"$_LINE"
     fi
-    if [[ ! -z "$_LINE" ]]; then
+    if [[ -n "$_LINE" ]]; then
       _BUMP=$(sed -E 's&^.* ([0-9]+)&\1&' <<<"$_LINE")
       _BUMPS=$(sed -E 's&^('"${_LINE% *}"') '"$_BUMP"'$&\1 '"$((_BUMP + 1))"'&' <<<"$_BUMPS")
     fi
