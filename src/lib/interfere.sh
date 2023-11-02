@@ -225,7 +225,10 @@ function interference-bump() {
     _BUMPS=$(sed -E 's&^('"${_LINE% *}"') '"${_BUMP}"'$&\1 '"$((_BUMP + 1))"'&' <<<"${_BUMPS}")
   done
 
-  echo "${_BUMPS_BRK}"
+  # show broken packages without version info
+  echo "${_BUMPS_BRK}" | sed -E 's& .*$&&' | sort -u
+
+  # save bumps file
   echo "${_BUMPS}" >"${_BUMPSFILE}"
 
   interfere-push-bumps || interfere-sync
