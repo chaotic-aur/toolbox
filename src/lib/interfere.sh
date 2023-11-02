@@ -26,8 +26,8 @@ function interference-apply() {
     # The worst one, but KISS and easier to maintain
     _PREPEND="$(cat "${_INTERFERE}/PKGBUILD.prepend")"
     _PKGBUILD="$(cat PKGBUILD)"
-    echo "${_PREPEND}" >PKGBUILD
-    echo "${_PKGBUILD}" >>PKGBUILD
+    echo "$_PREPEND" >PKGBUILD
+    echo "$_PKGBUILD" >>PKGBUILD
   fi
 
   [[ -f "${_INTERFERE}/PKGBUILD.append" ]] \
@@ -47,30 +47,30 @@ function interference-generic() {
   _PKGTAG="${1:-}"
 
   # * Treats VCs
-  if (echo "${_PKGTAG}" | grep -qP '\-git$'); then
+  if (echo "$_PKGTAG" | grep -qP '\-git$'); then
     extra_pkgs+=("git")
     _PKGTAG_NON_VCS="${_PKGTAG%-git}"
   fi
-  if (echo "${_PKGTAG}" | grep -qP '\-svn$'); then
+  if (echo "$_PKGTAG" | grep -qP '\-svn$'); then
     extra_pkgs+=("subversion")
     _PKGTAG_NON_VCS="${_PKGTAG%-svn}"
   fi
-  if (echo "${_PKGTAG}" | grep -qP '\-bzr$'); then
+  if (echo "$_PKGTAG" | grep -qP '\-bzr$'); then
     extra_pkgs+=("breezy")
     _PKGTAG_NON_VCS="${_PKGTAG%-bzr}"
   fi
-  if (echo "${_PKGTAG}" | grep -qP '\-hg$'); then
+  if (echo "$_PKGTAG" | grep -qP '\-hg$'); then
     extra_pkgs+=("mercurial")
     _PKGTAG_NON_VCS="${_PKGTAG%-hg}"
   fi
 
   # * Multilib
-  if (echo "${_PKGTAG}" | grep -qP '^lib32-'); then
+  if (echo "$_PKGTAG" | grep -qP '^lib32-'); then
     extra_pkgs+=("multilib-devel")
   fi
 
   # * Special cookie for TKG kernels
-  if (echo "${_PKGTAG}" | grep -qP '^linux.*tkg'); then
+  if (echo "$_PKGTAG" | grep -qP '^linux.*tkg'); then
     extra_pkgs+=("git")
   fi
 
@@ -80,7 +80,7 @@ function interference-generic() {
   fi
 
   # * CHROOT Update
-  ${CAUR_PUSH} pacman -Syu --noconfirm "${extra_pkgs[@]}"
+  $CAUR_PUSH pacman -Syu --noconfirm "${extra_pkgs[@]}"
 
   # * Add missing newlines at end of file
   # * Get rid of troublesome options
@@ -107,7 +107,7 @@ function interference-pkgrel() {
   _PKGTAG="${1:-}"
   _BUMPSFILE="${CAUR_INTERFERE}/PKGREL_BUMPS"
 
-  if [[ ! -f "${_BUMPSFILE}" ]]; then
+  if [ ! -f "${_BUMPSFILE}" ]; then
     return 0
   fi
 
@@ -137,7 +137,7 @@ esac" >>PKGBUILD
 function interference-makepkg() {
   set -euo pipefail
 
-  ${CAUR_PUSH} exec /usr/local/bin/internal-makepkg --skippgpcheck "$@" "${TARGET_ARGS:-}" \$\@
+  $CAUR_PUSH exec /usr/local/bin/internal-makepkg --skippgpcheck "$@" "${TARGET_ARGS:-}" \$\@
 
   return 0
 }
