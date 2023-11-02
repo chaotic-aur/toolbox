@@ -8,14 +8,14 @@ function interference-apply() {
 
   interference-generic "${_PKGTAG}"
 
-  [[ -d "${_INTERFERE}" ]] && echo 'optdepends+=("chaotic-interfere")' >> PKGBUILD
+  [[ -d "${_INTERFERE}" ]] && echo 'optdepends+=("chaotic-interfere")' >>PKGBUILD
 
   # shellcheck source=/dev/null
   [[ -f "${_INTERFERE}/prepare" ]] \
     && source "${_INTERFERE}/prepare"
 
   if [[ -f "${_INTERFERE}/interfere.patch" ]]; then
-    if patch -Np1 < "${_INTERFERE}/interfere.patch"; then
+    if patch -Np1 <"${_INTERFERE}/interfere.patch"; then
       echo 'Patches applied with success'
     else
       echo 'Ignoring patch failure...'
@@ -26,12 +26,12 @@ function interference-apply() {
     # The worst one, but KISS and easier to maintain
     _PREPEND="$(cat "${_INTERFERE}/PKGBUILD.prepend")"
     _PKGBUILD="$(cat PKGBUILD)"
-    echo "${_PREPEND}" > PKGBUILD
-    echo "${_PKGBUILD}" >> PKGBUILD
+    echo "${_PREPEND}" >PKGBUILD
+    echo "${_PKGBUILD}" >>PKGBUILD
   fi
 
   [[ -f "${_INTERFERE}/PKGBUILD.append" ]] \
-    && cat "${_INTERFERE}/PKGBUILD.append" >> PKGBUILD
+    && cat "${_INTERFERE}/PKGBUILD.append" >>PKGBUILD
 
   interference-pkgrel "${_PKGTAG}"
 
@@ -89,7 +89,7 @@ function interference-generic() {
     echo "PKGEXT='.pkg.tar.zst'"
     echo 'unset groups'
     echo 'unset replaces'
-  } >> PKGBUILD
+  } >>PKGBUILD
 
   # * Get rid of 'native optimizations'
   if (grep -qP '\-march=native' PKGBUILD); then
@@ -111,7 +111,7 @@ function interference-pkgrel() {
     return 0
   fi
 
-  IFS=";" read -r _EPOCH _PKGVER _PKGREL _BUMPCOUNT <<< "$(awk -v pkgtag="${_PKGTAG}" '$1==pkgtag { epoch_index=index($2,":"); pkgrel_index=index($2,"-"); print (epoch_index==0 ? "0" : substr($2,0,epoch_index-1)) ";" substr($2,epoch_index+1,pkgrel_index-epoch_index-1) ";" substr($2,pkgrel_index+1) ";" $3; exit}' "${_BUMPSFILE}")"
+  IFS=";" read -r _EPOCH _PKGVER _PKGREL _BUMPCOUNT <<<"$(awk -v pkgtag="${_PKGTAG}" '$1==pkgtag { epoch_index=index($2,":"); pkgrel_index=index($2,"-"); print (epoch_index==0 ? "0" : substr($2,0,epoch_index-1)) ";" substr($2,epoch_index+1,pkgrel_index-epoch_index-1) ";" substr($2,pkgrel_index+1) ";" $3; exit}' "${_BUMPSFILE}")"
 
   if [[ -z "${_EPOCH}" ]] || [[ -z "${_PKGVER}" ]] || [[ -z "${_PKGREL}" ]]; then
     return 0
@@ -131,7 +131,7 @@ function interference-pkgrel() {
       pkgrel=\"\$pkgrel.${_BUMPCOUNT}\"
     fi
     ;;
-esac" >> PKGBUILD
+esac" >>PKGBUILD
 }
 
 function interference-makepkg() {
@@ -169,8 +169,8 @@ function interference-bump() {
   # collect packages that have not been rebuilt
   _BUMPS_TMP=$(
     comm -13 \
-      <(sort -u <<< "${_PACKAGES}" || true) \
-      <(sort -u <<< "${_BUMPS}" || true)
+      <(sort -u <<<"${_PACKAGES}" || true) \
+      <(sort -u <<<"${_BUMPS}" || true)
   )
 
   # collect existing versions of packages
@@ -178,13 +178,13 @@ function interference-bump() {
     echo
     while read -r _LINE; do
       [[ -z "${_LINE}" ]] && continue
-      grep -E '^'"${_LINE%% *}"'\b .*$' <<< "${_PACKAGES}"
-    done <<< "${_BUMPS_TMP}"
+      grep -E '^'"${_LINE%% *}"'\b .*$' <<<"${_PACKAGES}"
+    done <<<"${_BUMPS_TMP}"
   )
 
   _BUMPS_TMP=$(
     echo
-    sort -u <<< "${_BUMPS_TMP}"
+    sort -u <<<"${_BUMPS_TMP}"
   )
 
   _BUMPS_BRK="${_BUMPS_TMP}"
@@ -194,40 +194,40 @@ function interference-bump() {
     sed -Ez \
       -e 's&\n(\S+ \S+) \S+\n\1 \S+\n&\n\n&g' \
       -e 's&\n(\S+ \S+) \S+\n\1 \S+\n&\n\n&g' \
-      <<< "${_BUMPS_TMP}"
+      <<<"${_BUMPS_TMP}"
   )
 
   _BUMPS_UPD=$(
-    sort -u <<< "${_BUMPS_TMP}"
+    sort -u <<<"${_BUMPS_TMP}"
   )
 
   # keep broken packages only
   _BUMPS_BRK=$(
     comm -23 \
-      <(sort -u <<< "${_BUMPS_BRK}" || true) \
-      <(sort -u <<< "${_BUMPS_UPD}" || true)
+      <(sort -u <<<"${_BUMPS_BRK}" || true) \
+      <(sort -u <<<"${_BUMPS_UPD}" || true)
   )
 
   # remove updated packages from bump list
-  _BUMPS_TMP=$(sed -E 's& .*$&&' <<< "${_BUMPS_UPD}")
+  _BUMPS_TMP=$(sed -E 's& .*$&&' <<<"${_BUMPS_UPD}")
 
   while read -r _LINE; do
     [[ -z "${_LINE}" ]] && continue
     _BUMPS=$(
-      sed -E "s&^${_LINE} .*+\$&&" <<< "${_BUMPS}"
+      sed -E "s&^${_LINE} .*+\$&&" <<<"${_BUMPS}"
     )
-  done <<< "${_BUMPS_TMP}"
+  done <<<"${_BUMPS_TMP}"
 
   # Add/increase existing bumps
   for _PKGTAG in "$@"; do
     [[ -z "${_PKGTAG}" ]] && continue
-    _LINE=$(grep -E "^${_PKGTAG} " <<< "${_BUMPS}")
-    _BUMP=$(sed -E 's&^.* ([0-9]+)&\1&' <<< "${_LINE}")
-    _BUMPS=$(sed -E 's&^('"${_LINE% *}"') '"${_BUMP}"'$&\1 '"$((_BUMP + 1))"'&' <<< "${_BUMPS}")
+    _LINE=$(grep -E "^${_PKGTAG} " <<<"${_BUMPS}")
+    _BUMP=$(sed -E 's&^.* ([0-9]+)&\1&' <<<"${_LINE}")
+    _BUMPS=$(sed -E 's&^('"${_LINE% *}"') '"${_BUMP}"'$&\1 '"$((_BUMP + 1))"'&' <<<"${_BUMPS}")
   done
 
   echo "${_BUMPS_BRK}"
-  echo "${_BUMPS}" > "${_BUMPSFILE}"
+  echo "${_BUMPS}" >"${_BUMPSFILE}"
 
   interfere-push-bumps || interfere-sync
   return 0
@@ -239,7 +239,7 @@ function interference-finish() {
   unset TARGET_ARGS || true
 
   if [[ -n "${TARGET_RUN:-}" ]]; then
-    echo "${TARGET_RUN}" > 'CONTAINER_ARGS'
+    echo "${TARGET_RUN}" >'CONTAINER_ARGS'
   fi
 
   unset TARGET_RUN || true
