@@ -177,27 +177,21 @@ function interference-bump() {
     echo
     while read -r _LINE; do
       [[ -z "${_LINE}" ]] && continue
-      grep -E '^'"${_LINE%% *}"'\b .*$' <<<"${_PACKAGES}"
+      grep -Esm1 '^'"${_LINE%% *}"'\b .*$' <<<"${_PACKAGES}"
     done <<<"${_BUMPS_TMP}"
   )
 
-  _BUMPS_TMP=$(
+  _BUMPS_BRK=$(
     echo
     sort -u <<<"${_BUMPS_TMP}"
   )
 
-  _BUMPS_BRK="${_BUMPS_TMP}"
-
   # remove broken packages; keep updated packages
-  _BUMPS_TMP=$(
+  _BUMPS_UPD=$(
     sed -Ez \
       -e 's&\n(\S+ \S+) \S+\n\1 \S+\n&\n\n&g' \
       -e 's&\n(\S+ \S+) \S+\n\1 \S+\n&\n\n&g' \
-      <<<"${_BUMPS_TMP}"
-  )
-
-  _BUMPS_UPD=$(
-    sort -u <<<"${_BUMPS_TMP}"
+      <<<"${_BUMPS_BRK}" | sort -u || true
   )
 
   # collect broken packages only
@@ -221,10 +215,10 @@ function interference-bump() {
   for _PKGTAG in "$@"; do
     [[ -z "$_PKGTAG" ]] && continue
     # increase existing bump
-    _LINE=$(grep -E "^$_PKGTAG " <<<"$_BUMPS" || true)
+    _LINE=$(grep -Esm1 "^$_PKGTAG " <<<"$_BUMPS" || true)
     if [[ -z "$_LINE" ]]; then
       # add new bump
-      _LINE=$(grep -E "^$_PKGTAG " <<<"$_PACKAGES" || true)
+      _LINE=$(grep -Esm1 "^$_PKGTAG " <<<"$_PACKAGES" || true)
       _BUMPS+=$'\n'"$_LINE"
     fi
     if [[ -n "$_LINE" ]]; then
