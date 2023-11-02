@@ -150,7 +150,7 @@ function interference-bump() {
 
   _BUMPSFILE="${CAUR_INTERFERE}/PKGREL_BUMPS"
 
-  if [ -f "${_BUMPSFILE}" ]; then
+  if [[ -f "${_BUMPSFILE}" ]]; then
     _BUMPS=$(sort -u "${_BUMPSFILE}")
   else
     _BUMPS=""
@@ -169,61 +169,61 @@ function interference-bump() {
   # collect packages that have not been rebuilt
   _BUMPS_TMP=$(
     comm -13 \
-      <(sort -u <<< "$_PACKAGES") \
-      <(sort -u <<< "$_BUMPS")
+      <(sort -u <<< "${_PACKAGES}") \
+      <(sort -u <<< "${_BUMPS}")
   )
 
   # collect existing versions of packages
   _BUMPS_TMP+=$(
     echo
     while read -r _LINE ; do
-      [[ -z "$_LINE" ]] && continue
-      grep -E '^'"${_LINE%% *}"'\b .*$' <<< "$_PACKAGES"
-    done <<< "$_BUMPS_TMP"
+      [[ -z "${_LINE}" ]] && continue
+      grep -E '^'"${_LINE%% *}"'\b .*$' <<< "${_PACKAGES}"
+    done <<< "${_BUMPS_TMP}"
   )
 
   _BUMPS_TMP=$(
     echo
-    sort -u <<< "$_BUMPS_TMP"
+    sort -u <<< "${_BUMPS_TMP}"
   )
 
-  _BUMPS_BRK="$_BUMPS_TMP"
+  _BUMPS_BRK="${_BUMPS_TMP}"
 
   # remove broken packages; keep updated packages
   _BUMPS_TMP=$(
     sed -Ez \
       -e 's&\n(\S+ \S+) \S+\n\1 \S+\n&\n\n&g' \
       -e 's&\n(\S+ \S+) \S+\n\1 \S+\n&\n\n&g' \
-      <<< "$_BUMPS_TMP"
+      <<< "${_BUMPS_TMP}"
   )
 
   _BUMPS_UPD=$(
-    sort -u <<< "$_BUMPS_TMP"
+    sort -u <<< "${_BUMPS_TMP}"
   )
 
   # keep broken packages only
   _BUMPS_BRK=$(
     comm -23 \
-      <(sort -u <<< "$_BUMPS_BRK" ) \
-      <(sort -u <<< "$_BUMPS_UPD" )
+      <(sort -u <<< "${_BUMPS_BRK}" ) \
+      <(sort -u <<< "${_BUMPS_UPD}" )
   )
 
   # remove updated packages from bump list
-  _BUMPS_TMP=$(sed -E 's& .*$&&' <<< "$_BUMPS_UPD")
+  _BUMPS_TMP=$(sed -E 's& .*$&&' <<< "${_BUMPS_UPD}")
 
   while read -r _LINE ; do
-    [[ -z "$_LINE" ]] && continue
+    [[ -z "${_LINE}" ]] && continue
     _BUMPS=$(
-      sed -E "s&^$_LINE .*+\$&&" <<< "$_BUMPS"
+      sed -E "s&^${_LINE} .*+\$&&" <<< "${_BUMPS}"
     )
-  done <<< "$_BUMPS_TMP"
+  done <<< "${_BUMPS_TMP}"
 
   # Add/increase existing bumps
   for _PKGTAG in "$@"; do
-    [[ -z "$_PKGTAG" ]] && continue
-    _LINE=$(grep -E "^$_PKGTAG " <<< "$_BUMPS")
-    _BUMP=$(sed -E 's&^.* ([0-9]+)&\1&' <<< "$_LINE")
-    _BUMPS=$(sed -E 's&^('"${_LINE% *}"') '"$_BUMP"'$&\1 '"$((_BUMP+1))"'&' <<< "$_BUMPS")
+    [[ -z "${_PKGTAG}" ]] && continue
+    _LINE=$(grep -E "^${_PKGTAG} " <<< "${_BUMPS}")
+    _BUMP=$(sed -E 's&^.* ([0-9]+)&\1&' <<< "${_LINE}")
+    _BUMPS=$(sed -E 's&^('"${_LINE% *}"') '"${_BUMP}"'$&\1 '"$((_BUMP+1))"'&' <<< "${_BUMPS}")
   done
 
   echo "${_BUMPS_BRK}"
