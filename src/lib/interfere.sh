@@ -165,14 +165,14 @@ function interference-bump() {
       | sort -u
   )"
 
-  # collect packages that have not been rebuilt
+  # collect packages with mismatched pkgver, pkgrel, or bump
   _BUMPS_TMP=$(
     comm -13 \
       <(sort -u <<<"${_PACKAGES}" || true) \
       <(sort -u <<<"${_BUMPS}" || true)
   )
 
-  # collect existing versions of packages
+  # combine with repo package listing
   _BUMPS_TMP+=$(
     echo
     while read -r _LINE; do
@@ -187,6 +187,8 @@ function interference-bump() {
   )
 
   # remove broken packages; keep updated packages
+  # "broken" packages have same pkgver and pkgrel, but different bump
+  # "updated" packages have different pkgver or different pkgrel.
   _BUMPS_UPD=$(
     sed -Ez \
       -e 's&\n(\S+ \S+) \S+\n\1 \S+\n&\n\n&g' \
@@ -194,7 +196,7 @@ function interference-bump() {
       <<<"${_BUMPS_BRK}" | sort -u || true
   )
 
-  # collect broken packages only
+  # broken packages only; for later review
   _BUMPS_BRK=$(
     comm -23 \
       <(sort -u <<<"${_BUMPS_BRK}" || true) \
@@ -227,10 +229,10 @@ function interference-bump() {
     fi
   done
 
-  # show broken packages without version info
+  # display broken packages for review
   echo "${_BUMPS_BRK}" | sed -E 's& .*$&&' | sort -u
 
-  # save bumps file
+  # update bump file
   sort -u <<<"${_BUMPS}" >"${_BUMPSFILE}"
 
   interfere-push-bumps || interfere-sync
