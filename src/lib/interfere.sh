@@ -156,7 +156,7 @@ function interference-bump() {
     _BUMPS=""
   fi
 
-  # put into format: [name] [version]-pkgrel bump
+  # format: [name] [version]-pkgrel bump
   _PACKAGES="$(
     repoctl list -v \
       | sed -E \
@@ -165,7 +165,6 @@ function interference-bump() {
       | sort -u
   )"
 
-  ## Clear old bumps
   # collect packages that have not been rebuilt
   _BUMPS_TMP=$(
     comm -13 \
@@ -201,7 +200,7 @@ function interference-bump() {
     sort -u <<<"${_BUMPS_TMP}"
   )
 
-  # keep broken packages only
+  # collect broken packages only
   _BUMPS_BRK=$(
     comm -23 \
       <(sort -u <<<"${_BUMPS_BRK}" || true) \
@@ -214,7 +213,7 @@ function interference-bump() {
   while read -r _LINE; do
     [[ -z "${_LINE}" ]] && continue
     _BUMPS=$(
-      sed -E "s&^${_LINE} .*+\$&&" <<<"${_BUMPS}"
+      sed -E "/^${_LINE} .*+\$/d" <<<"${_BUMPS}"
     )
   done <<<"${_BUMPS_TMP}"
 
