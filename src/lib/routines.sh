@@ -14,6 +14,10 @@ function routine() {
   export CAUR_IN_ROUTINE
 
   case "${_CMD}" in
+  'garuda')
+    load-config 'routines/garuda'
+    routine-garuda
+    ;;
   'tkg-kernels')
     load-config 'routines/tkg-kernels'
     routine-tkg-kernels

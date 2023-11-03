@@ -16,6 +16,7 @@ LIBS = \
 	package-prepare \
 	pkgrel-incrementer \
 	routines \
+	routines-garuda \
 	routines-tkg \
 	routines-tkg-wine \
 	sync \
@@ -26,6 +27,7 @@ ROUTINES = \
 	afternoon \
 	nightly \
 	midnight \
+	garuda \
 	tkg-kernels \
 	tkg-wine
 
