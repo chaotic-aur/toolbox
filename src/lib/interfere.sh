@@ -146,7 +146,7 @@ function interference-bump() {
   set -euo pipefail
 
   local _PACKAGES _PKGTAG _BUMPSFILE _BUMPS
-  local _BUMPS_TMP _BUMPS_UPD _BUMPS_BRK _BUMP _LINE
+  local _BUMPS_TMP _BUMPS_UPD _BUMPS_RVW _BUMP _LINE
 
   _BUMPSFILE="${CAUR_INTERFERE}/PKGREL_BUMPS"
 
@@ -156,7 +156,7 @@ function interference-bump() {
     _BUMPS=""
   fi
 
-  # format: [name] [version]-pkgrel bump
+  # format: [name] [version]-[pkgrel] [bump]
   _PACKAGES="$(
     repoctl list -v \
       | sed -E \
@@ -172,7 +172,7 @@ function interference-bump() {
       <(sort -u <<<"${_BUMPS}" || true)
   )
 
-  # combine with repo package listing
+  # combine mismatched package with current listing
   _BUMPS_TMP+=$(
     echo
     while read -r _LINE; do
@@ -181,25 +181,26 @@ function interference-bump() {
     done <<<"${_BUMPS_TMP}"
   )
 
-  _BUMPS_BRK=$(
+  # _BUMPS_RVW will contain packages that need review.
+  # These are usually packages that have yet to be rebuils.
+  # The pkgver and pkgrel match, but bump is still mismatched.
+  _BUMPS_RVW=$(
     echo
     sort -u <<<"${_BUMPS_TMP}"
   )
 
-  # remove broken packages; keep updated packages
-  # "broken" packages have same pkgver and pkgrel, but different bump
-  # "updated" packages have different pkgver or different pkgrel.
+  # _BUMPS_UPD will contain packages with new releases.
+  # The pkgver and pkgrel no longer match the bump list.
   _BUMPS_UPD=$(
     sed -Ez \
       -e 's&\n(\S+ \S+) \S+\n\1 \S+\n&\n\n&g' \
       -e 's&\n(\S+ \S+) \S+\n\1 \S+\n&\n\n&g' \
-      <<<"${_BUMPS_BRK}" | sort -u || true
+      <<<"${_BUMPS_RVW}" | sort -u || true
   )
 
-  # broken packages only; for later review
-  _BUMPS_BRK=$(
+  _BUMPS_RVW=$(
     comm -23 \
-      <(sort -u <<<"${_BUMPS_BRK}" || true) \
+      <(sort -u <<<"${_BUMPS_RVW}" || true) \
       <(sort -u <<<"${_BUMPS_UPD}" || true)
   )
 
@@ -213,7 +214,7 @@ function interference-bump() {
     )
   done <<<"${_BUMPS_TMP}"
 
-  # Add new bump or increase existing one
+  # add new bump or increase existing one
   for _PKGTAG in "$@"; do
     [[ -z "$_PKGTAG" ]] && continue
     # increase existing bump
@@ -221,7 +222,7 @@ function interference-bump() {
     if [[ -z "$_LINE" ]]; then
       # add new bump
       _LINE=$(grep -Esm1 "^$_PKGTAG " <<<"$_PACKAGES" || true)
-      _BUMPS+=$'\n'"$_LINE"
+      [[ -n "$_LINE" ]] && _BUMPS+=$'\n'"$_LINE"
     fi
     if [[ -n "$_LINE" ]]; then
       _BUMP=$(sed -E 's&^.* ([0-9]+)&\1&' <<<"$_LINE")
@@ -229,8 +230,8 @@ function interference-bump() {
     fi
   done
 
-  # display broken packages for review
-  echo "${_BUMPS_BRK}" | sed -E 's& .*$&&' | sort -u
+  # display packages for review
+  echo "${_BUMPS_RVW}" | sed -E 's& .*$&&' | sort -u
 
   # update bump file
   sort -u <<<"${_BUMPS}" >"${_BUMPSFILE}"
