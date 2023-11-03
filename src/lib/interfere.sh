@@ -182,7 +182,7 @@ function interference-bump() {
   )
 
   # _BUMPS_RVW will contain packages that need review.
-  # These are usually packages that have yet to be rebuils.
+  # These are usually packages that have yet to be rebuilt.
   # The pkgver and pkgrel match, but bump is still mismatched.
   _BUMPS_RVW=$(
     echo
