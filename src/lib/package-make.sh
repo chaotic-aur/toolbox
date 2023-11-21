@@ -219,6 +219,7 @@ function makepkg-singularity() {
     -B "${_CCACHE}:${_HOME}/.ccache" \
     -B "${_SRCCACHE}:${_HOME}/pkgsrc" \
     -B "${CAUR_CACHE_PKG}:/var/cache/pacman/pkg" \
+    --dns 1.1.1.1,8.8.8.8 \
     "${_SANDBOX}" \
     "/home/main-builder/wizard.sh" "${@:2}" || local _BUILD_FAILED="$?"
 
