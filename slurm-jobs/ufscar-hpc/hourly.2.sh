@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=hourly.2
-#SBATCH --cpus-per-task 40
-#SBATCH --mem 257500M
+#SBATCH --mincpus 40
+#SBATCH --exclusive
 #SBATCH --partition fast
 #SBATCH --nodes 1
 #SBATCH --dependency=singleton
