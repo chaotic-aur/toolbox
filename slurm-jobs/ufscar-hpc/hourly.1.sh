@@ -2,6 +2,7 @@
 #SBATCH --job-name=hourly.1
 #SBATCH --mincpus 40
 #SBATCH --exclusive
+#SBATCH --mem 0
 #SBATCH --partition fast
 #SBATCH --nodes 1
 #SBATCH --dependency=singleton
