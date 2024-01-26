@@ -134,6 +134,7 @@ function clean-duplicates() {
     _TO_MV=$(
       echo "${_DUPLICATED[@]}" \
         | awk '{print "find -name \""$1"*\" -printf \"%T@ %p\\n\" | sort -n | grep -Po \"\\.\\/"$1"(((-[^-]*){3}\\.pkg\\.tar(?>\\.xz|\\.zst)?))\\.sig$\" | head -n -1;"}' \
+        | sed 's/\+/\\+/g' \
         | bash \
         | awk '{sub(/\.sig$/,"");print $1"\n"$1".sig"}'
     )
