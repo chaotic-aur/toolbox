@@ -5,3 +5,4 @@ LOGDEST=/home/main-builder/makepkglogs
 JOBS=8
 MAKEFLAGS="-j$JOBS"
 export SCONSFLAGS="-j$JOBS"
+OPTIONS=(strip docs !libtool !staticlibs emptydirs zipman purge !debug lto)
